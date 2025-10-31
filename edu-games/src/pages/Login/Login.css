@@ -1,0 +1,377 @@
+.form-container,
+form,
+input,
+button {
+  transition: all 0.5s ease;
+}
+
+.form-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  height: 800px;
+  margin: 0 auto;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 180px;
+}
+
+.form-container {
+  position: absolute;
+  width: 100%;
+  height: max-content;
+  padding: 20px;
+  gap: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--cor-fundo-componente);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  transition: all 0.8s ease;
+}
+
+.left-decor {
+  flex: 0 0 300px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.left-decor img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: inherit;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.left-decor img:hover {
+  transform: scale(1.02);
+}
+
+form {
+  flex: 1;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+form label {
+  font-size: 0.9rem;
+  color: var(--cor-texto-secundario);
+  font-weight: 500;
+}
+
+form input {
+  width: 100%;
+  padding: 14px 12px;
+  font-size: 0.95rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-principal);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+form input:focus {
+  border-color: var(--cor-principal-violeta);
+  box-shadow: 0 0 6px rgba(130, 87, 229, 0.3);
+}
+
+.form-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.98rem;
+}
+
+.form-links button {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  cursor: pointer;
+  font-size: 0.98rem;
+  font-weight: 800;
+  padding: 0;
+}
+
+.form-cadastro {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  opacity: 0;
+  transform: translateX(100%);
+  z-index: 1;
+}
+
+.form-cadastro form {
+  order: 1;
+  flex: 1 1 60%;
+  min-width: 320px;
+}
+
+.form-cadastro .left-decor {
+  order: 2;
+  flex: 0 0 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+}
+
+.form-login-active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 2;
+}
+
+.form-login-hide {
+  opacity: 0;
+  transform: translateX(-100%);
+  z-index: 1;
+}
+
+.form-cadastro-active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 2;
+}
+
+body[data-theme="light"] form input {
+  background-color: var(--cor-fundo-componente);
+}
+
+body[data-theme="light"] form input:focus {
+  box-shadow: 0 0 6px rgba(107, 77, 230, 0.2);
+}
+
+@media (max-width: 900px) {
+  body,
+  main.main-container {
+    padding-left: 12px;
+    padding-right: 12px;
+    box-sizing: border-box;
+  }
+
+  .form-wrapper {
+    max-width: 720px;
+    width: 100%;
+    margin: 12px auto;
+    padding: 12px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+  }
+
+  .form-container,
+  #container-login,
+  #container-cadastro {
+    width: 100%;
+    max-width: 720px;
+    margin: 8px auto;
+    padding: 14px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    max-height: calc(100vh - var(--altura-header, 100px) - 80px);
+    overflow: visible;
+  }
+
+  .left-decor {
+    order: -1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .left-decor img {
+    width: 80%;
+    max-width: 360px;
+    height: auto;
+    max-height: 28vh;
+    object-fit: contain;
+    border-radius: 8px;
+    display: block;
+  }
+
+  form {
+    order: 0;
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    box-sizing: border-box;
+  }
+
+  form h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    text-align: center;
+  }
+
+  label {
+    font-size: 0.95rem;
+    text-align: left;
+  }
+
+  form input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+  }
+
+  .form-container button {
+    width: 100%;
+    padding: 11px 12px;
+    font-size: 1rem;
+  }
+
+  .form-links {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 8px;
+  }
+
+  .form-links > * {
+    flex: 1 1 45%;
+    min-width: 120px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+  }
+
+  .form-links .no-account {
+    background: transparent;
+    color: var(--cor-texto-secundario);
+    text-align: center;
+  }
+
+  .form-links .cadastre-se,
+  .form-links button,
+  .form-links .register-btn {
+    width: 100%;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-wrapper {
+    padding: 14px;
+    box-sizing: border-box;
+  }
+
+  .form-container,
+  #container-login,
+  #container-cadastro {
+    max-width: 420px;
+    padding: 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    box-sizing: border-box;
+  }
+
+  form {
+    order: 1;
+    width: 100%;
+  }
+
+  .left-decor {
+    order: -1 !important;
+    flex: 0 0 auto;
+    width: 100%;
+    max-height: 220px;
+    margin: 0 0 10px 0;
+  }
+
+  .left-decor img {
+    width: 100%;
+    height: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  form h2 {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  form input {
+    padding: 9px;
+    font-size: 0.9rem;
+  }
+
+  .form-container button {
+    width: 100%;
+    padding: 11px;
+  }
+}
+
+@media (max-width: 420px) {
+  .form-wrapper {
+    padding: 10px;
+  }
+
+  .form-container {
+    max-width: 360px;
+    padding: 10px;
+  }
+
+  .left-decor img {
+    max-height: 140px;
+  }
+
+  form h2 {
+    font-size: 1.05rem;
+  }
+
+  form input {
+    padding: 8px;
+    font-size: 0.88rem;
+  }
+
+  .form-links {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+  }
+
+  .form-links > * {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .navegacao button {
+    min-width: 100px;
+    padding: 8px 10px;
+    font-size: 0.86rem;
+  }
+}

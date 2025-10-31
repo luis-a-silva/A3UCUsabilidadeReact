@@ -1,0 +1,33 @@
+.rodape {
+  background-color: var(--cor-fundo-componente);
+  padding: 40px 0;
+  border-top: 1px solid var(--cor-borda);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+}
+
+.rodape-links a {
+  color: var(--cor-texto-secundario);
+  text-decoration: none;
+  margin-right: 20px;
+  transition: color 0.3s;
+}
+
+.rodape-links a:hover {
+  color: var(--cor-texto-principal);
+}
+
+.rodape .icones-sociais a {
+  color: var(--cor-texto-secundario);
+  font-size: 1.5rem;
+  margin-left: 20px;
+  transition: color 0.3s;
+}
+
+.rodape .icones-sociais a:hover {
+  color: var(--cor-principal-violeta);
+}
