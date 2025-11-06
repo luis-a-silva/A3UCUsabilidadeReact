@@ -15,7 +15,6 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 180px;
 }
 
 .form-container {
@@ -155,7 +154,6 @@ body[data-theme="light"] form input:focus {
 }
 
 @media (max-width: 900px) {
-  body,
   main.main-container {
     padding-left: 12px;
     padding-right: 12px;

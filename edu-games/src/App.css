@@ -1,7 +1,239 @@
+
+:root {
+  --cor-fundo: #100e19;
+  --cor-fundo-componente: #1d1a2c;
+  --cor-principal-violeta: #8257e5;
+  --cor-destaque-amarelo: #f7df1e;
+  --cor-destaque-ciano: #61dafb;
+  --cor-borda: #2c2844;
+  --cor-texto-principal: #ffffff;
+  --cor-texto-secundario: #a8a8b3;
+  --fonte-logo: "Faster One", system-ui;
+  --fonte-corpo: "Poppins", sans-serif;
+  --altura-header: 100px;
+}
+
+body[data-theme="light"] {
+  --cor-fundo: #f5f5f5;
+  --cor-fundo-componente: #ffffff;
+  --cor-principal-violeta: #6b4de6;
+  --cor-destaque-amarelo: #f7c948;
+  --cor-destaque-ciano: #40cfff;
+  --cor-borda: #e0e0e0;
+  --cor-texto-principal: #1a1a1a;
+  --cor-texto-secundario: #555555;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-principal);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .main-content{
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   width: 100%;
   position: relative;
+}
+
+.container {
+  margin-left: 260px;
+  padding: 0 20px;
+  padding-top: var(--altura-header);
+}
+
+.btn-menu-hamburger {
+  display: none;
+  background: none;
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-secundario);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 6px;
+  z-index: 1001;
+  transition: all 0.3s ease;
+}
+
+.btn-menu-hamburger:hover {
+  color: var(--cor-texto-principal);
+  border-color: var(--cor-principal-violeta);
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.open {
+  display: block;
+  opacity: 1;
+}
+
+.btn-primario {
+  cursor: pointer;
+  background: var(--cor-principal-violeta);
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-principal);
+  font-family: var(--fonte-corpo);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 15px 30px;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.3s, border-color 0.3s, padding 0.3s ease,
+    font-size 0.3s ease;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.btn-primario:hover {
+  border-color: var(--cor-fundo);
+}
+
+.btn-secundario {
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-principal);
+  font-family: var(--fonte-corpo);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 15px 30px;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.3s, border-color 0.3s, padding 0.3s ease,
+    font-size 0.3s ease;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.btn-secundario:hover {
+  background-color: var(--cor-fundo-componente);
+  border-color: var(--cor-principal-violeta);
+}
+
+@media (max-width: 700px) {
+  header {
+    gap: 8px;
+  }
+
+  .cabecalho .logo img {
+    max-height: 35px;
+  }
+
+  .cabecalho .barra-busca {
+    min-width: 80px;
+  }
+
+  .navegacao {
+    gap: 6px;
+  }
+
+  .navegacao .btn-primario,
+  .navegacao .btn-secundario {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+
+  .btn-menu-hamburger {
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    gap: 6px;
+    padding: 0 10px;
+  }
+
+  .cabecalho .logo img {
+    max-height: 32px;
+  }
+
+  .cabecalho .barra-busca {
+    min-width: 50px;
+  }
+
+  .cabecalho .barra-busca input {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  .cabecalho .barra-busca button {
+    padding: 6px 8px;
+  }
+
+  .navegacao button#whiteMode,
+  .navegacao button#darkMode {
+    display: none;
+  }
+
+  .navegacao .btn-primario,
+  .navegacao .btn-secundario {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+
+  .btn-menu-hamburger {
+    padding: 6px 8px;
+  }
+
+  .sidebar {
+    padding: 20px 12px;
+  }
+
+  .sidebar h3 {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  header {
+    gap: 5px;
+  }
+
+  .cabecalho .logo img {
+    max-height: 30px;
+  }
+
+  .cabecalho .barra-busca {
+    min-width: 40px;
+  }
+
+  .navegacao .btn-primario,
+  .navegacao .btn-secundario {
+    padding: 5px 6px;
+    font-size: 0.75rem;
+  }
+
+  .btn-menu-hamburger {
+    padding: 5px 6px;
+  }
+
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
