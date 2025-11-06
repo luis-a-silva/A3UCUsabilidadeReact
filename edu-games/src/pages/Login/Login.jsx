@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { loginUser, registerUser } from "../../api/authService.jsx";
 import loginImg from "../../assets/login-img.png";
 import registerImg from "../../assets/register-img.png";
+import { mostrarMensagem } from "../../utils/alerta.js";
 import "./login.css";
 
 export default function Login() {
@@ -47,7 +48,7 @@ export default function Login() {
         const res = await loginUser(email, senha);
 
         // ✅ Mostra a mensagem de sucesso da API
-        alert(res.message || "Login realizado com sucesso!");
+        mostrarMensagem(`${res.message}`, "success");
 
         // Se veio token, guarda e redireciona
         if (res.token) {
@@ -59,9 +60,10 @@ export default function Login() {
 
         // ⚠️ Se a API retornar uma mensagem de erro, mostra no alert
         if (err.response && err.response.data && err.response.data.message) {
-          alert(`❌ ${err.response.data.message}`);
+          mostrarMensagem(`${err.response.data.message}`, "danger");
+          
         } else {
-          alert("❌ Erro inesperado ao tentar fazer login.");
+          mostrarMensagem("inesperado ao realizar login!", "danger");
         }
       } finally {
         setLoading(false);
@@ -81,7 +83,7 @@ export default function Login() {
       const confirmar = document.getElementById("confirm-password-cadastro").value;
 
       if (senha !== confirmar) {
-        alert("⚠️ As senhas não coincidem!");
+        mostrarMensagem("As senhas não coincidem!", "info");
         setLoading(false);
         return;
       }
@@ -95,7 +97,7 @@ export default function Login() {
         const res = await registerUser(nome, email, senha, 2, dataNascimento);
 
         // ✅ Exibe mensagem de sucesso vinda da API
-        alert(res.message || "Cadastro realizado com sucesso!");
+        mostrarMensagem(`${res.message || "Cadastro realizado com sucesso!"}`, "info");
 
         // Se a mensagem contiver sucesso, volta para tela de login
         if (res.message?.toLowerCase().includes("sucesso")) {
@@ -106,9 +108,9 @@ export default function Login() {
         console.error(err);
 
         if (err.response && err.response.data && err.response.data.message) {
-          alert(`❌ ${err.response.data.message}`);
+          mostrarMensagem(` ${err.response.data.message}`, "danger");
         } else {
-          alert("❌ Erro inesperado ao tentar cadastrar usuário.");
+          mostrarMensagem("Erro inesperado ao tentar cadastrar usuário.","danger");
         }
       } finally {
         setLoading(false);
