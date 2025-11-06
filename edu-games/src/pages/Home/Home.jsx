@@ -1,22 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Header from "../../components/Header/Header";
 import HeaderAuth from "../../components/Header/HeaderAuth";
 import { isAuthenticated } from "../../utils/auth";
 import axios from "axios";
-import "./Home.css"; // opcional se tiver CSS da grade
+import "./Home.css";
 
 export default function Home() {
   const [jogos, setJogos] = useState([]);
-  const [autenticado, setAutenticado] = useState(false);
+  const [autenticado, setAutenticado] = useState(null); // começa nulo
+  const effectRan = useRef(false);
 
   useEffect(() => {
-    // Verifica se o usuário está logado
-    setAutenticado(isAuthenticated());
+    if (effectRan.current) return; // impede execução dupla
+    effectRan.current = true;
 
-    // Busca os jogos públicos
+    console.log("🔹 useEffect executado");
+    const tokenExiste = isAuthenticated();
+    console.log("🔹 Token encontrado?", tokenExiste);
+    setAutenticado(tokenExiste);
+
+    // 🔹 Carrega jogos
     async function carregarJogos() {
       try {
-        const response = await axios.get("http://localhost:8080/public/jogos");
+        const response = await axios.get("http://localhost:3000/api/v1/public/jogos");
         setJogos(response.data);
       } catch (err) {
         console.error("Erro ao carregar jogos:", err);
@@ -26,12 +32,19 @@ export default function Home() {
     carregarJogos();
   }, []);
 
+  console.log("Valor de autenticado:", autenticado);
+
+  // 🔸 Enquanto verifica autenticação, não renderiza header
+  if (autenticado === null) {
+    return <p style={{ textAlign: "center", marginTop: "20px" }}>Carregando...</p>;
+  }
+
   return (
-    <>
-      {/* Header muda conforme login */}
+    <div className="content">
+      {/* 🔹 Renderiza apenas um header conforme login */}
       {autenticado ? <HeaderAuth /> : <Header />}
 
-      {/* Seção de jogos */}
+      {/* 🔹 Grade de jogos */}
       <section className="games-section">
         <div className="titulo-secao">
           <span className="subtitulo">CONFIRA TAMBÉM</span>
@@ -42,7 +55,6 @@ export default function Home() {
           {jogos.length > 0 ? (
             jogos.map((jogo, index) => (
               <div className="cartao-jogo" key={index}>
-                {/* Se a API não retornar imagem, usa placeholder */}
                 <img
                   src={
                     jogo.imagem ||
@@ -50,7 +62,6 @@ export default function Home() {
                   }
                   alt={`Capa do jogo ${jogo.nome}`}
                 />
-
                 <div className="info-jogo">
                   <h3>{jogo.nome}</h3>
                   <p className="categoria">
@@ -77,11 +88,11 @@ export default function Home() {
             ))
           ) : (
             <p style={{ textAlign: "center", marginTop: "20px" }}>
-              Carregando jogos...
+              Nenhum jogo encontrado.
             </p>
           )}
         </div>
       </section>
-    </>
+    </div>
   );
 }

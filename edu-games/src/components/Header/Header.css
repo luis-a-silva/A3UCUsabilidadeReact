@@ -1,4 +1,3 @@
-
 header {
   width: 100%;
   z-index: 999;
@@ -71,12 +70,14 @@ header {
   transform: scale(1.03);
 }
 
-.cabecalho .navegacao {
+
+.navegacao {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
 }
+
 
 .cabecalho a:hover {
   color: var(--cor-texto-principal);
@@ -102,7 +103,7 @@ header {
   background-color: var(--cor-fundo-componente);
   border: 1px solid var(--cor-borda);
   border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
   z-index: 999;
   min-width: 180px;
 }
@@ -120,7 +121,7 @@ header {
 }
 
 .dropdown-menu li a:hover {
-  background: rgba(130,87,229,0.15);
+  background: rgba(130, 87, 229, 0.15);
 }
 
 /* Mostrar dropdown ativo */

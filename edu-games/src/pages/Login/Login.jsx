@@ -3,6 +3,7 @@ import { loginUser, registerUser } from "../../api/authService.jsx";
 import loginImg from "../../assets/login-img.png";
 import registerImg from "../../assets/register-img.png";
 import { mostrarMensagem } from "../../utils/alerta.js";
+import Header from "../../components/Header/Header.jsx";
 import "./login.css";
 
 export default function Login() {
@@ -35,7 +36,6 @@ export default function Login() {
     });
 
     // 🔹 Login
-    // 🔹 Login
     loginForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
       setLoading(true);
@@ -61,7 +61,7 @@ export default function Login() {
         // ⚠️ Se a API retornar uma mensagem de erro, mostra no alert
         if (err.response && err.response.data && err.response.data.message) {
           mostrarMensagem(`${err.response.data.message}`, "danger");
-          
+
         } else {
           mostrarMensagem("inesperado ao realizar login!", "danger");
         }
@@ -110,7 +110,7 @@ export default function Login() {
         if (err.response && err.response.data && err.response.data.message) {
           mostrarMensagem(` ${err.response.data.message}`, "danger");
         } else {
-          mostrarMensagem("Erro inesperado ao tentar cadastrar usuário.","danger");
+          mostrarMensagem("Erro inesperado ao tentar cadastrar usuário.", "danger");
         }
       } finally {
         setLoading(false);
@@ -126,57 +126,112 @@ export default function Login() {
   }, []);
 
   return (
-    <div class="form-wrapper">
-      {/* 🔹 Mensagem de retorno da API */}
-      {message && <div className="api-message">{message}</div>}
+    <>
+      <Header />
 
-      {/* Form de Login */}
-      <div class="form-container form-login-active" id="container-login">
-        <div class="left-decor">
-          <img src={loginImg} alt="Imagem Login" />
-        </div>
-        <form id="login-form">
-          <h2>Efetue seu login</h2>
-          <label for="email-login">E-mail</label>
-          <input type="email" id="email-login" placeholder="Digite seu e-mail" required />
-          <label for="password-login">Senha</label>
-          <input type="password" id="password-login" placeholder="Digite sua senha" required />
-          <button type="submit" class="btn-primario" disabled={loading}>
-            {loading ? "Aguarde..." : "Entrar"}
-          </button>
-          <div class="form-links">
-            <span>Não possui uma conta?</span>
-            <button type="button" id="btn-cadastrar">Cadastre-se</button>
-          </div>
-        </form>
-      </div>
+      <div class="form-wrapper">
+        {/* 🔹 Mensagem de retorno da API */}
+        {message && <div className="api-message">{message}</div>}
 
-      {/* Form de Cadastro */}
-      <div class="form-container form-cadastro" id="container-cadastro">
-        <div class="left-decor">
-          <img src={registerImg} alt="Imagem Cadastro" />
-        </div>
-        <form id="cadastrar-form">
-          <h2>Faça seu cadastro!</h2>
-          <label for="email-cadastro">E-mail</label>
-          <input type="email" id="email-cadastro" placeholder="Digite seu e-mail" required />
-          <label for="nome">Nome</label>
-          <input type="text" id="nome" placeholder="Digite seu nome" required />
-          <label for="data-nascimento">Data de nascimento</label>
-          <input type="date" id="data-nascimento" required />
-          <label for="password-cadastro">Senha</label>
-          <input type="password" id="password-cadastro" placeholder="Digite sua senha" required />
-          <label for="confirm-password-cadastro">Confirme sua senha</label>
-          <input type="password" id="confirm-password-cadastro" placeholder="Confirme sua senha" required />
-          <button type="submit" class="btn-primario" disabled={loading}>
-            {loading ? "Aguarde..." : "Cadastrar"}
-          </button>
-          <div class="form-links">
-            <span>Já possui uma conta?</span>
-            <button type="button" id="btn-login">Login</button>
+        {/* Form de Login */}
+        <div class="form-container form-login-active" id="container-login">
+          <div class="left-decor">
+            <img src={loginImg} alt="Imagem Login" />
           </div>
-        </form>
+          <form id="login-form">
+            <h2>Efetue seu login</h2>
+
+            <label for="email-login">E-mail</label>
+            <input
+              type="email"
+              id="email-login"
+              placeholder="Digite seu e-mail"
+              required
+              disabled={loading}
+            />
+
+            <label for="password-login">Senha</label>
+            <input
+              type="password"
+              id="password-login"
+              placeholder="Digite sua senha"
+              required
+              disabled={loading}
+            />
+
+            <button type="submit" class="btn-primario" disabled={loading}>
+              {loading ? "Aguarde..." : "Entrar"}
+            </button>
+
+            <div class="form-links">
+              <span>Não possui uma conta?</span>
+              <button type="button" id="btn-cadastrar" disabled={loading}>
+                Cadastre-se
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Form de Cadastro */}
+        <div class="form-container form-cadastro" id="container-cadastro">
+          <div class="left-decor">
+            <img src={registerImg} alt="Imagem Cadastro" />
+          </div>
+          <form id="cadastrar-form">
+            <h2>Faça seu cadastro!</h2>
+
+            <label for="email-cadastro">E-mail</label>
+            <input
+              type="email"
+              id="email-cadastro"
+              placeholder="Digite seu e-mail"
+              required
+              disabled={loading}
+            />
+
+            <label for="nome">Nome</label>
+            <input
+              type="text"
+              id="nome"
+              placeholder="Digite seu nome"
+              required
+              disabled={loading}
+            />
+
+            <label for="data-nascimento">Data de nascimento</label>
+            <input type="date" id="data-nascimento" required disabled={loading} />
+
+            <label for="password-cadastro">Senha</label>
+            <input
+              type="password"
+              id="password-cadastro"
+              placeholder="Digite sua senha"
+              required
+              disabled={loading}
+            />
+
+            <label for="confirm-password-cadastro">Confirme sua senha</label>
+            <input
+              type="password"
+              id="confirm-password-cadastro"
+              placeholder="Confirme sua senha"
+              required
+              disabled={loading}
+            />
+
+            <button type="submit" class="btn-primario" disabled={loading}>
+              {loading ? "Aguarde..." : "Cadastrar"}
+            </button>
+
+            <div class="form-links">
+              <span>Já possui uma conta?</span>
+              <button type="button" id="btn-login" disabled={loading}>
+                Login
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
