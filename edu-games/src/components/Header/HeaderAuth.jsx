@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import logo from "../../assets/logo_edugames_horizontal.png";
+import logo from "../../assets/logo_edugames.png";
 import { alternarModos } from "../../utils/tema";
 import { inicializarDropdownPerfil } from "../../utils/perfilDropdown";
-import { inicializarMenuLateral } from "../../utils/menuLateral";
+import { inicializarMenuLateral } from "../../utils/sidebar";
 import "./Header.css";
 
 export default function HeaderAuth() {
