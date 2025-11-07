@@ -43,7 +43,6 @@ export default function Home() {
     <div className="content">
       {/* 🔹 Renderiza apenas um header conforme login */}
       {autenticado ? <HeaderAuth /> : <Header />}
-
       {/* 🔹 Grade de jogos */}
       <section className="games-section">
         <div className="titulo-secao">
