@@ -8,15 +8,31 @@ const API_URL = "http://localhost:3000/api/v1/carrinho";
 export async function getCarrinho() {
   try {
     const token = localStorage.getItem("token");
-    const res = await axios.get(API_URL, {
+    const res = await axios.get(`${API_URL}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    return res.data;
+
+    // 🔹 Normaliza o formato para sempre retornar um array de jogos
+    const carrinhos = Array.isArray(res.data?.carrinhosComItens)
+      ? res.data.carrinhosComItens
+      : [];
+
+    const itens = carrinhos.flatMap((c) =>
+      (c.itens || []).map((i) => ({
+        jogoId: i.fkJogo,
+        carrinhoId: c.id,
+        itemId: i.id,
+      }))
+    );
+
+    return itens;
   } catch (err) {
     console.error("Erro ao buscar carrinho:", err);
-    throw err;
+    return []; // garante retorno vazio e evita erro no front
   }
 }
+
+
 
 // ===================================================
 // 🔹 Adicionar item ao carrinho

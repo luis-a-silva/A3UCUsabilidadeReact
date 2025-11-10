@@ -20,7 +20,6 @@
   justify-content: center;
 }
 
-
 .hero-banner {
   width: 100%;
   height: auto;
@@ -161,7 +160,6 @@
   font-size: 0.95rem;
 }
 
-
 .acoes-jogo {
   display: flex;
   justify-content: center;
@@ -193,6 +191,14 @@
   color: var(--cor-destaque-amarelo);
 }
 
+.btn-add-cart.ativo {
+  opacity: 0.6;
+}
+
+.btn-add-cart.ativo:hover i {
+  color: #ff4444;
+  content: "\f1f8"; /* ícone de lixeira */
+}
 
 .btn-primario.small,
 .btn-secundario.small {

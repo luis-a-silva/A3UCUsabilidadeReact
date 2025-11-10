@@ -1,95 +1,122 @@
-import { useEffect, useState, useRef } from "react";
-import Header from "../../components/Header/Header";
-import HeaderAuth from "../../components/Header/HeaderAuth";
-import { isAuthenticated } from "../../utils/auth";
-import { getAllJogos, getPublicJogos } from "../../api/jogos"; // 👈 importa funções prontas
-import "./Home.css";
+import axios from "axios";
 
-export default function Home() {
-  const [jogos, setJogos] = useState([]);
-  const [autenticado, setAutenticado] = useState(null);
-  const effectRan = useRef(false);
+const API_URL = "http://localhost:3000/api/v1";
 
-  useEffect(() => {
-    if (effectRan.current) return;
-    effectRan.current = true;
-
-    console.log("🔹 useEffect executado");
-    const tokenExiste = isAuthenticated();
-    console.log("🔹 Token encontrado?", tokenExiste);
-    setAutenticado(tokenExiste);
-
-    // 🔹 Carrega jogos conforme autenticação
-    async function carregarJogos() {
-      try {
-        const dados = tokenExiste
-          ? await getAllJogos() // usa endpoint autenticado
-          : await getPublicJogos(); // usa endpoint público
-
-        setJogos(dados);
-      } catch (err) {
-        console.error("Erro ao carregar jogos:", err);
-      }
-    }
-
-    carregarJogos();
-  }, []);
-
-  console.log("Valor de autenticado:", autenticado);
-
-  if (autenticado === null) {
-    return <p style={{ textAlign: "center", marginTop: "20px" }}>Carregando...</p>;
+// ===================================================
+// 🔹 Listar todos os jogos (rota autenticada)
+// ===================================================
+export async function getAllJogos() {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(`${API_URL}/jogos`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Erro ao buscar jogos (autenticado):", err);
+    throw err;
   }
+}
 
-  return (
-    <div className="content">
-      {/* Header correto conforme login */}
-      {autenticado ? <HeaderAuth /> : <Header />}
+// ===================================================
+// 🔹 Listar todos os jogos (rota pública)
+// ===================================================
+export async function getPublicJogos() {
+  try {
+    const res = await axios.get(`${API_URL}/public/jogos`);
+    return res.data;
+  } catch (err) {
+    console.error("Erro ao buscar jogos públicos:", err);
+    throw err;
+  }
+}
 
-      <section className="games-section">
-        <div className="titulo-secao">
-          <span className="subtitulo">CONFIRA TAMBÉM</span>
-          <h2>Todos os Jogos</h2>
-        </div>
+// ===================================================
+// 🔹 Listar jogo por ID
+// ===================================================
+export async function getJogoById(id) {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(`${API_URL}/jogos/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error(`Erro ao buscar jogo ID ${id}:`, err);
+    throw err;
+  }
+}
 
-        <div className="grade-jogos">
-          {jogos.length > 0 ? (
-            jogos.map((jogo, index) => (
-              <div className="cartao-jogo" key={index}>
-                <img
-                  src={
-                    jogo.imagem ||
-                    "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400&h=400&fit=crop"
-                  }
-                  alt={`Capa do jogo ${jogo.nome}`}
-                />
-                <div className="info-jogo">
-                  <h3>{jogo.nome}</h3>
-                  <p className="categoria">{jogo.categoria?.trim() || "Sem categoria"}</p>
-                  <div className="preco-comprar">
-                    <p className="preco">
-                      R$ {Number(jogo.preco).toFixed(2).replace(".", ",")}
-                    </p>
-                    <div className="acoes-jogo">
-                      <button className="btn-comprar">
-                        <i className="fas fa-shopping-bag"></i> Comprar
-                      </button>
-                      <button className="btn-add-cart">
-                        <i className="fas fa-cart-plus"></i>
-                      </button>
-                      <button className="btn-favorito">
-                        <i className="fas fa-star"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p style={{ textAlign: "center", marginTop: "20px" }}>Nenhum jogo encontrado.</p>
-          )}
-        </div>
-      </section>
-    </div>
-  );
+// ===================================================
+// 🔹 Listar todas as categorias
+// ===================================================
+export async function getCategorias() {
+  try {
+    const res = await axios.get(`${API_URL}/categorias`);
+    return res.data;
+  } catch (err) {
+    console.error("Erro ao buscar categorias:", err);
+    throw err;
+  }
+}
+
+// ===================================================
+// 🔹 Listar jogos por categoria
+// ===================================================
+export async function getJogosPorCategoria(idCategoria) {
+  try {
+    const res = await axios.get(`${API_URL}/categorias/${idCategoria}`);
+    return res.data;
+  } catch (err) {
+    console.error("Erro ao buscar jogos por categoria:", err);
+    throw err;
+  }
+}
+
+// ===================================================
+// 🔹 Criar jogo (autenticado)
+// ===================================================
+export async function createJogo(jogo) {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.post(`${API_URL}/jogos`, jogo, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Erro ao criar jogo:", err);
+    throw err;
+  }
+}
+
+// ===================================================
+// 🔹 Atualizar jogo (autenticado)
+// ===================================================
+export async function updateJogo(id, jogo) {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.put(`${API_URL}/jogos/${id}`, jogo, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Erro ao atualizar jogo:", err);
+    throw err;
+  }
+}
+
+// ===================================================
+// 🔹 Deletar jogo (autenticado)
+// ===================================================
+export async function deleteJogo(id) {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.delete(`${API_URL}/jogos/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Erro ao deletar jogo:", err);
+    throw err;
+  }
 }
