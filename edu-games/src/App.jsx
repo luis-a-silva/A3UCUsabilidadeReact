@@ -17,7 +17,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/jogo/:id" element={<GameInfo />} />
+          <Route path="/jogo/:jogoId" element={<GameInfo />} />
           <Route path="/carrinho" element={<Cart />} />
           <Route path="/admin" element={<AdminPanel />} />
         </Routes>

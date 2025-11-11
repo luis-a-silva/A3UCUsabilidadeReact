@@ -1,13 +1,12 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:3000/api/v1";
-
+const token = localStorage.getItem("token");
 // ===================================================
 // 🔹 Listar todos os jogos (rota autenticada)
 // ===================================================
 export async function getAllJogos() {
   try {
-    const token = localStorage.getItem("token");
     const res = await axios.get(`${API_URL}/jogos`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -36,7 +35,6 @@ export async function getPublicJogos() {
 // ===================================================
 export async function getJogoById(id) {
   try {
-    const token = localStorage.getItem("token");
     const res = await axios.get(`${API_URL}/jogos/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -52,7 +50,9 @@ export async function getJogoById(id) {
 // ===================================================
 export async function getCategorias() {
   try {
-    const res = await axios.get(`${API_URL}/categorias`);
+    const res = await axios.get(`${API_URL}/categorias`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   } catch (err) {
     console.error("Erro ao buscar categorias:", err);
@@ -65,10 +65,60 @@ export async function getCategorias() {
 // ===================================================
 export async function getJogosPorCategoria(idCategoria) {
   try {
-    const res = await axios.get(`${API_URL}/categorias/${idCategoria}`);
+    const res = await axios.get(`${API_URL}/categorias/${idCategoria}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   } catch (err) {
     console.error("Erro ao buscar jogos por categoria:", err);
+    throw err;
+  }
+}
+
+
+// ===================================================
+// 🔹 Buscar todas as avaliações de um jogo
+// ===================================================
+export async function getAvaliacoesByJogo(jogoId) {
+  try {
+    const res = await axios.get(`${API_URL}/avaliacoes?jogoId=${jogoId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return Array.isArray(res.data) ? res.data : [];
+  } catch (err) {
+    console.error(`Erro ao buscar avaliações do jogo ${jogoId}:`, err);
+    return [];
+  }
+}
+
+// ===================================================
+// 🔹 Buscar média das avaliações de um jogo
+// ===================================================
+export async function getMediaAvaliacao(jogoId) {
+  try {
+    const res = await axios.get(`${API_URL}/avaliacoes/media/${jogoId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return Number(res.data?.media) || 0;
+  } catch (err) {
+    console.error(`Erro ao buscar média do jogo ${jogoId}:`, err);
+    return 0;
+  }
+}
+
+// ===================================================
+// 🔹 Criar nova avaliação
+// ===================================================
+export async function addAvaliacao(jogoId, nota, comentario = "") {
+  try {
+    const body = { jogoId, nota, comentario };
+    const res = await axios.post(`${API_URL}/avaliacoes`, body, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return res.data;
+  } catch (err) {
+    console.error("Erro ao adicionar avaliação:", err);
     throw err;
   }
 }
@@ -78,7 +128,6 @@ export async function getJogosPorCategoria(idCategoria) {
 // ===================================================
 export async function createJogo(jogo) {
   try {
-    const token = localStorage.getItem("token");
     const res = await axios.post(`${API_URL}/jogos`, jogo, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -94,7 +143,6 @@ export async function createJogo(jogo) {
 // ===================================================
 export async function updateJogo(id, jogo) {
   try {
-    const token = localStorage.getItem("token");
     const res = await axios.put(`${API_URL}/jogos/${id}`, jogo, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -110,7 +158,6 @@ export async function updateJogo(id, jogo) {
 // ===================================================
 export async function deleteJogo(id) {
   try {
-    const token = localStorage.getItem("token");
     const res = await axios.delete(`${API_URL}/jogos/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });

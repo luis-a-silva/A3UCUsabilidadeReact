@@ -1,15 +1,36 @@
-import { useEffect } from "react";
+import { useEffect, useState  } from "react";
 import logo from "../../assets/logo_edugames_horizontal.png";
 import { alternarModos } from "../../utils/tema";
+import { getCarrinho } from "../../api/carrinho";
+
 import { inicializarDropdownPerfil } from "../../utils/perfilDropdown";
-import { inicializarMenuLateral } from "../../utils/sidebar";
 import "./Header.css";
 
 export default function HeaderAuth() {
+
+    const [cartCount, setCartCount] = useState(0);
+
     useEffect(() => {
         // Inicializa comportamentos utilitários
         alternarModos();
-        inicializarMenuLateral();
+        inicializarDropdownPerfil();
+
+        // 🔹 Busca a contagem do carrinho
+        async function carregarCarrinho() {
+            try {
+                const itens = await getCarrinho();
+                // O getCarrinho() já retorna um array normalizado
+                setCartCount(itens.length);
+            } catch (err) {
+                console.error("Erro ao buscar carrinho:", err);
+            }
+        }
+
+        carregarCarrinho();
+
+        // 🔹 Atualiza a cada 30 segundos (opcional)
+        const interval = setInterval(carregarCarrinho, 30000);
+        return () => clearInterval(interval);
     }, []);
 
     // 🔹 Função para sair da conta
@@ -99,7 +120,7 @@ export default function HeaderAuth() {
                             <li><a href="#">Acessar meu perfil</a></li>
                             <li><a href="#">Lista de Favoritos</a></li>
                             <li>
-                                <button className="btn-link" onClick={handleLogout}>
+                                <button className="btn-primario" onClick={handleLogout}>
                                     <i className="fas fa-sign-out-alt"></i> Sair
                                 </button>
                             </li>
@@ -108,10 +129,10 @@ export default function HeaderAuth() {
 
 
 
-                    {/* Botão do carrinho */}
+                    {/* Botão do carrinho com contador dinâmico */}
                     <button className="btn-secundario" id="btnCarrinho" aria-label="Carrinho">
                         <i className="fas fa-shopping-cart"></i>
-                        <span className="badge" id="cartCount">0</span>
+                        <span className="badge" id="cartCount">{cartCount}</span>
                     </button>
 
                     {/* Botões de tema */}

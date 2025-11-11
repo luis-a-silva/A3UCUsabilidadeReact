@@ -1,0 +1,456 @@
+.secao-detalhes-jogo {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 60px;
+  align-items: flex-start;
+  padding-top: 120px;
+  max-width: 1400px;
+  width: 100%;
+  margin: auto;
+  padding-bottom: 90px;
+}
+
+.imagem-jogo {
+  flex: 1;
+  max-width: 400px;
+}
+
+.imagem-jogo img {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--cor-borda);
+  object-fit: cover;
+  aspect-ratio: 3 / 4;
+}
+
+.info-jogo {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+}
+
+.nome-jogo {
+  font-family: var(--fonte-destaque);
+  font-size: 3.5rem;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.empresa-jogo {
+  color: var(--cor-texto-secundario);
+  margin-bottom: 15px;
+}
+
+.empresa-jogo a {
+  color: var(--cor-destaque-ciano);
+  text-decoration: none;
+}
+
+.empresa-jogo a:hover {
+  text-decoration: underline;
+}
+
+.categorias-jogo {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tag {
+  background-color: var(--cor-fundo-componente);
+  border: 1px solid var(--cor-borda);
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.preco-jogo {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--cor-destaque-amarelo);
+  margin-bottom: 25px;
+}
+
+.btn-comprar-grande {
+  background-color: var(--cor-principal-violeta);
+  color: var(--cor-texto-principal);
+  min-height: max-content;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  align-self: flex-start;
+  margin-bottom: 40px;
+}
+
+.btn-comprar-grande:hover {
+  background-color: #6a40d3;
+}
+
+.titulo-descricao {
+  font-size: 1.5rem;
+  font-weight: 600;
+  border-bottom: 2px solid var(--cor-principal-violeta);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.texto-descricao {
+  color: var(--cor-texto-secundario);
+  line-height: 1.6;
+}
+
+.secao-avaliacoes {
+  border-top: 1px solid var(--cor-borda);
+  padding-top: 50px;
+  max-width: 1400px;
+  width: 100%;
+  margin: auto;
+  padding-bottom: 90px;
+}
+
+.titulo-secao-avaliacoes {
+  text-align: center;
+  font-family: var(--fonte-destaque);
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+}
+
+.avaliacao-geral {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 40px;
+  background-color: var(--cor-fundo-componente);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.avaliacao-geral .estrelas i {
+  color: var(--cor-destaque-amarelo);
+  font-size: 1.2rem;
+}
+
+.info-avaliacoes {
+  color: var(--cor-texto-secundario);
+}
+
+.form-avaliacao {
+  background-color: var(--cor-fundo-componente);
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--cor-borda);
+  margin-bottom: 40px;
+}
+
+.form-avaliacao h3 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.campo-form-avaliacao {
+  margin-bottom: 20px;
+}
+
+.campo-form-avaliacao label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--cor-texto-secundario);
+}
+
+.campo-form-avaliacao textarea {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--cor-fundo);
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  color: var(--cor-texto-principal);
+  font-family: var(--fonte-corpo);
+  resize: vertical;
+}
+
+.btn-enviar-avaliacao {
+  background-color: var(--cor-destaque-amarelo);
+  color: var(--cor-fundo);
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-enviar-avaliacao:hover {
+  transform: scale(1.05);
+}
+
+.rating-input {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.rating-input input[type="radio"] {
+  display: none;
+}
+
+.rating-input label {
+  font-size: 1.8rem;
+  color: var(--cor-borda);
+  cursor: pointer;
+  transition: color 0.2s;
+  margin: 0 2px !important;
+}
+
+.rating-input label::before {
+  content: "★";
+}
+
+.rating-input input[type="radio"]:checked ~ label,
+.rating-input label:hover,
+.rating-input label:hover ~ label {
+  color: var(--cor-destaque-amarelo);
+}
+
+.lista-comentarios {
+  margin-bottom: 40px;
+}
+
+.comentario-usuario {
+  background-color: var(--cor-fundo-componente);
+  border: 1px solid var(--cor-borda);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.comentario-usuario:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.comentario-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.nome-usuario {
+  font-weight: 600;
+}
+
+.nota-usuario {
+  color: var(--cor-destaque-amarelo);
+  font-weight: 500;
+}
+
+.texto-comentario {
+  color: var(--cor-texto-secundario);
+  font-style: italic;
+  padding-bottom: 5px;
+}
+
+.texto-comentario::before {
+  content: "“";
+  margin-right: 4px;
+}
+
+.texto-comentario::after {
+  content: "”";
+  margin-left: 4px;
+}
+
+.comentario-acoes {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn-acao {
+  background-color: transparent;
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-secundario);
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-acao.btn-editar:hover {
+  background-color: var(--cor-destaque-ciano);
+  border-color: var(--cor-destaque-ciano);
+  color: var(--cor-fundo);
+}
+
+.btn-acao.btn-excluir:hover {
+  background-color: #e55757;
+  border-color: #e55757;
+  color: var(--cor-texto-principal);
+}
+
+.ver-mais {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+@media (max-width: 900px) {
+  .secao-detalhes-jogo {
+    padding-top: 20px;
+    flex-direction: column;
+    gap: 30px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 50px;
+  }
+
+  .imagem-jogo {
+    max-width: 500px;
+    width: 90%;
+    align-self: center;
+  }
+
+  .imagem-jogo img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .info-jogo {
+    align-items: center;
+    width: 100%;
+  }
+
+  .nome-jogo {
+    font-size: 2.8rem;
+    text-align: center;
+  }
+
+  .empresa-jogo {
+    text-align: center;
+  }
+
+  .categorias-jogo {
+    justify-content: center;
+  }
+
+  .btn-comprar-grande {
+    align-self: center;
+  }
+
+  .titulo-descricao {
+    align-self: stretch;
+    text-align: center;
+  }
+
+  .texto-descricao {
+    text-align: left;
+  }
+
+  .secao-avaliacoes {
+    padding-top: 30px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .avaliacao-geral {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 700px) {
+  .nome-jogo {
+    font-size: 2.4rem;
+  }
+
+  .preco-jogo {
+    font-size: 2.2rem;
+  }
+
+  .titulo-secao-avaliacoes {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .secao-detalhes-jogo {
+    padding-top: 20px;
+  }
+
+  .imagem-jogo img {
+    aspect-ratio: 4 / 3;
+  }
+
+  .nome-jogo {
+    font-size: 2rem;
+  }
+
+  .preco-jogo {
+    font-size: 2rem;
+  }
+
+  .btn-comprar-grande {
+    font-size: 1.1rem;
+    padding: 14px 28px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .titulo-descricao {
+    font-size: 1.3rem;
+  }
+
+  .titulo-secao-avaliacoes {
+    font-size: 2rem;
+  }
+
+  .form-avaliacao {
+    padding: 20px;
+  }
+
+  .comentario-cabecalho {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 400px) {
+  .nome-jogo {
+    font-size: 1.8rem;
+  }
+
+  .preco-jogo {
+    font-size: 1.8rem;
+  }
+
+  .btn-comprar-grande {
+    font-size: 1rem;
+    padding: 12px 25px;
+  }
+
+  .tag {
+    padding: 4px 12px;
+    font-size: 0.75rem;
+  }
+
+  .form-avaliacao h3 {
+    font-size: 1.1rem;
+  }
+
+  .rating-input label {
+    font-size: 1.6rem;
+  }
+
+  .btn-acao {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+}

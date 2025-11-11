@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import HeaderAuth from "../../components/Header/HeaderAuth";
 import { isAuthenticated } from "../../utils/auth";
@@ -162,7 +163,6 @@ export default function Home() {
             jogos.map((jogo, index) => {
               const noCarrinho = estaNoCarrinho(jogo.id);
               const nosFavoritos = estaNosFavoritos(jogo.id);
-
               return (
                 <div className="cartao-jogo" key={jogo.id ?? index}>
                   <img
@@ -179,10 +179,20 @@ export default function Home() {
                       <p className="preco">
                         R$ {Number(jogo.preco).toFixed(2).replace(".", ",")}
                       </p>
+
+
                       <div className="acoes-jogo">
-                        <button className="btn-comprar">
-                          <i className="fas fa-shopping-bag"></i> Comprar
-                        </button>
+
+                        {autenticado ?
+                        <Link to={`/jogo/${jogo.id}`} className="btn-comprar">
+                          <i className="fas fa-arrow-right"></i> Ir para
+                        </Link>
+                        
+                        :
+                         <buttons className="btn-comprar" onClick={() => mostrarMensagem("Você precisa estar logado para comprar jogos.", "info")}>
+                          <i className="fas fa-arrow-right"></i> Ir para
+                        </buttons>
+                        }
 
                         {/* Carrinho */}
                         <button
