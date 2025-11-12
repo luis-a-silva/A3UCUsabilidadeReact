@@ -66,7 +66,7 @@ export async function getCategorias() {
 // ===================================================
 // 🔹 Listar jogos por categoria
 // ===================================================
-export async function getJogosPorCategoria(idCategoria) {
+export async function getCategoriaById(idCategoria) {
   const token = localStorage.getItem("token");
   try {
     const res = await axios.get(`${API_URL}/categorias/${idCategoria}`, {

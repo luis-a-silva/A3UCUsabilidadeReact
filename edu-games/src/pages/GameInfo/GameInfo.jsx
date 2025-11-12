@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { mostrarMensagem } from "../../utils/alerta";
-import { getJogoById, getAvaliacoesByJogo, getMediaAvaliacao } from "../../api/jogos";
+import {
+  getJogoById,
+  getAvaliacoesByJogo,
+  getMediaAvaliacao,
+  getCategoriaById,
+} from "../../api/jogos";
 import { useParams, useNavigate } from "react-router-dom";
 import HeaderAuth from "../../components/Header/HeaderAuth";
 import Header from "../../components/Header/Header";
@@ -11,8 +16,9 @@ import "./GameInfo.css";
 import { atualizarHeaderCarrinho } from "../../utils/headerUtil";
 
 export default function GameInfo() {
-  const navigate = useNavigate(); // 👈 usado para redirecionar
+  const navigate = useNavigate();
   const { jogoId } = useParams();
+
   const [jogo, setJogo] = useState(null);
   const [empresa, setEmpresa] = useState(null);
   const [categoria, setCategoria] = useState(null);
@@ -20,13 +26,11 @@ export default function GameInfo() {
   const [media, setMedia] = useState(0);
   const [autenticado, setAutenticado] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [noCarrinho, setNoCarrinho] = useState(false); // 👈 controla o botão
+  const [carrinho, setCarrinho] = useState([]);
 
   useEffect(() => {
-
     const tokenExiste = isAuthenticated();
 
-    // 👇 Se o usuário não estiver autenticado, redireciona
     if (!tokenExiste) {
       mostrarMensagem("Você precisa estar logado para acessar esta página.", "info");
       navigate("/login");
@@ -37,7 +41,7 @@ export default function GameInfo() {
       try {
         setAutenticado(tokenExiste);
 
-        // 🔹 Jogo
+        // 🔹 Busca jogo
         const jogoData = await getJogoById(jogoId);
         setJogo(jogoData);
 
@@ -48,16 +52,10 @@ export default function GameInfo() {
         }
 
         // 🔹 Categoria
-        if (jogoData?.fkCategoria) {
-          try {
-            const categoriaData = await getCategoriaById(jogoData.fkCategoria);
-            setCategoria(categoriaData?.nome || "Sem categoria");
-          } catch {
-            setCategoria("Sem categoria");
-          }
-        }
+        const categoriaData = await getCategoriaById(jogoData.fkCategoria);
+        setCategoria(categoriaData?.nome || "Sem categoria");
 
-        // 🔹 Avaliações
+        // 🔹 Avaliações e média
         const [avaliacoesData, mediaData] = await Promise.all([
           getAvaliacoesByJogo(jogoId),
           getMediaAvaliacao(jogoId),
@@ -65,14 +63,9 @@ export default function GameInfo() {
         setAvaliacoes(avaliacoesData);
         setMedia(mediaData);
 
-        // 🔹 Carrinho — só se logado
-        if (tokenExiste) {
-          const carrinhoItens = await getCarrinho();
-          const estaNoCarrinho = carrinhoItens.some(
-            (item) => item.jogoId === Number(jogoId)
-          );
-          setNoCarrinho(estaNoCarrinho);
-        }
+        // 🔹 Carrinho
+        const carrinhoAPI = await getCarrinho();
+        setCarrinho(carrinhoAPI);
       } catch (err) {
         console.error("Erro ao carregar dados do jogo:", err);
       } finally {
@@ -83,23 +76,42 @@ export default function GameInfo() {
     carregarDados();
   }, [jogoId]);
 
-  // 🔹 Alternar carrinho
+  // 🔹 Função para verificar status do jogo
+  function statusDoJogo(id) {
+    const item = carrinho.find((i) => i.jogoId === Number(id));
+    if (!item) return "fora"; // não está no carrinho
+    if (item.status === "F") return "comprado"; // já comprado
+    return "ativo"; // no carrinho ativo
+  }
+
+  // 🔹 Alternar carrinho (adicionar/remover)
   async function toggleCarrinho(jogoId) {
     if (!autenticado) {
       mostrarMensagem("Você precisa estar logado para adicionar ao carrinho.", "info");
       return;
     }
 
+    const jogoStatus = statusDoJogo(jogoId);
+
     try {
-      if (noCarrinho) {
+      if (jogoStatus === "comprado") {
+        mostrarMensagem("Você já comprou este jogo.", "info");
+        return;
+      }
+
+      if (jogoStatus === "ativo") {
         const res = await removeCarrinho(jogoId);
         mostrarMensagem(res.message || "Item removido do carrinho!", "info");
-        setNoCarrinho(false);
+        setCarrinho((prev) => prev.filter((i) => i.jogoId !== Number(jogoId)));
       } else {
         const res = await addCarrinho(jogoId);
         mostrarMensagem(res.message || "Item adicionado ao carrinho!", "success");
-        setNoCarrinho(true);
+        setCarrinho((prev) => [
+          ...prev,
+          { jogoId: Number(jogoId), status: "A" },
+        ]);
       }
+
       atualizarHeaderCarrinho();
     } catch (err) {
       console.error("Erro no toggleCarrinho:", err);
@@ -110,9 +122,15 @@ export default function GameInfo() {
     }
   }
 
-  // 🔹 Estados de carregamento e erro
-  if (loading) return <p style={{ textAlign: "center", marginTop: "30px" }}>Carregando...</p>;
-  if (!jogo) return <p style={{ textAlign: "center", marginTop: "30px" }}>Jogo não encontrado.</p>;
+  // 🔹 Estados de carregamento
+  if (loading)
+    return <p style={{ textAlign: "center", marginTop: "30px" }}>Carregando...</p>;
+
+  if (!jogo)
+    return <p style={{ textAlign: "center", marginTop: "30px" }}>Jogo não encontrado.</p>;
+
+  // 🔹 Status atual do jogo
+  const jogoStatus = statusDoJogo(jogo.id);
 
   return (
     <>
@@ -146,18 +164,32 @@ export default function GameInfo() {
             </p>
 
             <div className="area-botoes">
-              <button className="btn-comprar-grande">Comprar Agora</button>
 
               {/* 🔹 Botão dinâmico do carrinho */}
               <button
-                className={`btn-adicionar-carrinho-grande ${noCarrinho ? "ativo" : ""}`}
+                className={`btn-adicionar-carrinho-grande ${
+                  jogoStatus === "ativo"
+                    ? "ativo"
+                    : jogoStatus === "comprado"
+                    ? "comprado"
+                    : ""
+                }`}
                 onClick={() => toggleCarrinho(jogo.id)}
               >
                 <i
-                  className={`fas ${noCarrinho ? "fa-cart-arrow-down" : "fa-cart-plus"
-                    }`}
-                ></i>{" "}
-                {noCarrinho ? "Remover do carrinho" : "Adicionar ao carrinho"}
+                  className={`fas ${
+                    jogoStatus === "ativo"
+                      ? "fa-cart-arrow-down"
+                      : jogoStatus === "comprado"
+                      ? "fa-check"
+                      : "fa-cart-plus"
+                  }`}
+                ></i>
+                {jogoStatus === "comprado"
+                  ? " Você já comprou este jogo"
+                  : jogoStatus === "ativo"
+                  ? " Remover do carrinho"
+                  : " Adicionar ao carrinho"}
               </button>
             </div>
 
@@ -180,12 +212,13 @@ export default function GameInfo() {
                 return (
                   <i
                     key={i}
-                    className={`fas ${rating <= Math.floor(media)
-                      ? "fa-star"
-                      : rating - media <= 0.5
+                    className={`fas ${
+                      rating <= Math.floor(media)
+                        ? "fa-star"
+                        : rating - media <= 0.5
                         ? "fa-star-half-alt"
                         : "fa-star-o"
-                      }`}
+                    }`}
                   ></i>
                 );
               })}

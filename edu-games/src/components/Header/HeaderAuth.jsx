@@ -113,7 +113,7 @@ export default function HeaderAuth() {
 
 
                     {/* Botão do carrinho com contador dinâmico */}
-                    <Link to="/cart" className="btn-secundario" id="btnCarrinho" aria-label="Carrinho">
+                    <Link to="/carrinho" className="btn-secundario" id="btnCarrinho" aria-label="Carrinho">
                         <i className="fas fa-shopping-cart"></i>
                         <span className="badge" id="cartCount">{cartCount}</span>
                     </Link>

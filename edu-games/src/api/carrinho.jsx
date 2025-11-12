@@ -22,6 +22,7 @@ export async function getCarrinho() {
         jogoId: i.fkJogo,
         carrinhoId: c.id,
         itemId: i.id,
+        status: c.status, // 🔹 inclui o status do carrinho
       }))
     );
 

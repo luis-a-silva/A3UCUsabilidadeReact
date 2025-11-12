@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import HeaderAuth from "../../components/Header/HeaderAuth";
 import { isAuthenticated } from "../../utils/auth";
-import { getAllJogos, getPublicJogos } from "../../api/jogos";
+import { getAllJogos, getPublicJogos, getCategoriaById } from "../../api/jogos";
 import { addCarrinho, removeCarrinho, getCarrinho } from "../../api/carrinho";
 import { addFavorito, removeFavorito, getFavoritos } from "../../api/favoritos";
 import { mostrarMensagem } from "../../utils/alerta";
@@ -31,6 +31,28 @@ export default function Home() {
           : await getPublicJogos();
 
         setJogos(Array.isArray(dadosJogos) ? dadosJogos : []);
+
+        // 🔹 Carrega categorias de todos os jogos
+        const jogosComCategorias = await Promise.all(
+          dadosJogos.map(async (jogo) => {
+            try {
+              const categoria = jogo.fkCategoria
+                ? await getCategoriaById(jogo.fkCategoria)
+                : null;
+              return {
+                ...jogo,
+                categoriaNome: categoria?.nome || "Sem categoria",
+              };
+            } catch {
+              return {
+                ...jogo,
+                categoriaNome: "Sem categoria",
+              };
+            }
+          })
+        );
+
+        setJogos(jogosComCategorias);
 
         if (tokenExiste) {
           const [carrinhoAPI, favoritosAPI] = await Promise.all([
@@ -69,8 +91,16 @@ export default function Home() {
   function estaNoCarrinho(id) {
     return carrinho.some((i) => i.jogoId === id);
   }
+  
   function estaNosFavoritos(id) {
     return favoritos.some((i) => i.jogoId === id);
+  }
+
+  function statusDoJogo(id) {
+    const item = carrinho.find((i) => i.jogoId === id);
+    if (!item) return "fora";
+    if (item.status === "F") return "comprado";
+    return "ativo";
   }
 
   async function toggleCarrinho(jogoId) {
@@ -127,7 +157,7 @@ export default function Home() {
   // ======== Renderização ========
 
   return (
-    <div className="content">
+    <div>
       {autenticado ? <HeaderAuth /> : <Header />}
 
       <section className="games-section">
@@ -152,33 +182,49 @@ export default function Home() {
                   />
                   <div className="info-jogo">
                     <h3>{jogo.nome}</h3>
-                    <p className="categoria">{jogo.categoria?.trim() || "Sem categoria"}</p>
+                    <p className="categoria">
+                      {jogo.categoriaNome || "Sem categoria"}
+                    </p>                    
+                    
                     <div className="preco-comprar">
                       <p className="preco">
                         R$ {Number(jogo.preco).toFixed(2).replace(".", ",")}
                       </p>
-
-
+                    </div>
+                      
                       <div className="acoes-jogo">
 
                         {autenticado ?
-                        <Link to={`/jogo/${jogo.id}`} className="btn-comprar">
-                          <i className="fas fa-arrow-right"></i> Ir para
-                        </Link>
-                        
-                        :
-                         <buttons className="btn-comprar" onClick={() => mostrarMensagem("Você precisa estar logado para comprar jogos.", "info")}>
-                          <i className="fas fa-arrow-right"></i> Ir para
-                        </buttons>
+                          <Link to={`/jogo/${jogo.id}`} className="btn-comprar">
+                            <i className="fas fa-arrow-right"></i> Ir para
+                          </Link>
+
+                          :
+                          <buttons className="btn-comprar" onClick={() => mostrarMensagem("Você precisa estar logado para comprar jogos.", "info")}>
+                            <i className="fas fa-arrow-right"></i> Ir para
+                          </buttons>
                         }
 
                         {/* Carrinho */}
                         <button
-                          className={`btn-add-cart ${noCarrinho ? "ativo" : ""}`}
-                          onClick={() => toggleCarrinho(jogo.id)}
+                          className={`btn-add-cart ${statusDoJogo(jogo.id) === "ativo"
+                              ? "ativo"
+                              : statusDoJogo(jogo.id) === "comprado"
+                                ? "comprado"
+                                : ""
+                            }`}
+                          onClick={() =>
+                            statusDoJogo(jogo.id) === "comprado"
+                              ? mostrarMensagem("Você já comprou este jogo.", "info")
+                              : toggleCarrinho(jogo.id)
+                          }
                         >
                           <i
-                            className={`fas ${noCarrinho ? "fa-cart-arrow-down" : "fa-cart-plus"
+                            className={`fas ${statusDoJogo(jogo.id) === "ativo"
+                                ? "fa-cart-arrow-down"
+                                : statusDoJogo(jogo.id) === "comprado"
+                                  ? "fa-check"
+                                  : "fa-cart-plus"
                               }`}
                           ></i>
                         </button>
@@ -193,7 +239,6 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                </div>
               );
             })
           ) : (
