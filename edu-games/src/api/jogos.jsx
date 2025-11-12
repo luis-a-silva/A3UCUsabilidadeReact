@@ -1,11 +1,12 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:3000/api/v1";
-const token = localStorage.getItem("token");
+
 // ===================================================
 // 🔹 Listar todos os jogos (rota autenticada)
 // ===================================================
 export async function getAllJogos() {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.get(`${API_URL}/jogos`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -34,6 +35,7 @@ export async function getPublicJogos() {
 // 🔹 Listar jogo por ID
 // ===================================================
 export async function getJogoById(id) {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.get(`${API_URL}/jogos/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -49,6 +51,7 @@ export async function getJogoById(id) {
 // 🔹 Listar todas as categorias
 // ===================================================
 export async function getCategorias() {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.get(`${API_URL}/categorias`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -64,6 +67,7 @@ export async function getCategorias() {
 // 🔹 Listar jogos por categoria
 // ===================================================
 export async function getJogosPorCategoria(idCategoria) {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.get(`${API_URL}/categorias/${idCategoria}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -80,6 +84,7 @@ export async function getJogosPorCategoria(idCategoria) {
 // 🔹 Buscar todas as avaliações de um jogo
 // ===================================================
 export async function getAvaliacoesByJogo(jogoId) {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.get(`${API_URL}/avaliacoes?jogoId=${jogoId}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -95,6 +100,7 @@ export async function getAvaliacoesByJogo(jogoId) {
 // 🔹 Buscar média das avaliações de um jogo
 // ===================================================
 export async function getMediaAvaliacao(jogoId) {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.get(`${API_URL}/avaliacoes/media/${jogoId}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -110,6 +116,7 @@ export async function getMediaAvaliacao(jogoId) {
 // 🔹 Criar nova avaliação
 // ===================================================
 export async function addAvaliacao(jogoId, nota, comentario = "") {
+  const token = localStorage.getItem("token");
   try {
     const body = { jogoId, nota, comentario };
     const res = await axios.post(`${API_URL}/avaliacoes`, body, {
@@ -127,6 +134,7 @@ export async function addAvaliacao(jogoId, nota, comentario = "") {
 // 🔹 Criar jogo (autenticado)
 // ===================================================
 export async function createJogo(jogo) {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.post(`${API_URL}/jogos`, jogo, {
       headers: { Authorization: `Bearer ${token}` },
@@ -142,6 +150,7 @@ export async function createJogo(jogo) {
 // 🔹 Atualizar jogo (autenticado)
 // ===================================================
 export async function updateJogo(id, jogo) {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.put(`${API_URL}/jogos/${id}`, jogo, {
       headers: { Authorization: `Bearer ${token}` },
@@ -157,6 +166,7 @@ export async function updateJogo(id, jogo) {
 // 🔹 Deletar jogo (autenticado)
 // ===================================================
 export async function deleteJogo(id) {
+  const token = localStorage.getItem("token");
   try {
     const res = await axios.delete(`${API_URL}/jogos/${id}`, {
       headers: { Authorization: `Bearer ${token}` },

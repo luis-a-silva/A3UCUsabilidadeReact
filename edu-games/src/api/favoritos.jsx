@@ -6,8 +6,8 @@ const API_URL = "http://localhost:3000/api/v1/lista-desejo";
 // 🔹 Obter lista de desejos
 // ===================================================
 export async function getFavoritos() {
+  const token = localStorage.getItem("token");
   try {
-    const token = localStorage.getItem("token");
     const res = await axios.get(API_URL, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -40,6 +40,7 @@ export async function addFavorito(jogoId) {
 // 🔹 Remover dos favoritos
 // ===================================================
 export async function removeFavorito(jogoId) {
+  const token = localStorage.getItem("token");
   try {
     const token = localStorage.getItem("token");
     const res = await axios.delete(API_URL, {

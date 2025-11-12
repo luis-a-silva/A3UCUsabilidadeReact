@@ -25,45 +25,49 @@ export async function getCarrinho() {
       }))
     );
 
+    // 🔹 Atualiza contador no header se callback existir
+    if (typeof onCountUpdate === "function") {
+      onCountUpdate(itens.length);
+    }
+
     return itens;
   } catch (err) {
     console.error("Erro ao buscar carrinho:", err);
-    return []; // garante retorno vazio e evita erro no front
+    if (typeof onCountUpdate === "function") onCountUpdate(0);
+    return [];
   }
 }
-
-
 
 // ===================================================
 // 🔹 Adicionar item ao carrinho
 // ===================================================
 export async function addCarrinho(jogoId) {
-  try {
-    const token = localStorage.getItem("token");
-    const res = await axios.post(
-      `${API_URL}/add`,
-      { jogoId },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return res.data;
-  } catch (err) {
-    console.error("Erro ao adicionar ao carrinho:", err);
-    throw err;
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(
+        `${API_URL}/add`,
+        { jogoId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data;
+    } catch (err) {
+      console.error("Erro ao adicionar ao carrinho:", err);
+      throw err;
+    }
   }
-}
 
-// ===================================================
-// 🔹 Remover item do carrinho
-// ===================================================
-export async function removeCarrinho(jogoId) {
-  try {
-    const token = localStorage.getItem("token");
-    const res = await axios.delete(`${API_URL}/${jogoId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data;
-  } catch (err) {
-    console.error("Erro ao remover item do carrinho:", err);
-    throw err;
+  // ===================================================
+  // 🔹 Remover item do carrinho
+  // ===================================================
+  export async function removeCarrinho(jogoId) {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.delete(`${API_URL}/${jogoId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data;
+    } catch (err) {
+      console.error("Erro ao remover item do carrinho:", err);
+      throw err;
+    }
   }
-}

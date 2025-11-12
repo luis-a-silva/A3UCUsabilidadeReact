@@ -8,6 +8,7 @@ import { addCarrinho, removeCarrinho, getCarrinho } from "../../api/carrinho";
 import { addFavorito, removeFavorito, getFavoritos } from "../../api/favoritos";
 import { mostrarMensagem } from "../../utils/alerta";
 import "./Home.css";
+import { atualizarHeaderCarrinho } from "../../utils/headerUtil";
 
 export default function Home() {
   const [jogos, setJogos] = useState([]);
@@ -58,8 +59,6 @@ export default function Home() {
     carregarTudo();
   }, []);
 
-  console.log("Valor de autenticado:", autenticado);
-
   // Enquanto ainda verifica autenticação
   if (autenticado === null) {
     return <p style={{ textAlign: "center", marginTop: "20px" }}>Carregando...</p>;
@@ -90,6 +89,7 @@ export default function Home() {
         setCarrinho((prev) => [...prev, { jogoId }]);
         mostrarMensagem(res.message || "Item adicionado ao carrinho!", "success");
       }
+      atualizarHeaderCarrinho();
     } catch (err) {
       console.error("Erro no toggleCarrinho:", err);
       mostrarMensagem(
@@ -121,28 +121,6 @@ export default function Home() {
         err.response?.data?.message || "Erro ao atualizar favoritos!",
         "danger"
       );
-    }
-  }
-
-  async function toggleFavorito(jogoId) {
-    if (!autenticado) {
-      mostrarMensagem("Você precisa estar logado para favoritar jogos.", "info");
-      return;
-    }
-
-    try {
-      if (estaNosFavoritos(jogoId)) {
-        await removeFavorito(jogoId);
-        setFavoritos((prev) => prev.filter((f) => f.jogoId !== jogoId && f.id !== jogoId));
-        mostrarMensagem("Removido dos favoritos!", "info");
-      } else {
-        await addFavorito(jogoId);
-        setFavoritos((prev) => [...prev, { jogoId }]);
-        mostrarMensagem("Adicionado aos favoritos!", "success");
-      }
-    } catch (err) {
-      console.error("Erro no toggleFavorito:", err);
-      mostrarMensagem("Erro ao atualizar favoritos!", "danger");
     }
   }
 

@@ -1,31 +1,47 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { mostrarMensagem } from "../../utils/alerta";
+import { getJogoById, getAvaliacoesByJogo, getMediaAvaliacao } from "../../api/jogos";
+import { useParams, useNavigate } from "react-router-dom";
 import HeaderAuth from "../../components/Header/HeaderAuth";
 import Header from "../../components/Header/Header";
 import { isAuthenticated } from "../../utils/auth";
-import { getJogoById, getAvaliacoesByJogo, getMediaAvaliacao, getJogosPorCategoria } from "../../api/jogos";
+import { addCarrinho, removeCarrinho, getCarrinho } from "../../api/carrinho";
 import { getEmpresaById } from "../../api/empresa";
 import "./GameInfo.css";
+import { atualizarHeaderCarrinho } from "../../utils/headerUtil";
 
 export default function GameInfo() {
+  const navigate = useNavigate(); // 👈 usado para redirecionar
   const { jogoId } = useParams();
   const [jogo, setJogo] = useState(null);
   const [empresa, setEmpresa] = useState(null);
+  const [categoria, setCategoria] = useState(null);
   const [avaliacoes, setAvaliacoes] = useState([]);
   const [media, setMedia] = useState(0);
-  const [categoria, setCategoria] = useState(null);
   const [autenticado, setAutenticado] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [noCarrinho, setNoCarrinho] = useState(false); // 👈 controla o botão
 
   useEffect(() => {
+
+    const tokenExiste = isAuthenticated();
+
+    // 👇 Se o usuário não estiver autenticado, redireciona
+    if (!tokenExiste) {
+      mostrarMensagem("Você precisa estar logado para acessar esta página.", "info");
+      navigate("/login");
+      return;
+    }
+
     async function carregarDados() {
       try {
-        const tokenExiste = isAuthenticated();
         setAutenticado(tokenExiste);
 
+        // 🔹 Jogo
         const jogoData = await getJogoById(jogoId);
         setJogo(jogoData);
-        console.log("Dados do jogo:", jogoData);
+
+        // 🔹 Empresa
         if (jogoData?.fkEmpresa) {
           const empresaData = await getEmpresaById(jogoData.fkEmpresa);
           setEmpresa(empresaData);
@@ -34,24 +50,29 @@ export default function GameInfo() {
         // 🔹 Categoria
         if (jogoData?.fkCategoria) {
           try {
-            const categoriaData = await getJogosPorCategoria(jogoData.fkCategoria);
-            // A API pode retornar { id: 20, nome: "Aventura" }
+            const categoriaData = await getCategoriaById(jogoData.fkCategoria);
             setCategoria(categoriaData?.nome || "Sem categoria");
           } catch {
             setCategoria("Sem categoria");
           }
-        } else {
-          setCategoria("Sem categoria");
         }
 
-
+        // 🔹 Avaliações
         const [avaliacoesData, mediaData] = await Promise.all([
           getAvaliacoesByJogo(jogoId),
           getMediaAvaliacao(jogoId),
         ]);
-
         setAvaliacoes(avaliacoesData);
         setMedia(mediaData);
+
+        // 🔹 Carrinho — só se logado
+        if (tokenExiste) {
+          const carrinhoItens = await getCarrinho();
+          const estaNoCarrinho = carrinhoItens.some(
+            (item) => item.jogoId === Number(jogoId)
+          );
+          setNoCarrinho(estaNoCarrinho);
+        }
       } catch (err) {
         console.error("Erro ao carregar dados do jogo:", err);
       } finally {
@@ -62,20 +83,42 @@ export default function GameInfo() {
     carregarDados();
   }, [jogoId]);
 
-  if (loading) {
-    return <p style={{ textAlign: "center", marginTop: "30px" }}>Carregando...</p>;
+  // 🔹 Alternar carrinho
+  async function toggleCarrinho(jogoId) {
+    if (!autenticado) {
+      mostrarMensagem("Você precisa estar logado para adicionar ao carrinho.", "info");
+      return;
+    }
+
+    try {
+      if (noCarrinho) {
+        const res = await removeCarrinho(jogoId);
+        mostrarMensagem(res.message || "Item removido do carrinho!", "info");
+        setNoCarrinho(false);
+      } else {
+        const res = await addCarrinho(jogoId);
+        mostrarMensagem(res.message || "Item adicionado ao carrinho!", "success");
+        setNoCarrinho(true);
+      }
+      atualizarHeaderCarrinho();
+    } catch (err) {
+      console.error("Erro no toggleCarrinho:", err);
+      mostrarMensagem(
+        err.response?.data?.message || "Erro ao atualizar carrinho!",
+        "danger"
+      );
+    }
   }
 
-  if (!jogo) {
-    return <p style={{ textAlign: "center", marginTop: "30px" }}>Jogo não encontrado.</p>;
-  }
+  // 🔹 Estados de carregamento e erro
+  if (loading) return <p style={{ textAlign: "center", marginTop: "30px" }}>Carregando...</p>;
+  if (!jogo) return <p style={{ textAlign: "center", marginTop: "30px" }}>Jogo não encontrado.</p>;
 
   return (
     <>
       {autenticado ? <HeaderAuth /> : <Header />}
 
       <main className="container">
-        {/* 🔹 Detalhes do Jogo */}
         <section className="secao-detalhes-jogo">
           <div className="imagem-jogo">
             <img
@@ -91,12 +134,7 @@ export default function GameInfo() {
             <h1 className="nome-jogo">{jogo.nome}</h1>
 
             <p className="empresa-jogo">
-              Empresa:{" "}
-              {empresa ? (
-                <a href="#">{empresa.nome}</a>
-              ) : (
-                <span>Não informada</span>
-              )}
+              Empresa: {empresa ? <a href="#">{empresa.nome}</a> : <span>Não informada</span>}
             </p>
 
             <div className="categorias-jogo">
@@ -104,13 +142,24 @@ export default function GameInfo() {
             </div>
 
             <p className="preco-jogo">
-              R${" "}
-              {Number(jogo.preco).toFixed(2).replace(".", ",")}
+              R$ {Number(jogo.preco).toFixed(2).replace(".", ",")}
             </p>
 
-            <button className="btn-comprar btn-comprar-grande">
-              Comprar Agora
-            </button>
+            <div className="area-botoes">
+              <button className="btn-comprar-grande">Comprar Agora</button>
+
+              {/* 🔹 Botão dinâmico do carrinho */}
+              <button
+                className={`btn-adicionar-carrinho-grande ${noCarrinho ? "ativo" : ""}`}
+                onClick={() => toggleCarrinho(jogo.id)}
+              >
+                <i
+                  className={`fas ${noCarrinho ? "fa-cart-arrow-down" : "fa-cart-plus"
+                    }`}
+                ></i>{" "}
+                {noCarrinho ? "Remover do carrinho" : "Adicionar ao carrinho"}
+              </button>
+            </div>
 
             <h2 className="titulo-descricao">Descrição completa do jogo</h2>
             <p className="texto-descricao">
@@ -156,11 +205,7 @@ export default function GameInfo() {
           ) : (
             <div className="lista-comentarios">
               {avaliacoes.map((av) => (
-                <div
-                  key={av.id}
-                  className="comentario-usuario"
-                  data-avaliacao-id={av.id}
-                >
+                <div key={av.id} className="comentario-usuario">
                   <div className="comentario-cabecalho">
                     <span className="nome-usuario">
                       Usuário: {av.usuario || "Anônimo"}

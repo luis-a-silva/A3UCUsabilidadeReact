@@ -1,8 +1,8 @@
-import { useEffect, useState  } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo_edugames_horizontal.png";
 import { alternarModos } from "../../utils/tema";
-import { getCarrinho } from "../../api/carrinho";
-
+import { atualizarHeaderCarrinho } from "../../utils/headerUtil";
 import { inicializarDropdownPerfil } from "../../utils/perfilDropdown";
 import "./Header.css";
 
@@ -11,26 +11,9 @@ export default function HeaderAuth() {
     const [cartCount, setCartCount] = useState(0);
 
     useEffect(() => {
-        // Inicializa comportamentos utilitários
         alternarModos();
         inicializarDropdownPerfil();
-
-        // 🔹 Busca a contagem do carrinho
-        async function carregarCarrinho() {
-            try {
-                const itens = await getCarrinho();
-                // O getCarrinho() já retorna um array normalizado
-                setCartCount(itens.length);
-            } catch (err) {
-                console.error("Erro ao buscar carrinho:", err);
-            }
-        }
-
-        carregarCarrinho();
-
-        // 🔹 Atualiza a cada 30 segundos (opcional)
-        const interval = setInterval(carregarCarrinho, 30000);
-        return () => clearInterval(interval);
+        atualizarHeaderCarrinho(); // ✅ Atualiza ao montar
     }, []);
 
     // 🔹 Função para sair da conta
@@ -130,10 +113,10 @@ export default function HeaderAuth() {
 
 
                     {/* Botão do carrinho com contador dinâmico */}
-                    <button className="btn-secundario" id="btnCarrinho" aria-label="Carrinho">
+                    <Link to="/cart" className="btn-secundario" id="btnCarrinho" aria-label="Carrinho">
                         <i className="fas fa-shopping-cart"></i>
                         <span className="badge" id="cartCount">{cartCount}</span>
-                    </button>
+                    </Link>
 
                     {/* Botões de tema */}
                     <button aria-label="Modo claro" id="whiteMode" className="btn-primario">
