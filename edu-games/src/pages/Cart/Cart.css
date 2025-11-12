@@ -155,6 +155,7 @@
   border: 1px solid var(--cor-borda);
   display: flex;
   flex-direction: column; 
+  margin-top: 65px;
 }
 
 .resumo-compra-secao h3 {
