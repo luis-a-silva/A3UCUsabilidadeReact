@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="shortcut icon" href="../assets/favicon.png" type="image/x-icon"/>
+  <title>Meu Perfil - EduGames Admin</title>
+
+  <!-- FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Faster+One&family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="adminprofile.css"/>
+</head>
+<body>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="perfil-layout container">
+
+    <!-- SIDEBAR -->
+    <aside class="perfil-sidebar">
+      <div class="perfil-usuario-card">
+        <h3>Meu Perfil</h3>
+        <img 
+          src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop" 
+          alt="Foto do Admin" 
+          class="foto-usuario"
+        />
+        <p class="nome-usuario" id="display-nome">João Silva</p>
+        <p class="role-admin">Administrador</p>
+
+        <!-- BOTÃO ELEGANTE -->
+        <a href="admin-hub.html" class="btn-gerenciamento">
+          <i class="fas fa-cogs"></i> Painel Administrativo
+        </a>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="perfil-conteudo">
+      <h2>Dados do meu Perfil</h2>
+
+      <div class="perfil-dados-card">
+        <h3>Informações Básicas</h3>
+
+        <div class="form-group">
+          <label>Nome Completo</label>
+          <div class="input-wrapper">
+            <input type="text" id="input-nome" value="João Silva" readonly />
+            <button class="btn-editar" data-target="input-nome">Editar</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email:</label>
+          <div class="input-wrapper">
+            <input type="email" id="input-email" value="admin@edugames.com" readonly />
+            <button class="btn-editar" data-target="input-email">Editar</button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-salvar" id="btn-salvar">Salvar</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script src="adminprofile.js"></script>
+</body>
+</html>

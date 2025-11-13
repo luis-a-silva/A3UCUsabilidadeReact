@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="shortcut icon" href="../assets/favicon.png" type="image/x-icon"/>
+  <title>Rankings - EduGames Admin</title>
+
+  <!-- FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Faster+One&family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="admin-rankings.css"/>
+</head>
+<body>
+
+  <!-- CONTEÚDO -->
+  <main class="container">
+    <!-- NAVEGAÇÃO SUPERIOR -->
+    <section class="admin-nav-section">
+      <h1>Painel Administrativo</h1>
+      <nav class="admin-nav-links">
+        <a href="admin-gerenciamento.html" class="nav-btn">
+          <i class="fas fa-cogs"></i> Gerenciamento
+        </a>
+        <a href="admin-dashboard.html" class="nav-btn">
+          <i class="fas fa-chart-line"></i> Dashboard de Vendas
+        </a>
+        <a href="admin-rankings.html" class="nav-btn active">
+          <i class="fas fa-trophy"></i> Rankings
+        </a>
+      </nav>
+    </section>
+
+    <!-- RANKING JOGO MAIS VENDIDO -->
+    <section class="ranking-main">
+      <div class="ranking-card">
+        <h2>Ranking Jogo mais Vendido</h2>
+        <div class="top1-game">
+          <img src="https://via.placeholder.com/300x150?text=The+Witcher+3" alt="The Witcher 3" class="game-image">
+          <div class="game-info">
+            <h3>#1 The Witcher 3</h3>
+            <p><strong>1.250 vendas</strong> • R$ 162.500,00 em receita</p>
+            <p class="game-desc">Aventura épica de mundo aberto com narrativa profunda.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOP 5 POR CATEGORIA -->
+    <section class="ranking-categories">
+      <!-- AÇÃO -->
+      <div class="category-card">
+        <h3>Top 5 jogos de ação</h3>
+        <ol class="top-list">
+          <li><span class="game-name">God of War</span> <span class="sales">980 vendas</span></li>
+          <li><span class="game-name">Spider-Man</span> <span class="sales">850 vendas</span></li>
+          <li><span class="game-name">Call of Duty: Modern Warfare</span> <span class="sales">720 vendas</span></li>
+          <li><span class="game-name">DOOM Eternal</span> <span class="sales">680 vendas</span></li>
+          <li><span class="game-name">Devil May Cry 5</span> <span class="sales">620 vendas</span></li>
+        </ol>
+      </div>
+
+      <!-- AVENTURA -->
+      <div class="category-card">
+        <h3>Top 5 jogos de aventura</h3>
+        <ol class="top-list">
+          <li><span class="game-name">The Legend of Zelda: Breath of the Wild</span> <span class="sales">1.100 vendas</span></li>
+          <li><span class="game-name">Uncharted 4</span> <span class="sales">890 vendas</span></li>
+          <li><span class="game-name">Tomb Raider</span> <span class="sales">780 vendas</span></li>
+          <li><span class="game-name">Red Dead Redemption 2</span> <span class="sales">680 vendas</span></li>
+          <li><span class="game-name">Assassin’s Creed Valhalla</span> <span class="sales">610 vendas</span></li>
+        </ol>
+      </div>
+
+      <!-- TERROR -->
+      <div class="category-card">
+        <h3>Top 5 jogos de terror</h3>
+        <ol class="top-list">
+          <li><span class="game-name">Resident Evil Village</span> <span class="sales">920 vendas</span></li>
+          <li><span class="game-name">Dead by Daylight</span> <span class="sales">810 vendas</span></li>
+          <li><span class="game-name">Outlast 2</span> <span class="sales">700 vendas</span></li>
+          <li><span class="game-name">Amnesia: Rebirth</span> <span class="sales">650 vendas</span></li>
+          <li><span class="game-name">Phasmophobia</span> <span class="sales">590 vendas</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- RANKING DE AVALIAÇÃO -->
+    <section class="ranking-avg">
+      <div class="ranking-card">
+        <h2>Ranking de Avaliação de Jogo mais avaliado</h2>
+        <ol class="top-avg-list">
+          <li>
+            <div class="avg-item">
+              <span class="game-name">The Last of Us Part II</span>
+              <span class="rating">4.9</span>
+            </div>
+          </li>
+          <li>
+            <div class="avg-item">
+              <span class="game-name">Red Dead Redemption 2</span>
+              <span class="rating">4.8</span>
+            </div>
+          </li>
+          <li>
+            <div class="avg-item">
+              <span class="game-name">God of War</span>
+              <span class="rating">4.8</span>
+            </div>
+          </li>
+          <li>
+            <div class="avg-item">
+              <span class="game-name">The Witcher 3</span>
+              <span class="rating">4.7</span>
+            </div>
+          </li>
+          <li>
+            <div class="avg-item">
+              <span class="game-name">Hades</span>
+              <span class="rating">4.7</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>

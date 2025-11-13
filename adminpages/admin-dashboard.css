@@ -1,0 +1,207 @@
+/* ===== VARIÁVEIS ===== */
+:root {
+  --cor-principal-violeta: #8257e5;
+  --cor-destaque-amarelo: #FFD60A;
+  --cor-destaque-ciano: #06b6d4;
+  --cor-fundo-componente: #1a1a2e;
+  --cor-borda: #333;
+  --cor-texto-principal: #e0e0e0;
+  --cor-texto-secundario: #aaa;
+  --cor-fundo: #0d0d1a;
+  --fonte-destaque: 'Poppins', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fonte-destaque);
+  background: var(--cor-fundo);
+  color: var(--cor-texto-principal);
+  min-height: 100vh;
+  padding-top: 2rem;
+}
+
+/* ===== NAVEGAÇÃO SUPERIOR ===== */
+.container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+.admin-nav-section {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.admin-nav-section h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.admin-nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background: #25253a;
+  border: 2px solid #333;
+  color: white;
+  padding: 1rem 1.8rem;
+  border-radius: 16px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 200px;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.nav-btn i { font-size: 1.5rem; color: var(--cor-destaque-ciano); }
+.nav-btn:hover { background: #2a2a42; border-color: var(--cor-principal-violeta); transform: translateY(-4px); }
+.nav-btn.active { background: var(--cor-principal-violeta); border-color: var(--cor-principal-violeta); }
+
+/* ===== GRÁFICO ===== */
+.chart-section {
+  margin-bottom: 3rem;
+}
+
+.chart-container {
+  background: var(--cor-fundo-componente);
+  border: 1px solid var(--cor-borda);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  color: white;
+}
+
+.chart-placeholder {
+  width: 100%;
+  height: 250px;
+  background: #111;
+  border: 1px dashed #444;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* ===== MÉTRICAS ===== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.metric-card {
+  background: var(--cor-fundo-componente);
+  border: 1px solid var(--cor-borda);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  transition: transform 0.3s;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+}
+
+.metric-card h3 {
+  font-size: 1rem;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 0.8rem;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cor-destaque-amarelo);
+}
+
+/* ===== TOP 5 JOGOS ===== */
+.top-games-section {
+  margin-bottom: 3rem;
+}
+
+.top-games-container {
+  background: var(--cor-fundo-componente);
+  border: 1px solid var(--cor-borda);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.top-games-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  color: white;
+}
+
+.top-games-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.top-games-table th,
+.top-games-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.top-games-table th {
+  color: var(--cor-texto-secundario);
+  font-weight: 600;
+}
+
+.top-games-table td {
+  color: white;
+}
+
+.top-games-table tr:hover {
+  background: #25253a;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 992px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-nav-section h1 { font-size: 1.6rem; }
+  .chart-container, .top-games-container { padding: 1.2rem; }
+  .metric-value { font-size: 1.8rem; }
+}
+
+@media (max-width: 480px) {
+  .nav-btn { min-width: 160px; font-size: 0.95rem; padding: 0.8rem 1.2rem; }
+  .top-games-table { font-size: 0.85rem; }
+  .top-games-table th, .top-games-table td { padding: 0.8rem; }
+}

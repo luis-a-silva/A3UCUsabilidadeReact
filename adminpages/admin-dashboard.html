@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="shortcut icon" href="../assets/favicon.png" type="image/x-icon"/>
+  <title>Dashboard de Vendas - EduGames Admin</title>
+
+  <!-- FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Faster+One&family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="admin-dashboard.css"/>
+</head>
+<body>
+
+  <!-- CONTEÚDO -->
+  <main class="container">
+    <!-- NAVEGAÇÃO SUPERIOR -->
+    <section class="admin-nav-section">
+      <h1>Painel Administrativo</h1>
+      <nav class="admin-nav-links">
+        <a href="admin-gerenciamento.html" class="nav-btn">
+          <i class="fas fa-cogs"></i> Gerenciamento
+        </a>
+        <a href="admin-dashboard.html" class="nav-btn active">
+          <i class="fas fa-chart-line"></i> Dashboard de Vendas
+        </a>
+        <a href="admin-rankings.html" class="nav-btn">
+          <i class="fas fa-trophy"></i> Rankings
+        </a>
+      </nav>
+    </section>
+
+    <!-- GRÁFICO DE INCOME MENSAL -->
+    <section class="chart-section">
+      <div class="chart-container">
+        <h2>Gráfico de Income Mensal</h2>
+        <div class="chart-placeholder">
+          <p>Gráfico será exibido aqui (Chart.js)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MÉTRICAS -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <h3>Total de Jogos Vendidos</h3>
+        <p class="metric-value">4.480</p>
+      </div>
+      <div class="metric-card">
+        <h3>Total de Vendas</h3>
+        <p class="metric-value">R$ 582.400,00</p>
+      </div>
+      <div class="metric-card">
+        <h3>Média de Avaliação</h3>
+        <p class="metric-value">4.8</p>
+      </div>
+    </section>
+
+    <!-- TOP 5 JOGOS -->
+    <section class="top-games-section">
+      <div class="top-games-container">
+        <h2>Top 5 Jogos mais Vendidos</h2>
+        <table class="top-games-table">
+          <thead>
+            <tr>
+              <th>Posição</th>
+              <th>Jogo</th>
+              <th>Vendas</th>
+              <th>Receita</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#1</td>
+              <td>The Witcher 3</td>
+              <td>1.250</td>
+              <td>R$ 162.500,00</td>
+            </tr>
+            <tr>
+              <td>#2</td>
+              <td>God of War</td>
+              <td>980</td>
+              <td>R$ 127.400,00</td>
+            </tr>
+            <tr>
+              <td>#3</td>
+              <td>Spider-Man</td>
+              <td>850</td>
+              <td>R$ 110.500,00</td>
+            </tr>
+            <tr>
+              <td>#4</td>
+              <td>Cyberpunk 2077</td>
+              <td>720</td>
+              <td>R$ 93.600,00</td>
+            </tr>
+            <tr>
+              <td>#5</td>
+              <td>Red Dead Redemption 2</td>
+              <td>680</td>
+              <td>R$ 88.400,00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>

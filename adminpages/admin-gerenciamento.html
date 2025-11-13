@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="shortcut icon" href="../assets/favicon.png" type="image/x-icon"/>
+  <title>Gerenciamento - EduGames Admin</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Faster+One&family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+
+  <link rel="stylesheet" href="admin-gerenciamento.css"/>
+</head>
+<body>
+
+
+  <main class="container">
+    
+    <section class="admin-nav-section">
+      <h1>Painel Administrativo</h1>
+      <nav class="admin-nav-links">
+        <a href="admin-gerenciamento.html" class="nav-btn active">
+          <i class="fas fa-cogs"></i> Gerenciamento
+        </a>
+        <a href="admin-dashboard.html" class="nav-btn">
+          <i class="fas fa-chart-line"></i> Dashboard de Vendas
+        </a>
+        <a href="admin-rankings.html" class="nav-btn">
+          <i class="fas fa-trophy"></i> Rankings
+        </a>
+      </nav>
+    </section>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="gerenciamento-content">
+      <!-- MENU LATERAL -->
+      <aside class="sidebar-menu">
+        <button class="menu-item active" data-section="empresas">Empresas</button>
+        <button class="menu-item" data-section="categorias">Categorias</button>
+        <button class="menu-item" data-section="jogos">Jogos</button>
+      </aside>
+
+      <!-- ÁREA PRINCIPAL -->
+      <section class="main-area">
+        <!-- EMPRESAS -->
+        <div class="section-content active" id="empresas">
+          <div class="section-header">
+            <button class="btn-add" data-modal="modal-empresa">
+              <i class="fas fa-plus"></i> Botão cadastrar empresa
+            </button>
+            <p class="count">Qtd de empresas cadastradas: <strong id="count-empresas">0</strong></p>
+          </div>
+          <div class="cards-grid" id="empresas-grid"></div>
+        </div>
+
+        <!-- CATEGORIAS -->
+        <div class="section-content" id="categorias">
+          <div class="section-header">
+            <button class="btn-add" data-modal="modal-categoria">
+              <i class="fas fa-plus"></i> Botão cadastrar categoria
+            </button>
+            <p class="count">Qtd de categorias cadastradas: <strong id="count-categorias">0</strong></p>
+          </div>
+          <div class="cards-grid" id="categorias-grid"></div>
+        </div>
+
+        <!-- JOGOS -->
+        <div class="section-content" id="jogos">
+          <div class="section-header">
+            <button class="btn-add" data-modal="modal-jogo">
+              <i class="fas fa-plus"></i> Botão cadastrar jogo
+            </button>
+            <p class="count">Qtd de jogos cadastrados: <strong id="count-jogos">0</strong></p>
+          </div>
+          <div class="cards-grid" id="jogos-grid"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- MODAL EMPRESA -->
+  <div class="modal" id="modal-empresa">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <h2>Cadastrar Empresa</h2>
+      <form id="form-empresa" class="modal-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome da Empresa:</label>
+            <input type="text" name="nome" required />
+          </div>
+          <div class="form-group">
+            <label>Descrição:</label>
+            <input type="text" name="descricao" required />
+          </div>
+        </div>
+        <button type="submit" class="btn-cadastrar">Cadastrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL CATEGORIA -->
+  <div class="modal" id="modal-categoria">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <h2>Cadastrar Categoria</h2>
+      <form id="form-categoria" class="modal-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome da Categoria:</label>
+            <input type="text" name="nome" required />
+          </div>
+          <div class="form-group">
+            <label>Descrição:</label>
+            <input type="text" name="descricao" required />
+          </div>
+        </div>
+        <button type="submit" class="btn-cadastrar">Cadastrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL JOGO -->
+  <div class="modal" id="modal-jogo">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <h2 id="modal-jogo-title">Cadastrar Jogo</h2>
+      <form id="form-jogo" class="modal-form">
+        <input type="hidden" name="id" />
+        <div class="form-group full">
+          <label>Nome do Jogo:</label>
+          <input type="text" name="nome" required />
+        </div>
+        <div class="form-group full">
+          <label>Descrição:</label>
+          <textarea name="descricao" required></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Preço - R$:</label>
+            <input type="text" name="preco" placeholder="0,00" required />
+          </div>
+          <div class="form-group">
+            <label>Imagem do jogo - URL:</label>
+            <input type="url" name="imagem" placeholder="https://..." required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Empresa:</label>
+            <select name="empresa" required></select>
+          </div>
+          <div class="form-group">
+            <label>Categoria:</label>
+            <select name="categoria" required></select>
+          </div>
+        </div>
+        <button type="submit" class="btn-cadastrar">Cadastrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="admin-gerenciamento.js"></script>
+</body>
+</html>

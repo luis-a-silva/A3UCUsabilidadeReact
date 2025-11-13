@@ -1,0 +1,362 @@
+/* ===== VARIÁVEIS ===== */
+:root {
+  --cor-principal-violeta: #8257e5;
+  --cor-destaque-amarelo: #FFD60A;
+  --cor-destaque-ciano: #06b6d4;
+  --cor-fundo-componente: #1a1a2e;
+  --cor-borda: #333;
+  --cor-texto-principal: #e0e0e0;
+  --cor-texto-secundario: #aaa;
+  --cor-fundo: #0d0d1a;
+  --fonte-destaque: 'Poppins', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fonte-destaque);
+  background: var(--cor-fundo);
+  color: var(--cor-texto-principal);
+  min-height: 100vh;
+  padding-top: 2rem;
+}
+
+/* ===== NAVEGAÇÃO SUPERIOR ===== */
+.container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+.admin-nav-section {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.admin-nav-section h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.admin-nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background: #25253a;
+  border: 2px solid #333;
+  color: white;
+  padding: 1rem 1.8rem;
+  border-radius: 16px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 200px;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.nav-btn i { font-size: 1.5rem; color: var(--cor-destaque-ciano); }
+.nav-btn:hover { background: #2a2a42; border-color: var(--cor-principal-violeta); transform: translateY(-4px); }
+.nav-btn.active { background: var(--cor-principal-violeta); border-color: var(--cor-principal-violeta); }
+
+/* ===== CONTEÚDO GERENCIAMENTO ===== */
+.gerenciamento-content {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* MENU LATERAL */
+.sidebar-menu {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.menu-item {
+  background: #1a1a2e;
+  border: 1px solid #333;
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.menu-item:hover { background: #25253a; }
+.menu-item.active { background: var(--cor-principal-violeta); border-color: var(--cor-principal-violeta); }
+
+/* ÁREA PRINCIPAL */
+.main-area {
+  flex: 1;
+  min-width: 300px;
+}
+
+.section-content {
+  display: none;
+}
+
+.section-content.active {
+  display: block;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.btn-add {
+  background: var(--cor-fundo-componente);
+  border: 1px solid #333;
+  color: white;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+}
+
+.btn-add:hover {
+  background: #25253a;
+  border-color: var(--cor-principal-violeta);
+}
+
+.count {
+  color: var(--cor-texto-secundario);
+  font-size: 0.95rem;
+}
+
+/* CARDS GRID */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.empresa-card {
+  background: var(--cor-fundo-componente);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 1.2rem;
+  transition: transform 0.3s;
+}
+
+.empresa-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.card-header h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.empresa-card p {
+  font-size: 0.85rem;
+  color: var(--cor-texto-secundario);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-edit, .btn-delete {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.btn-edit {
+  background: #25253a;
+  color: var(--cor-destaque-ciano);
+  border: 1px solid #333;
+}
+
+.btn-edit:hover {
+  background: var(--cor-destaque-ciano);
+  color: black;
+}
+
+.btn-delete {
+  background: #25253a;
+  color: #e55757;
+  border: 1px solid #333;
+}
+
+.btn-delete:hover {
+  background: #e55757;
+  color: white;
+}
+
+/* ===== MODAIS ===== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: #1a1a2e;
+  border: 1px solid #333;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  padding: 2rem;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: white;
+}
+
+.modal-content h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 250px;
+}
+
+.form-group.full {
+  min-width: 100%;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--cor-texto-secundario);
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.8rem;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+  font-family: inherit;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.btn-cadastrar {
+  background: white;
+  color: #000;
+  border: none;
+  padding: 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  align-self: center;
+  min-width: 180px;
+  transition: 0.3s;
+}
+
+.btn-cadastrar:hover {
+  background: #eee;
+  transform: scale(1.05);
+}
+
+
+@media (max-width: 992px) {
+  .gerenciamento-content {
+    flex-direction: column;
+  }
+  .sidebar-menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .menu-item {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+  .modal-content {
+    padding: 1.5rem;
+  }
+}

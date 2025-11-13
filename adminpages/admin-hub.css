@@ -1,0 +1,156 @@
+/* ===== VARIÁVEIS ===== */
+:root {
+  --cor-principal-violeta: #8257e5;
+  --cor-destaque-amarelo: #FFD60A;
+  --cor-destaque-ciano: #06b6d4;
+  --cor-fundo-componente: #1a1a2e;
+  --cor-borda: #333;
+  --cor-texto-principal: #e0e0e0;
+  --cor-texto-secundario: #aaa;
+  --cor-fundo: #0d0d1a;
+  --fonte-destaque: 'Poppins', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fonte-destaque);
+  background: var(--cor-fundo);
+  color: var(--cor-texto-principal);
+  min-height: 100vh;
+  padding-top: 2rem;
+}
+
+/* ===== CONTEÚDO ADMIN ===== */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.admin-nav-section {
+  text-align: center;
+  padding: 2rem 0;
+  margin-bottom: 3rem;
+}
+
+.admin-nav-section h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.admin-nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background: #25253a;
+  border: 2px solid #333;
+  color: white;
+  padding: 1rem 1.8rem;
+  border-radius: 16px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 200px;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.nav-btn i {
+  font-size: 1.5rem;
+  color: var(--cor-destaque-ciano);
+}
+
+.nav-btn:hover {
+  background: #2a2a42;
+  border-color: var(--cor-principal-violeta);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(130, 87, 229, 0.25);
+}
+
+/* ===== WELCOME CARD ===== */
+.welcome-card {
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.logo-glow {
+  display: inline-block;
+  margin-bottom: 1.8rem;
+}
+
+.logo-edugames {
+  width: 140px;
+  height: 140px;
+  border-radius: 24px;
+  border: 4px solid var(--cor-principal-violeta);
+  box-shadow: 
+    0 0 25px rgba(130, 87, 229, 0.6),
+    0 0 50px rgba(130, 87, 229, 0.3);
+  transition: all 0.4s ease;
+}
+
+.welcome-card:hover .logo-edugames {
+  box-shadow: 
+    0 0 35px rgba(130, 87, 229, 0.8),
+    0 0 70px rgba(130, 87, 229, 0.5);
+  transform: scale(1.05);
+}
+
+.welcome-card h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-card p {
+  font-size: 1.1rem;
+  color: #aaa;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 992px) {
+  .admin-nav-links {
+    flex-direction: column;
+    align-items: center;
+  }
+  .nav-btn {
+    width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-nav-section h1 {
+    font-size: 1.6rem;
+  }
+  .logo-edugames {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-btn {
+    width: 100%;
+    max-width: 300px;
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
+  }
+}
