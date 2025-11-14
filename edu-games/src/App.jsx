@@ -5,6 +5,8 @@ import Home from "./pages/Home/Home";
 import GameInfo from "./pages/GameInfo/GameInfo";
 import Cart from "./pages/Cart/Cart";
 import AdminPanel from "./pages/Admin/AdminPanel";
+import User from "./pages/User/User";
+import Favoritos from "./pages/Favoritos/Favoritos";
 import "./App.css";
 
 export default function App() {
@@ -19,6 +21,8 @@ export default function App() {
           <Route path="/jogo/:jogoId" element={<GameInfo />} />
           <Route path="/carrinho" element={<Cart />} />
           <Route path="/admin" element={<AdminPanel />} />          
+          <Route path="/user" element={<User />} />          
+          <Route path="/favoritos" element={<Favoritos />} />          
         </Routes>
       </main>
 

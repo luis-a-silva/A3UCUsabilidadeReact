@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import HeaderAuth from "../../components/Header/HeaderAuth";
 import { getCarrinho, removeCarrinho } from "../../api/carrinho";
-import { getJogoById } from "../../api/jogos";
+import { getJogoById, finalizarCompra } from "../../api/jogos";
 import { mostrarMensagem } from "../../utils/alerta";
+import { mostrarConfirmacao } from "../../utils/confirmacao";
 import "./Cart.css";
 
 export default function Cart() {
   const [itens, setItens] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [currentStep, setCurrentStep] = useState(1);
+  const nextStep = (step) => setCurrentStep(step);
 
   useEffect(() => {
     async function carregarCarrinho() {
@@ -50,6 +53,24 @@ export default function Cart() {
     carregarCarrinho();
   }, []);
 
+  async function handlePagamento() {
+    mostrarConfirmacao("Deseja realmente finalizar a compra?", async () => {
+      try {
+        const res = await finalizarCompra();
+        mostrarMensagem(res.message || "Compra realizada com sucesso!", "success");
+        nextStep(3); // 🔹 passo 3 = "Compra Realizada"
+        setInterval(() => {
+          window.location.href = "/user"
+        }, 2000);
+      } catch (err) {
+        mostrarMensagem(
+          err?.message || "Erro ao finalizar compra!",
+          "danger"
+        );
+      }
+    });
+  }
+
   async function removerItem(jogoId) {
     try {
       const res = await removeCarrinho(jogoId);
@@ -76,15 +97,15 @@ export default function Cart() {
       <div className="content">
 
         <nav className="passos-progresso">
-          <div className="passo passo-ativo">
+          <div className={`passo ${currentStep >= 1 ? "passo-ativo" : ""}`}>
             <span>1</span>
             <span className="rotulo-passo">Carrinho</span>
           </div>
-          <div className="passo">
+          <div className={`passo ${currentStep >= 2 ? "passo-ativo" : ""}`}>
             <span>2</span>
             <span className="rotulo-passo">Pagamento</span>
           </div>
-          <div className="passo">
+          <div className={`passo ${currentStep >= 3 ? "passo-ativo" : ""}`}>
             <span>3</span>
             <span className="rotulo-passo">Compra Realizada</span>
           </div>
@@ -133,32 +154,42 @@ export default function Cart() {
 
             <aside className="resumo-compra-secao">
               <h3>Resumo da Compra</h3>
+
               <div className="linha-resumo">
                 <span>Preço Oficial</span>
                 <span>R$ {Number(total).toFixed(2).replace(".", ",")}</span>
               </div>
+
               <div className="linha-resumo">
                 <span>Desconto</span>
                 <span>R$ 0,00</span>
               </div>
+
               <div className="total-resumo">
                 <span>Total</span>
                 <span>R$ {Number(total).toFixed(2).replace(".", ",")}</span>
               </div>
+
               {itens.length > 0 ? (
-                <a href="/pagamento" className="btn-finalizar">
+                <button
+                  className="btn-finalizar"
+                  onClick={handlePagamento}
+                >
                   CONTINUAR PARA O PAGAMENTO
-                </a>
+                </button>
               ) : (
                 <a href="/home" className="btn-descobrir">
                   Descobrir Jogos
                 </a>
               )}
+
               <span className="divisor-ou">Ou</span>
+
               <a href="/home" className="link-continuar-comprando">
                 Continuar Comprando
               </a>
             </aside>
+
           </div>
         </main>
       </div>

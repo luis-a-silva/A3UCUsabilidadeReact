@@ -75,19 +75,7 @@ export default function HeaderAuth() {
                     </ul>
                 </div>
 
-                {/* 🔹 Campo de busca central */}
-                <div className="barra-busca">
-                    <input
-                        type="text"
-                        placeholder="Buscar jogos..."
-                        aria-label="Buscar jogos"
-                    />
-                    <button aria-label="Buscar">
-                        <i className="fas fa-search"></i>
-                    </button>
-                </div>
-
-
+        
                 {/* Navegação principal */}
                 <nav className="navegacao">
 
@@ -100,8 +88,8 @@ export default function HeaderAuth() {
                         </button>
 
                         <ul className="dropdown-menu" id="menuPerfil">
-                            <li><a href="#">Acessar meu perfil</a></li>
-                            <li><a href="#">Lista de Favoritos</a></li>
+                            <li><a href="/user">Acessar meu perfil</a></li>
+                            <li><a href="/favoritos">Lista de Favoritos</a></li>
                             <li>
                                 <button className="btn-primario" onClick={handleLogout}>
                                     <i className="fas fa-sign-out-alt"></i> Sair

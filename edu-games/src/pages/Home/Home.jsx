@@ -91,7 +91,7 @@ export default function Home() {
   function estaNoCarrinho(id) {
     return carrinho.some((i) => i.jogoId === id);
   }
-  
+
   function estaNosFavoritos(id) {
     return favoritos.some((i) => i.jogoId === id);
   }
@@ -196,12 +196,12 @@ export default function Home() {
 
                         {autenticado ?
                           <Link to={`/jogo/${jogo.id}`} className="btn-comprar">
-                            <i className="fas fa-arrow-right"></i> Ir para
+                            <i className="fas fa-arrow-right"></i> Saiba mais
                           </Link>
 
                           :
                           <buttons className="btn-comprar" onClick={() => mostrarMensagem("Você precisa estar logado para comprar jogos.", "info")}>
-                            <i className="fas fa-arrow-right"></i> Ir para
+                            <i className="fas fa-arrow-right"></i> Saiba mais
                           </buttons>
                         }
 

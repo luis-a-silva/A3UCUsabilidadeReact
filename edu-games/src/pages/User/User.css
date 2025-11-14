@@ -1,0 +1,181 @@
+.container {
+    padding-top: calc(var(--altura-header) + 30px);
+    padding-bottom: 40px;
+    flex: 1;
+}
+
+.lista-jogos-compra li{
+    list-style: none;
+}
+
+.info-item input {
+  width: 100%;
+  padding: 14px 12px;
+  margin: 12px 0;
+  font-size: 0.95rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-principal);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.info-item input:focus {
+  border-color: var(--cor-principal-violeta);
+  box-shadow: 0 0 6px rgba(130, 87, 229, 0.3);
+}
+
+.layout-perfil {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr;
+    gap: 30px;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.perfil-sidebar h2,
+.pedidos-secao h2 {
+    font-size: 1.8rem;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--cor-texto-principal);
+    font-family: var(--fonte-corpo);
+    font-weight: 600;
+}
+
+.perfil-info-box {
+    background-color: var(--cor-fundo-componente);
+    border-radius: 8px;
+    padding: 25px;
+    border: 1px solid var(--cor-borda);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.foto-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: var(--cor-fundo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--cor-texto-secundario);
+    font-size: 0.9rem;
+    margin: 0 auto 10px auto;
+    border: 2px dashed var(--cor-borda);
+}
+
+.info-item {
+    font-family: var(--fonte-corpo);
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 15px;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.info-item span {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--cor-texto-secundario);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.info-item p {
+    font-size: 1rem;
+    color: var(--cor-texto-principal);
+    font-weight: 600;
+    margin: 0;
+}
+
+.pedidos-container {
+    background-color: var(--cor-fundo-componente);
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.pedido-card {
+    background-color: var(--cor-fundo);
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+    padding: 20px 25px;
+    text-align: center;
+    transition: border-color 0.2s;
+    width: 100%;
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+    display: block;
+}
+
+.pedido-card:hover {
+    border-color: var(--cor-principal-violeta);
+}
+
+.pedido-card h3 {
+    font-family: var(--fonte-corpo);
+    font-size: 1.2rem;
+    color: var(--cor-texto-principal);
+    margin: 0 0 10px 0;
+}
+
+.pedido-card p {
+    color: var(--cor-texto-secundario);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 900px) {
+    .layout-perfil {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 0;
+    }
+
+    .perfil-sidebar h2,
+    .pedidos-secao h2 {
+        text-align: center;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .perfil-sidebar h2,
+    .pedidos-secao h2 {
+        font-size: 1.5rem;
+    }
+
+    .pedidos-container {
+        padding: 20px;
+    }
+
+    .pedido-card {
+        padding: 15px;
+    }
+
+    .pedido-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .pedido-card p {
+        font-size: 0.9rem;
+    }
+
+    .perfil-info-box {
+        padding: 20px;
+    }
+}

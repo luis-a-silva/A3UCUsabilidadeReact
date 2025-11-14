@@ -1,24 +1,19 @@
 import { useEffect, useState } from "react";
 import { mostrarMensagem } from "../../utils/alerta";
-import {
-  getJogoById,
-  getAvaliacoesByJogo,
-  getMediaAvaliacao,
-  getCategoriaById,
-} from "../../api/jogos";
+import { getJogoById, getAvaliacoesByJogo, getMediaAvaliacao, getCategoriaById } from "../../api/jogos";
 import { useParams, useNavigate } from "react-router-dom";
 import HeaderAuth from "../../components/Header/HeaderAuth";
-import Header from "../../components/Header/Header";
 import { isAuthenticated } from "../../utils/auth";
 import { addCarrinho, removeCarrinho, getCarrinho } from "../../api/carrinho";
 import { getEmpresaById } from "../../api/empresa";
 import "./GameInfo.css";
 import { atualizarHeaderCarrinho } from "../../utils/headerUtil";
+import axios from "axios";
+
 
 export default function GameInfo() {
   const navigate = useNavigate();
   const { jogoId } = useParams();
-
   const [jogo, setJogo] = useState(null);
   const [empresa, setEmpresa] = useState(null);
   const [categoria, setCategoria] = useState(null);
@@ -27,6 +22,9 @@ export default function GameInfo() {
   const [autenticado, setAutenticado] = useState(false);
   const [loading, setLoading] = useState(true);
   const [carrinho, setCarrinho] = useState([]);
+  const [novaNota, setNovaNota] = useState(0);
+  const [novoComentario, setNovoComentario] = useState("");
+  const [jogoComprado, setJogoComprado] = useState(false);
 
   useEffect(() => {
     const tokenExiste = isAuthenticated();
@@ -55,17 +53,25 @@ export default function GameInfo() {
         const categoriaData = await getCategoriaById(jogoData.fkCategoria);
         setCategoria(categoriaData?.nome || "Sem categoria");
 
-        // 🔹 Avaliações e média
-        const [avaliacoesData, mediaData] = await Promise.all([
-          getAvaliacoesByJogo(jogoId),
-          getMediaAvaliacao(jogoId),
-        ]);
+        // 🔹 Avaliações 
+        const avaliacoesData = await getAvaliacoesByJogo(jogoId);
         setAvaliacoes(avaliacoesData);
+        console.log("Avaliações carregadas:", avaliacoesData);
+
+        // 🔹 Médias 
+        const mediaData = await getMediaAvaliacao(jogoId);
         setMedia(mediaData);
+        console.log("Média carregada:", mediaData);
 
         // 🔹 Carrinho
         const carrinhoAPI = await getCarrinho();
+        const jaComprou = carrinhoAPI.some(
+          (item) => item.jogoId === Number(jogoId) && item.status === "F"
+        );
         setCarrinho(carrinhoAPI);
+        setJogoComprado(jaComprou);
+
+
       } catch (err) {
         console.error("Erro ao carregar dados do jogo:", err);
       } finally {
@@ -132,6 +138,35 @@ export default function GameInfo() {
   // 🔹 Status atual do jogo
   const jogoStatus = statusDoJogo(jogo.id);
 
+  async function handleEnviarAvaliacao(e) {
+    e.preventDefault();
+
+    if (novaNota < 1 || novaNota > 5) {
+      mostrarMensagem("Selecione uma nota de 1 a 5 estrelas.", "warning");
+      return;
+    }
+
+    try {
+      await addAvaliacao(Number(jogoId), novaNota, novoComentario);
+
+      mostrarMensagem("Avaliação enviada com sucesso!", "success");
+
+      // limpa o formulário
+      setNovaNota(0);
+      setNovoComentario("");
+
+      // recarrega as avaliações
+      const novasAvaliacoes = await getAvaliacoesByJogo(jogoId);
+      setAvaliacoes(novasAvaliacoes);
+    } catch (err) {
+      console.error("Erro ao enviar avaliação:", err);
+      mostrarMensagem(
+        err.response?.data?.message || "Erro ao enviar avaliação.",
+        "danger"
+      );
+    }
+  }
+
   return (
     <>
       {autenticado ? <HeaderAuth /> : <Header />}
@@ -167,29 +202,27 @@ export default function GameInfo() {
 
               {/* 🔹 Botão dinâmico do carrinho */}
               <button
-                className={`btn-adicionar-carrinho-grande ${
-                  jogoStatus === "ativo"
-                    ? "ativo"
-                    : jogoStatus === "comprado"
+                className={`btn-adicionar-carrinho-grande ${jogoStatus === "ativo"
+                  ? "ativo"
+                  : jogoStatus === "comprado"
                     ? "comprado"
                     : ""
-                }`}
+                  }`}
                 onClick={() => toggleCarrinho(jogo.id)}
               >
                 <i
-                  className={`fas ${
-                    jogoStatus === "ativo"
-                      ? "fa-cart-arrow-down"
-                      : jogoStatus === "comprado"
+                  className={`fas ${jogoStatus === "ativo"
+                    ? "fa-cart-arrow-down"
+                    : jogoStatus === "comprado"
                       ? "fa-check"
                       : "fa-cart-plus"
-                  }`}
+                    }`}
                 ></i>
                 {jogoStatus === "comprado"
                   ? " Você já comprou este jogo"
                   : jogoStatus === "ativo"
-                  ? " Remover do carrinho"
-                  : " Adicionar ao carrinho"}
+                    ? " Remover do carrinho"
+                    : " Adicionar ao carrinho"}
               </button>
             </div>
 
@@ -212,13 +245,12 @@ export default function GameInfo() {
                 return (
                   <i
                     key={i}
-                    className={`fas ${
-                      rating <= Math.floor(media)
-                        ? "fa-star"
-                        : rating - media <= 0.5
+                    className={`fas ${rating <= Math.floor(media)
+                      ? "fa-star"
+                      : rating - media <= 0.5
                         ? "fa-star-half-alt"
                         : "fa-star-o"
-                    }`}
+                      }`}
                   ></i>
                 );
               })}
@@ -240,8 +272,8 @@ export default function GameInfo() {
               {avaliacoes.map((av) => (
                 <div key={av.id} className="comentario-usuario">
                   <div className="comentario-cabecalho">
-                    <span className="nome-usuario">
-                      Usuário: {av.usuario || "Anônimo"}
+                    <span>
+                     Avaliador
                     </span>
                     <span className="nota-usuario">Nota: {av.nota} ★</span>
                   </div>
@@ -252,6 +284,47 @@ export default function GameInfo() {
               ))}
             </div>
           )}
+
+          {jogoComprado && (
+            <div className="form-avaliacao">
+              <h3>Deixe sua Avaliação</h3>
+
+              <form onSubmit={handleEnviarAvaliacao}>
+                <div className="campo-estrelas">
+                  <label htmlFor="nota">Nota:</label>
+                  <div className="estrelas-input">
+                    {Array.from({ length: 5 }, (_, i) => {
+                      const rating = i + 1;
+                      return (
+                        <i
+                          key={rating}
+                          className={`fas fa-star ${rating <= novaNota ? "selecionada" : ""
+                            }`}
+                          onClick={() => setNovaNota(rating)}
+                        ></i>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="campo-textarea">
+                  <label htmlFor="comentario">Comentário:</label>
+                  <textarea
+                    id="comentario"
+                    value={novoComentario}
+                    onChange={(e) => setNovoComentario(e.target.value)}
+                    required
+                    placeholder="Escreva o que achou do jogo..."
+                  ></textarea>
+                </div>
+
+                <button type="submit" className="btn-primario">
+                  Enviar Avaliação
+                </button>
+              </form>
+            </div>
+          )}
+
         </section>
       </main>
     </>

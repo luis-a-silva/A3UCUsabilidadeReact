@@ -89,12 +89,17 @@ export async function getAvaliacoesByJogo(jogoId) {
     const res = await axios.get(`${API_URL}/avaliacoes?jogoId=${jogoId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    return Array.isArray(res.data) ? res.data : [];
+    const data = res.data;
+    // 🔹 Se o backend retornar um único objeto, transforma em array
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    return [data];
   } catch (err) {
-    console.error(`Erro ao buscar avaliações do jogo ${jogoId}:`, err);
+    console.error("Erro ao buscar avaliações por jogo:", err);
     return [];
   }
 }
+
 
 // ===================================================
 // 🔹 Buscar média das avaliações de um jogo
@@ -111,6 +116,27 @@ export async function getMediaAvaliacao(jogoId) {
     return 0;
   }
 }
+
+
+// ===================================================
+// 🔹 Finalizar Compra
+// ===================================================
+export async function finalizarCompra() {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Usuário não autenticado");
+
+    const res = await axios.post(`${API_URL}/vendas/checkout`, {}, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return res.data;
+  } catch (err) {
+    console.error("Erro ao finalizar compra:", err);
+    throw err.response?.data || { message: "Erro ao finalizar compra." };
+  }
+}
+
 
 // ===================================================
 // 🔹 Criar nova avaliação
@@ -177,3 +203,4 @@ export async function deleteJogo(id) {
     throw err;
   }
 }
+
