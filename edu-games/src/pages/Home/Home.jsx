@@ -9,74 +9,89 @@ import { addFavorito, removeFavorito, getFavoritos } from "../../api/favoritos";
 import { mostrarMensagem } from "../../utils/alerta";
 import "./Home.css";
 import { atualizarHeaderCarrinho } from "../../utils/headerUtil";
+import { getTopDadosCompletos } from "../../api/vendas";
 
 export default function Home() {
   const [jogos, setJogos] = useState([]);
   const [carrinho, setCarrinho] = useState([]);
   const [favoritos, setFavoritos] = useState([]);
   const [autenticado, setAutenticado] = useState(null);
+  const [loading, setLoading] = useState(false);
   const effectRan = useRef(false);
+  const [topJogos, setTopJogos] = useState([]);
+  const [topEmpresas, setTopEmpresas] = useState([]);
+
+  async function carregarTudo(categoriaId = null) {
+    try {
+      setLoading(true); // 🔥 INÍCIO DO LOADING
+
+      const tokenExiste = isAuthenticated();
+      setAutenticado(tokenExiste);
+
+      let dadosJogos = tokenExiste
+        ? await getAllJogos()
+        : await getPublicJogos();
+
+      if (categoriaId) {
+        dadosJogos = dadosJogos.filter(j => j.fkCategoria === categoriaId);
+      }
+
+      const jogosComCategorias = await Promise.all(
+        dadosJogos.map(async (jogo) => {
+          try {
+            const categoria = jogo.fkCategoria
+              ? await getCategoriaById(jogo.fkCategoria)
+              : null;
+
+            return {
+              ...jogo,
+              categoriaNome: categoria?.nome || "Sem categoria",
+            };
+          } catch {
+            return { ...jogo, categoriaNome: "Sem categoria" };
+          }
+        })
+      );
+
+      setJogos(jogosComCategorias);
+
+      if (tokenExiste) {
+        const [carrinhoAPI, favoritosAPI] = await Promise.all([
+          getCarrinho(),
+          getFavoritos(),
+        ]);
+
+        setCarrinho(carrinhoAPI);
+        setFavoritos(
+          Array.isArray(favoritosAPI)
+            ? favoritosAPI.map(f => ({
+              jogoId: f.jogoId || f.jogo?.id || f.id,
+            }))
+            : []
+        );
+      }
+
+    } catch (err) {
+      console.error("❌ Erro ao carregar dados:", err);
+      setJogos([]);
+      setCarrinho([]);
+      setFavoritos([]);
+    } finally {
+      setLoading(false); // 🔥 FIM DO LOADING
+    }
+  }
+
 
   useEffect(() => {
     if (effectRan.current) return;
     effectRan.current = true;
 
-    async function carregarTudo() {
-      try {
-        const tokenExiste = isAuthenticated();
-        setAutenticado(tokenExiste);
-
-        const dadosJogos = tokenExiste
-          ? await getAllJogos()
-          : await getPublicJogos();
-
-        setJogos(Array.isArray(dadosJogos) ? dadosJogos : []);
-
-        // 🔹 Carrega categorias de todos os jogos
-        const jogosComCategorias = await Promise.all(
-          dadosJogos.map(async (jogo) => {
-            try {
-              const categoria = jogo.fkCategoria
-                ? await getCategoriaById(jogo.fkCategoria)
-                : null;
-              return {
-                ...jogo,
-                categoriaNome: categoria?.nome || "Sem categoria",
-              };
-            } catch {
-              return {
-                ...jogo,
-                categoriaNome: "Sem categoria",
-              };
-            }
-          })
-        );
-
-        setJogos(jogosComCategorias);
-
-        if (tokenExiste) {
-          const [carrinhoAPI, favoritosAPI] = await Promise.all([
-            getCarrinho(),
-            getFavoritos(),
-          ]);
-
-          // já vem normalizado
-          setCarrinho(carrinhoAPI);
-          setFavoritos(
-            Array.isArray(favoritosAPI)
-              ? favoritosAPI.map((f) => ({
-                jogoId: f.jogoId || f.jogo?.id || f.id,
-              }))
-              : []
-          );
-        }
-      } catch (err) {
-        console.error("❌ Erro ao carregar dados:", err);
-        setJogos([]);
-        setCarrinho([]);
-        setFavoritos([]);
-      }
+    async function carregarInfos() {
+      const { topJogos, topEmpresas } = await getTopDadosCompletos();
+      setTopJogos(topJogos);
+      setTopEmpresas(topEmpresas);
     }
+    carregarInfos();
 
     carregarTudo();
   }, []);
@@ -158,7 +173,81 @@ export default function Home() {
 
   return (
     <div>
-      {autenticado ? <HeaderAuth /> : <Header />}
+      {autenticado ? <HeaderAuth carregarTudo={carregarTudo} loading={loading} /> : <Header />}
+
+      {loading && (
+        <p style={{ textAlign: "center", marginTop: "10px" }}>
+          Filtrando jogos...
+        </p>
+      )}
+
+      <section className="top10-section">
+        <div className="titulo-secao">
+          <span className="subtitulo">OS MAIS VENDIDOS</span>
+          <h2>Top 10 Jogos</h2>
+        </div>
+
+        <div className="top10-grid">
+          {topJogos.map((jogo, index) => (
+            <div
+              key={index}
+              className="top10-card"
+              style={{
+                border: index === 0 ? "3px solid gold" : "1px solid #333",
+                position: "relative"
+              }}
+            >
+              {index === 0 && (
+                <div className="badge-ouro">🏆 Primeiro Lugar!</div>
+              )}
+
+              <div className="top10-rank">{index + 1}</div>
+
+              <img
+                src="https://placehold.co/400x300?text=Jogo"
+                alt={jogo.nome}
+              />
+
+              <div className="top10-info">
+                <h3>{jogo.nome}</h3>
+                <p className="categoria-badge">Mais Vendido</p>
+                <div className="rating">Vendas: {jogo.total}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="top10-section">
+        <div className="titulo-secao">
+          <span className="subtitulo">AS QUE MAIS VENDEM</span>
+          <h2>Top 5 Empresas</h2>
+        </div>
+
+        <div className="top10-grid">
+          {topEmpresas.map((emp, index) => (
+            <div
+              key={index}
+              className="top10-card"
+              style={{
+                border: index === 0 ? "3px solid gold" : "1px solid #333",
+                position: "relative"
+              }}
+            >
+              {index === 0 && (
+                <div className="badge-ouro">👑 Empresa #1</div>
+              )}
+
+              <div className="top10-rank">{index + 1}</div>
+
+              <div className="top10-info">
+                <h3>{emp.empresa}</h3>
+                <div className="rating">Total de vendas: {emp.total}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <section className="games-section">
         <div className="titulo-secao">
@@ -184,61 +273,61 @@ export default function Home() {
                     <h3>{jogo.nome}</h3>
                     <p className="categoria">
                       {jogo.categoriaNome || "Sem categoria"}
-                    </p>                    
-                    
+                    </p>
+
                     <div className="preco-comprar">
                       <p className="preco">
                         R$ {Number(jogo.preco).toFixed(2).replace(".", ",")}
                       </p>
                     </div>
-                      
-                      <div className="acoes-jogo">
 
-                        {autenticado ?
-                          <Link to={`/jogo/${jogo.id}`} className="btn-comprar">
-                            <i className="fas fa-arrow-right"></i> Saiba mais
-                          </Link>
+                    <div className="acoes-jogo">
 
-                          :
-                          <buttons className="btn-comprar" onClick={() => mostrarMensagem("Você precisa estar logado para comprar jogos.", "info")}>
-                            <i className="fas fa-arrow-right"></i> Saiba mais
-                          </buttons>
+                      {autenticado ?
+                        <Link to={`/jogo/${jogo.id}`} className="btn-comprar">
+                          <i className="fas fa-arrow-right"></i> Saiba mais
+                        </Link>
+
+                        :
+                        <buttons className="btn-comprar" onClick={() => mostrarMensagem("Você precisa estar logado para comprar jogos.", "info")}>
+                          <i className="fas fa-arrow-right"></i> Saiba mais
+                        </buttons>
+                      }
+
+                      {/* Carrinho */}
+                      <button
+                        className={`btn-add-cart ${statusDoJogo(jogo.id) === "ativo"
+                          ? "ativo"
+                          : statusDoJogo(jogo.id) === "comprado"
+                            ? "comprado"
+                            : ""
+                          }`}
+                        onClick={() =>
+                          statusDoJogo(jogo.id) === "comprado"
+                            ? mostrarMensagem("Você já comprou este jogo.", "info")
+                            : toggleCarrinho(jogo.id)
                         }
-
-                        {/* Carrinho */}
-                        <button
-                          className={`btn-add-cart ${statusDoJogo(jogo.id) === "ativo"
-                              ? "ativo"
-                              : statusDoJogo(jogo.id) === "comprado"
-                                ? "comprado"
-                                : ""
+                      >
+                        <i
+                          className={`fas ${statusDoJogo(jogo.id) === "ativo"
+                            ? "fa-cart-arrow-down"
+                            : statusDoJogo(jogo.id) === "comprado"
+                              ? "fa-check"
+                              : "fa-cart-plus"
                             }`}
-                          onClick={() =>
-                            statusDoJogo(jogo.id) === "comprado"
-                              ? mostrarMensagem("Você já comprou este jogo.", "info")
-                              : toggleCarrinho(jogo.id)
-                          }
-                        >
-                          <i
-                            className={`fas ${statusDoJogo(jogo.id) === "ativo"
-                                ? "fa-cart-arrow-down"
-                                : statusDoJogo(jogo.id) === "comprado"
-                                  ? "fa-check"
-                                  : "fa-cart-plus"
-                              }`}
-                          ></i>
-                        </button>
+                        ></i>
+                      </button>
 
-                        {/* Favorito */}
-                        <button
-                          className={`btn-favorito ${nosFavoritos ? "ativo" : ""}`}
-                          onClick={() => toggleFavorito(jogo.id)}
-                        >
-                          <i className="fas fa-star"></i>
-                        </button>
-                      </div>
+                      {/* Favorito */}
+                      <button
+                        className={`btn-favorito ${nosFavoritos ? "ativo" : ""}`}
+                        onClick={() => toggleFavorito(jogo.id)}
+                      >
+                        <i className="fas fa-star"></i>
+                      </button>
                     </div>
                   </div>
+                </div>
               );
             })
           ) : (
@@ -249,3 +338,4 @@ export default function Home() {
     </div>
   );
 }
+

@@ -27,19 +27,6 @@ export default function Header() {
           <ul className="navbar-menu">
             <li className="dropdown">
               <button className="dropdown-toggle">
-                Categorias <i className="fas fa-chevron-down"></i>
-              </button>
-              <ul className="dropdown-menu">
-                <li><a href="#">Ação</a></li>
-                <li><a href="#">Aventura</a></li>
-                <li><a href="#">RPG</a></li>
-                <li><a href="#">Puzzle</a></li>
-                <li><a href="#">Simulação</a></li>
-              </ul>
-            </li>
-
-            <li className="dropdown">
-              <button className="dropdown-toggle">
                 Ajuda <i className="fas fa-chevron-down"></i>
               </button>
               <ul className="dropdown-menu">
@@ -51,7 +38,7 @@ export default function Header() {
           </ul>
         </div>
 
-        
+
         <nav className="navegacao">
           <button className="btn-primario" onClick={irParaLogin}>
             Entrar / Cadastre-se

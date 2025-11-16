@@ -154,6 +154,8 @@ body[data-theme="light"] form input:focus {
 }
 
 @media (max-width: 900px) {
+
+  body,
   main.main-container {
     padding-left: 12px;
     padding-right: 12px;
@@ -184,27 +186,14 @@ body[data-theme="light"] form input:focus {
     gap: 12px;
     align-items: center;
     justify-content: center;
-    max-height: calc(100vh - var(--altura-header, 100px) - 80px);
-    overflow: visible;
   }
 
   .left-decor {
-    order: -1;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 6px;
+    display: none;
   }
 
-  .left-decor img {
-    width: 80%;
-    max-width: 360px;
-    height: auto;
-    max-height: 28vh;
-    object-fit: contain;
-    border-radius: 8px;
-    display: block;
+  #container-cadastro .left-decor {
+    display: none;
   }
 
   form {
@@ -254,7 +243,7 @@ body[data-theme="light"] form input:focus {
     padding: 0 8px;
   }
 
-  .form-links > * {
+  .form-links>* {
     flex: 1 1 45%;
     min-width: 120px;
     display: inline-flex;
@@ -302,19 +291,11 @@ body[data-theme="light"] form input:focus {
   }
 
   .left-decor {
-    order: -1 !important;
-    flex: 0 0 auto;
-    width: 100%;
-    max-height: 220px;
-    margin: 0 0 10px 0;
+    display: none;
   }
 
-  .left-decor img {
-    width: 100%;
-    height: 100%;
-    max-height: 220px;
-    object-fit: cover;
-    border-radius: 12px;
+  #container-cadastro .left-decor {
+    display: none;
   }
 
   form h2 {
@@ -343,8 +324,12 @@ body[data-theme="light"] form input:focus {
     padding: 10px;
   }
 
-  .left-decor img {
-    max-height: 140px;
+  .left-decor {
+    display: none;
+  }
+
+  #container-cadastro .left-decor {
+    display: none;
   }
 
   form h2 {
@@ -362,14 +347,8 @@ body[data-theme="light"] form input:focus {
     padding: 0;
   }
 
-  .form-links > * {
+  .form-links>* {
     flex: 1 1 100%;
     min-width: 0;
-  }
-
-  .navegacao button {
-    min-width: 100px;
-    padding: 8px 10px;
-    font-size: 0.86rem;
   }
 }

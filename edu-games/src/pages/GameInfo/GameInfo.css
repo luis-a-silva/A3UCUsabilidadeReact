@@ -190,7 +190,7 @@
     background-color: var(--cor-fundo);
     border: 1px solid var(--cor-borda);
     border-radius: 6px;
-    color: var(--cor-texto-principal);
+    color: var(--cor-texto-secundario);
     font-family: var(--fonte-corpo);
     resize: vertical;
 }
@@ -359,6 +359,7 @@
     border: 1px solid #ccc;
     resize: vertical;
     background-color: var(--cor-fundo);
+    color: var(--cor-texto-principal);
 }
 
 

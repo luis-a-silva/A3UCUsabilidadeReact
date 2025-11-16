@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { mostrarMensagem } from "../../utils/alerta";
-import { getJogoById, getAvaliacoesByJogo, getMediaAvaliacao, getCategoriaById } from "../../api/jogos";
+import { getJogoById, getAvaliacoesByJogo, getMediaAvaliacao, getCategoriaById, addAvaliacao} from "../../api/jogos";
 import { useParams, useNavigate } from "react-router-dom";
 import HeaderAuth from "../../components/Header/HeaderAuth";
 import { isAuthenticated } from "../../utils/auth";

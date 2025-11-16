@@ -4,13 +4,25 @@ import logo from "../../assets/logo_edugames_horizontal.png";
 import { alternarModos } from "../../utils/tema";
 import { atualizarHeaderCarrinho } from "../../utils/headerUtil";
 import { inicializarDropdownPerfil } from "../../utils/perfilDropdown";
+import { getCategorias } from "../../api/jogos";
 import "./Header.css";
 
-export default function HeaderAuth() {
+export default function HeaderAuth({ carregarTudo, loading }) {
 
     const [cartCount, setCartCount] = useState(0);
+    const [categorias, setCategorias] = useState([]);
+
+    async function carregarCategorias() {
+        try {
+            const lista = await getCategorias();
+            setCategorias(lista);
+        } catch (err) {
+            console.error("Erro ao carregar categorias:", err);
+        }
+    }
 
     useEffect(() => {
+        carregarCategorias();
         alternarModos();
         inicializarDropdownPerfil();
         atualizarHeaderCarrinho(); // ✅ Atualiza ao montar
@@ -54,11 +66,21 @@ export default function HeaderAuth() {
                                 Categorias <i className="fas fa-chevron-down"></i>
                             </button>
                             <ul className="dropdown-menu">
-                                <li><a href="#">Ação</a></li>
-                                <li><a href="#">Aventura</a></li>
-                                <li><a href="#">RPG</a></li>
-                                <li><a href="#">Puzzle</a></li>
-                                <li><a href="#">Simulação</a></li>
+                                {categorias.map(cat => (
+                                    <li key={cat.id}>
+                                        <a
+                                            href="#"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                if (loading) return; // 🔥 BLOQUEIA CLIQUE DURANTE O LOAD
+                                                carregarTudo(cat.id);
+                                            }}
+                                        >
+
+                                            {cat.nome.replace("\r", "")}
+                                        </a>
+                                    </li>
+                                ))}
                             </ul>
                         </li>
 
@@ -75,7 +97,7 @@ export default function HeaderAuth() {
                     </ul>
                 </div>
 
-        
+
                 {/* Navegação principal */}
                 <nav className="navegacao">
 

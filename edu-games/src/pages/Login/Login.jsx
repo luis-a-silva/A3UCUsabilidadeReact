@@ -97,7 +97,7 @@ export default function Login() {
         const res = await registerUser(nome, email, senha, 2, dataNascimento);
 
         // ✅ Exibe mensagem de sucesso vinda da API
-        mostrarMensagem(`${res.message || "Cadastro realizado com sucesso!"}`, "info");
+        mostrarMensagem(`${res.message}`, "info");
 
         // Se a mensagem contiver sucesso, volta para tela de login
         if (res.message?.toLowerCase().includes("sucesso")) {
@@ -107,11 +107,7 @@ export default function Login() {
         // ⚠️ Captura o erro e tenta extrair a mensagem da API
         console.error(err);
 
-        if (err.response && err.response.data && err.response.data.message) {
-          mostrarMensagem(` ${err.response.data.message}`, "danger");
-        } else {
-          mostrarMensagem("Erro inesperado ao tentar cadastrar usuário.", "danger");
-        }
+        mostrarMensagem(` ${err.response.data.message}`, "danger");
       } finally {
         setLoading(false);
       }

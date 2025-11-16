@@ -11,6 +11,7 @@ export async function getAllJogos() {
     const res = await axios.get(`${API_URL}/jogos`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    console.log(res.data);
     return res.data;
   } catch (err) {
     console.error("Erro ao buscar jogos (autenticado):", err);
@@ -78,7 +79,6 @@ export async function getCategoriaById(idCategoria) {
     throw err;
   }
 }
-
 
 // ===================================================
 // 🔹 Buscar todas as avaliações de um jogo
