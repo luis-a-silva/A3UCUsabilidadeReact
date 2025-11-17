@@ -55,6 +55,11 @@ export default function Home() {
 
       setJogos(jogosComCategorias);
 
+      const { topJogosFiltrados } = gerarRankingLocal(jogosComCategorias);
+
+      setTopJogos(topJogosFiltrados);
+
+
       if (tokenExiste) {
         const [carrinhoAPI, favoritosAPI] = await Promise.all([
           getCarrinho(),
@@ -81,6 +86,29 @@ export default function Home() {
     }
   }
 
+  function gerarRankingLocal(listaJogos) {
+    // 🔥 contar vendas por jogo
+    const vendasPorJogo = {};
+
+    listaJogos.forEach(jogo => {
+      if (!vendasPorJogo[jogo.nome]) vendasPorJogo[jogo.nome] = {
+        nome: jogo.nome,
+        total: 0,
+      };
+
+      vendasPorJogo[jogo.nome].total++;
+    });
+
+    const topJogosFiltrados = Object.values(vendasPorJogo)
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 10);
+
+  
+    return {
+      topJogosFiltrados
+    };
+  }
+
 
   useEffect(() => {
     if (effectRan.current) return;
@@ -91,8 +119,8 @@ export default function Home() {
       setTopJogos(topJogos);
       setTopEmpresas(topEmpresas);
     }
-    carregarInfos();
 
+    carregarInfos();
     carregarTudo();
   }, []);
 
@@ -187,35 +215,41 @@ export default function Home() {
           <h2>Top 10 Jogos</h2>
         </div>
 
-        <div className="top10-grid">
-          {topJogos.map((jogo, index) => (
-            <div
-              key={index}
-              className="top10-card"
-              style={{
-                border: index === 0 ? "3px solid gold" : "1px solid #333",
-                position: "relative"
-              }}
-            >
-              {index === 0 && (
-                <div className="badge-ouro">🏆 Primeiro Lugar!</div>
-              )}
+        {topJogos.length === 0 ? (
+          <p style={{ textAlign: "center", opacity: 0.7 }}>
+            Não foi possível carregar o ranking de jogos mais vendidos.
+          </p>
+        ) : (
+          <div className="top10-grid">
+            {topJogos.map((jogo, index) => (
+              <div
+                key={index}
+                className="top10-card"
+                style={{
+                  border: index === 0 ? "3px solid gold" : "1px solid #333",
+                  position: "relative"
+                }}
+              >
+                {index === 0 && (
+                  <div className="badge-ouro">🏆 Primeiro Lugar!</div>
+                )}
 
-              <div className="top10-rank">{index + 1}</div>
+                <div className="top10-rank">{index + 1}</div>
 
-              <img
-                src="https://placehold.co/400x300?text=Jogo"
-                alt={jogo.nome}
-              />
+                <img
+                  src="https://placehold.co/400x300?text=Jogo"
+                  alt={jogo.nome}
+                />
 
-              <div className="top10-info">
-                <h3>{jogo.nome}</h3>
-                <p className="categoria-badge">Mais Vendido</p>
-                <div className="rating">Vendas: {jogo.total}</div>
+                <div className="top10-info">
+                  <h3>{jogo.nome}</h3>
+                  <p className="categoria-badge">Mais Vendido</p>
+                  <div className="rating">Vendas: {jogo.total}</div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="top10-section">
@@ -224,29 +258,35 @@ export default function Home() {
           <h2>Top 5 Empresas</h2>
         </div>
 
-        <div className="top10-grid">
-          {topEmpresas.map((emp, index) => (
-            <div
-              key={index}
-              className="top10-card"
-              style={{
-                border: index === 0 ? "3px solid gold" : "1px solid #333",
-                position: "relative"
-              }}
-            >
-              {index === 0 && (
-                <div className="badge-ouro">👑 Empresa #1</div>
-              )}
+        {topEmpresas.length === 0 ? (
+          <p style={{ textAlign: "center", opacity: 0.7 }}>
+            Não foi possível carregar o ranking de empresas.
+          </p>
+        ) : (
+          <div className="top10-grid">
+            {topEmpresas.map((emp, index) => (
+              <div
+                key={index}
+                className="top10-card"
+                style={{
+                  border: index === 0 ? "3px solid gold" : "1px solid #333",
+                  position: "relative"
+                }}
+              >
+                {index === 0 && (
+                  <div className="badge-ouro">👑 Empresa #1</div>
+                )}
 
-              <div className="top10-rank">{index + 1}</div>
+                <div className="top10-rank">{index + 1}</div>
 
-              <div className="top10-info">
-                <h3>{emp.empresa}</h3>
-                <div className="rating">Total de vendas: {emp.total}</div>
+                <div className="top10-info">
+                  <h3>{emp.empresa}</h3>
+                  <div className="rating">Total de vendas: {emp.total}</div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="games-section">

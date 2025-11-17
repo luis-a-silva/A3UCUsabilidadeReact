@@ -7,7 +7,7 @@ import Header from "../../components/Header/Header.jsx";
 import "./login.css";
 
 export default function Login() {
-  const [message, setMessage] = useState(""); // ✅ mostra mensagem da API
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function Login() {
     const loginForm = document.getElementById("login-form");
     const cadastrarForm = document.getElementById("cadastrar-form");
 
-    // 🔹 Alternar Login/Cadastro
+    // Alternar Login/Cadastro
     btnIrParaCadastro?.addEventListener("click", () => {
       containerLogin.classList.remove("form-login-active");
       containerLogin.classList.add("form-login-hide");
@@ -35,7 +35,7 @@ export default function Login() {
       setMessage("");
     });
 
-    // 🔹 Login
+    // Login
     loginForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
       setLoading(true);
@@ -47,31 +47,27 @@ export default function Login() {
       try {
         const res = await loginUser(email, senha);
 
-        // ✅ Mostra a mensagem de sucesso da API
-        mostrarMensagem(`${res.message}`, "success");
+        // Mostra a mensagem vinda da API
+        mostrarMensagem(res.message, res.status === 200 ? "success" : "info");
 
-        // Se veio token, guarda e redireciona
-        if (res.token) {
-          localStorage.setItem("token", res.token);
-          setTimeout(() => (window.location.href = "/home"), 1000);
+        // Sucesso (status 200 + token)
+        if (res.status === 200 && res.data.token) {
+          localStorage.setItem("token", res.data.token);
+          setTimeout(() => (window.location.href = "/home"), 800);
         }
+        
+        // Erro
       } catch (err) {
         console.error(err);
+        const msg = err.response?.data?.message || "Não foi possível realizar o login.";
+        mostrarMensagem(msg, "danger");
 
-        // ⚠️ Se a API retornar uma mensagem de erro, mostra no alert
-        if (err.response && err.response.data && err.response.data.message) {
-          mostrarMensagem(`${err.response.data.message}`, "danger");
-
-        } else {
-          mostrarMensagem("inesperado ao realizar login!", "danger");
-        }
       } finally {
         setLoading(false);
       }
     });
 
-
-    // 🔹 Cadastro
+    // Cadastro
     cadastrarForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
       setLoading(true);
@@ -88,26 +84,29 @@ export default function Login() {
         return;
       }
 
-      const dataInput = document.getElementById("data-nascimento").value; // yyyy-mm-dd
+      const dataInput = document.getElementById("data-nascimento").value; //yyyy-mm-dd
       const [ano, mes, dia] = dataInput.split("-");
-      const dataNascimento = `${dia}/${mes}/${ano}`;
-
+      const dataNascimento = `${dia}/${mes}/${ano}`; //dd-mm-yyyy
 
       try {
         const res = await registerUser(nome, email, senha, 2, dataNascimento);
 
-        // ✅ Exibe mensagem de sucesso vinda da API
-        mostrarMensagem(`${res.message}`, "info");
+        // Exibe mensagem vinda da API
+        mostrarMensagem(res.message, res.status === 201 ? "success" : "info");
 
-        // Se a mensagem contiver sucesso, volta para tela de login
-        if (res.message?.toLowerCase().includes("sucesso")) {
+        // sucesso
+        if (res.status === 201) {
           btnIrParaLogin?.click();
         }
+
+        //erro
       } catch (err) {
-        // ⚠️ Captura o erro e tenta extrair a mensagem da API
         console.error(err);
 
-        mostrarMensagem(` ${err.response.data.message}`, "danger");
+        // alerta de erro
+        const msg = err.response?.data?.message || "Erro inesperado no cadastro.";
+        mostrarMensagem(msg, "danger");
+
       } finally {
         setLoading(false);
       }
