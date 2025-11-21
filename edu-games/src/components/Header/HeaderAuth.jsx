@@ -28,7 +28,7 @@ export default function HeaderAuth({ carregarTudo, loading }) {
         atualizarHeaderCarrinho(); // ✅ Atualiza ao montar
     }, []);
 
-    // 🔹 Função para sair da conta
+    //  Função para sair da conta
     const handleLogout = () => {
         localStorage.removeItem("token");
         window.location.href = "/login";
@@ -58,7 +58,7 @@ export default function HeaderAuth({ carregarTudo, loading }) {
             </header>
 
             <nav className="navbar">
-                {/* 🔹 Dropdowns à esquerda */}
+                {/*  Dropdowns à esquerda */}
                 <div className="navbar-left">
                     <ul className="navbar-menu">
                         <li className="dropdown">

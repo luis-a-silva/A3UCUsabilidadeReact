@@ -3,7 +3,7 @@ import axios from "axios";
 const API_URL = "http://localhost:3000/api/v1/lista-desejo";
 
 // ===================================================
-// 🔹 Obter lista de desejos
+//  Obter lista de desejos
 // ===================================================
 export async function getFavoritos() {
   const token = localStorage.getItem("token");
@@ -19,7 +19,7 @@ export async function getFavoritos() {
 }
 
 // ===================================================
-// 🔹 Adicionar aos favoritos
+//  Adicionar aos favoritos
 // ===================================================
 export async function addFavorito(jogoId) {
   try {
@@ -37,7 +37,7 @@ export async function addFavorito(jogoId) {
 }
 
 // ===================================================
-// 🔹 Remover dos favoritos
+//  Remover dos favoritos
 // ===================================================
 export async function removeFavorito(jogoId) {
   const token = localStorage.getItem("token");

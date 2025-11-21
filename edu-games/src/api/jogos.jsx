@@ -3,7 +3,7 @@ import axios from "axios";
 const API_URL = "http://localhost:3000/api/v1";
 
 // ===================================================
-// 🔹 Listar todos os jogos (rota autenticada)
+//  Listar todos os jogos (rota autenticada)
 // ===================================================
 export async function getAllJogos() {
   const token = localStorage.getItem("token");
@@ -11,7 +11,6 @@ export async function getAllJogos() {
     const res = await axios.get(`${API_URL}/jogos`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(res.data);
     return res.data;
   } catch (err) {
     console.error("Erro ao buscar jogos (autenticado):", err);
@@ -20,7 +19,7 @@ export async function getAllJogos() {
 }
 
 // ===================================================
-// 🔹 Listar todos os jogos (rota pública)
+//  Listar todos os jogos (rota pública)
 // ===================================================
 export async function getPublicJogos() {
   try {
@@ -33,7 +32,7 @@ export async function getPublicJogos() {
 }
 
 // ===================================================
-// 🔹 Listar jogo por ID
+//  Listar jogo por ID
 // ===================================================
 export async function getJogoById(id) {
   const token = localStorage.getItem("token");
@@ -49,7 +48,7 @@ export async function getJogoById(id) {
 }
 
 // ===================================================
-// 🔹 Listar todas as categorias
+//  Listar todas as categorias
 // ===================================================
 export async function getCategorias() {
   const token = localStorage.getItem("token");
@@ -65,7 +64,7 @@ export async function getCategorias() {
 }
 
 // ===================================================
-// 🔹 Listar jogos por categoria
+//  Listar jogos por categoria
 // ===================================================
 export async function getCategoriaById(idCategoria) {
   const token = localStorage.getItem("token");
@@ -81,7 +80,7 @@ export async function getCategoriaById(idCategoria) {
 }
 
 // ===================================================
-// 🔹 Buscar todas as avaliações de um jogo
+//  Buscar todas as avaliações de um jogo
 // ===================================================
 export async function getAvaliacoesByJogo(jogoId) {
   const token = localStorage.getItem("token");
@@ -90,7 +89,7 @@ export async function getAvaliacoesByJogo(jogoId) {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = res.data;
-    // 🔹 Se o backend retornar um único objeto, transforma em array
+    //  Se o backend retornar um único objeto, transforma em array
     if (!data) return [];
     if (Array.isArray(data)) return data;
     return [data];
@@ -102,7 +101,7 @@ export async function getAvaliacoesByJogo(jogoId) {
 
 
 // ===================================================
-// 🔹 Buscar média das avaliações de um jogo
+//  Buscar média das avaliações de um jogo
 // ===================================================
 export async function getMediaAvaliacao(jogoId) {
   const token = localStorage.getItem("token");
@@ -119,7 +118,7 @@ export async function getMediaAvaliacao(jogoId) {
 
 
 // ===================================================
-// 🔹 Finalizar Compra
+//  Finalizar Compra
 // ===================================================
 export async function finalizarCompra() {
   try {
@@ -139,7 +138,7 @@ export async function finalizarCompra() {
 
 
 // ===================================================
-// 🔹 Criar nova avaliação
+//  Criar nova avaliação
 // ===================================================
 export async function addAvaliacao(jogoId, nota, comentario = "") {
   const token = localStorage.getItem("token");
@@ -157,7 +156,7 @@ export async function addAvaliacao(jogoId, nota, comentario = "") {
 }
 
 // ===================================================
-// 🔹 Criar jogo (autenticado)
+//  Criar jogo (autenticado)
 // ===================================================
 export async function createJogo(jogo) {
   const token = localStorage.getItem("token");
@@ -173,7 +172,7 @@ export async function createJogo(jogo) {
 }
 
 // ===================================================
-// 🔹 Atualizar jogo (autenticado)
+//  Atualizar jogo (autenticado)
 // ===================================================
 export async function updateJogo(id, jogo) {
   const token = localStorage.getItem("token");
@@ -189,7 +188,7 @@ export async function updateJogo(id, jogo) {
 }
 
 // ===================================================
-// 🔹 Deletar jogo (autenticado)
+//  Deletar jogo (autenticado)
 // ===================================================
 export async function deleteJogo(id) {
   const token = localStorage.getItem("token");

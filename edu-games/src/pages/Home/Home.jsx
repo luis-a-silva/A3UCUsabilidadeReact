@@ -7,9 +7,9 @@ import { getAllJogos, getPublicJogos, getCategoriaById } from "../../api/jogos";
 import { addCarrinho, removeCarrinho, getCarrinho } from "../../api/carrinho";
 import { addFavorito, removeFavorito, getFavoritos } from "../../api/favoritos";
 import { mostrarMensagem } from "../../utils/alerta";
-import "./Home.css";
 import { atualizarHeaderCarrinho } from "../../utils/headerUtil";
-import { getTopDadosCompletos } from "../../api/vendas";
+import { getJogosComTotalVendas } from "../../api/vendas";
+import "./Home.css";
 
 export default function Home() {
   const [jogos, setJogos] = useState([]);
@@ -17,119 +17,120 @@ export default function Home() {
   const [favoritos, setFavoritos] = useState([]);
   const [autenticado, setAutenticado] = useState(null);
   const [loading, setLoading] = useState(false);
-  const effectRan = useRef(false);
+
+  // Top geral e top por empresa
   const [topJogos, setTopJogos] = useState([]);
-  const [topEmpresas, setTopEmpresas] = useState([]);
+  const [topJogosByEmpresas, setTopJogosByEmpresas] = useState([]);
+  useEffect(() => {
+    carregarTudo();
+  }, []);
 
   async function carregarTudo(categoriaId = null) {
     try {
-      setLoading(true); // 🔥 INÍCIO DO LOADING
+      setLoading(true);
 
       const tokenExiste = isAuthenticated();
       setAutenticado(tokenExiste);
 
+      // 1) Carregar jogos (public ou autenticado)
       let dadosJogos = tokenExiste
         ? await getAllJogos()
         : await getPublicJogos();
 
+
+      // 2) Filtrar categoria (se houver)
       if (categoriaId) {
         dadosJogos = dadosJogos.filter(j => j.fkCategoria === categoriaId);
       }
 
-      const jogosComCategorias = await Promise.all(
-        dadosJogos.map(async (jogo) => {
-          try {
-            const categoria = jogo.fkCategoria
-              ? await getCategoriaById(jogo.fkCategoria)
-              : null;
+      // 3) Montar categorias (NÃO chama endpoint se fkCategoria é undefined!)
+      const jogosBase = await Promise.all(
+        dadosJogos.map(async jogo => {
 
-            return {
-              ...jogo,
-              categoriaNome: categoria?.nome || "Sem categoria",
-            };
-          } catch {
-            return { ...jogo, categoriaNome: "Sem categoria" };
+          let categoriaNome = "Sem categoria";
+
+          if (jogo.fkCategoria) {
+            try {
+              const cat = await getCategoriaById(jogo.fkCategoria);
+              categoriaNome = cat?.nome || "Sem categoria";
+            } catch { }
           }
+
+          return {
+            ...jogo,
+            categoriaNome
+          };
         })
       );
 
-      setJogos(jogosComCategorias);
+      console.log("Jogos carregados:", jogosBase);
 
-      const { topJogosFiltrados } = gerarRankingLocal(jogosComCategorias);
-
-      setTopJogos(topJogosFiltrados);
-
-
-      if (tokenExiste) {
-        const [carrinhoAPI, favoritosAPI] = await Promise.all([
-          getCarrinho(),
-          getFavoritos(),
-        ]);
-
-        setCarrinho(carrinhoAPI);
-        setFavoritos(
-          Array.isArray(favoritosAPI)
-            ? favoritosAPI.map(f => ({
-              jogoId: f.jogoId || f.jogo?.id || f.id,
-            }))
-            : []
-        );
+      // 4) Se o usuário NÃO estiver autenticado, não carrega vendas
+      if (!tokenExiste) {
+        setJogos(jogosBase);
+        setTopJogos([]); // esconde ranking
+        return;
       }
+
+      // 5) Buscar vendas REAIS
+      const jogosComVenda = await getJogosComTotalVendas();
+
+      // 6) Mesclar: jogoBase + totalVendido
+      const jogosFinal = jogosBase.map(jogoBase => {
+        const venda = jogosComVenda.find(j => j.id === jogoBase.id);
+
+        return {
+          ...jogoBase,              // mantém categoriaNome
+          totalVendido: venda?.totalVendido || 0
+        };
+      });
+
+      console.log("Jogos FINAL (categoria + vendas):", jogosFinal);
+
+      setJogos(jogosFinal);
+
+
+      // 7) Ranking real
+      const ranking = jogosFinal
+        .filter(j => j.totalVendido > 0)
+        .sort((a, b) => b.totalVendido - a.totalVendido)
+        .slice(0, 10);
+
+      console.log("Ranking de jogos mais vendidos:", ranking);
+
+      setTopJogos(ranking);
+
+      // 8) Carrinho + favoritos
+      const [carrinhoAPI, favoritosAPI] = await Promise.all([
+        getCarrinho(),
+        getFavoritos()
+      ]);
+
+      setCarrinho(carrinhoAPI);
+
+      setFavoritos(
+        Array.isArray(favoritosAPI)
+          ? favoritosAPI.map(f => ({
+            jogoId: f.jogoId || f.jogo?.id || f.id
+          }))
+          : []
+      );
 
     } catch (err) {
       console.error("❌ Erro ao carregar dados:", err);
       setJogos([]);
       setCarrinho([]);
       setFavoritos([]);
+      setTopJogos([]);
     } finally {
-      setLoading(false); // 🔥 FIM DO LOADING
+      setLoading(false);
     }
   }
 
-  function gerarRankingLocal(listaJogos) {
-    // 🔥 contar vendas por jogo
-    const vendasPorJogo = {};
 
-    listaJogos.forEach(jogo => {
-      if (!vendasPorJogo[jogo.nome]) vendasPorJogo[jogo.nome] = {
-        nome: jogo.nome,
-        total: 0,
-      };
-
-      vendasPorJogo[jogo.nome].total++;
-    });
-
-    const topJogosFiltrados = Object.values(vendasPorJogo)
-      .sort((a, b) => b.total - a.total)
-      .slice(0, 10);
-
-  
-    return {
-      topJogosFiltrados
-    };
-  }
-
-
-  useEffect(() => {
-    if (effectRan.current) return;
-    effectRan.current = true;
-
-    async function carregarInfos() {
-      const { topJogos, topEmpresas } = await getTopDadosCompletos();
-      setTopJogos(topJogos);
-      setTopEmpresas(topEmpresas);
-    }
-
-    carregarInfos();
-    carregarTudo();
-  }, []);
-
-  // Enquanto ainda verifica autenticação
-  if (autenticado === null) {
-    return <p style={{ textAlign: "center", marginTop: "20px" }}>Carregando...</p>;
-  }
-
-  // ======== Funções utilitárias ========
+  // --------------------------------------------------
+  //  Utilitários
+  // --------------------------------------------------
 
   function estaNoCarrinho(id) {
     return carrinho.some((i) => i.jogoId === id);
@@ -197,11 +198,21 @@ export default function Home() {
     }
   }
 
-  // ======== Renderização ========
+  // --------------------------------------------------
+  //  Renderização
+  // --------------------------------------------------
+
+  if (autenticado === null) {
+    return <p style={{ textAlign: "center", marginTop: "20px" }}>Carregando...</p>;
+  }
 
   return (
     <div>
-      {autenticado ? <HeaderAuth carregarTudo={carregarTudo} loading={loading} /> : <Header />}
+      {autenticado ? (
+        <HeaderAuth carregarTudo={carregarTudo} loading={loading} />
+      ) : (
+        <Header />
+      )}
 
       {loading && (
         <p style={{ textAlign: "center", marginTop: "10px" }}>
@@ -209,62 +220,97 @@ export default function Home() {
         </p>
       )}
 
-      <section className="top10-section">
-        <div className="titulo-secao">
-          <span className="subtitulo">OS MAIS VENDIDOS</span>
-          <h2>Top 10 Jogos</h2>
+
+      {/* -------------------------------------------------- */}
+      {/*  HERO BANNER  */}
+      {/* -------------------------------------------------- */}
+      <section class="hero-banner hero-minimal">
+        <div class="hero-text">
+          <h2>Bem-vindo ao EduGames</h2>
+          <p>Jogos, ofertas e lançamentos — encontre o melhor para você.</p>
         </div>
-
-        {topJogos.length === 0 ? (
-          <p style={{ textAlign: "center", opacity: 0.7 }}>
-            Não foi possível carregar o ranking de jogos mais vendidos.
-          </p>
-        ) : (
-          <div className="top10-grid">
-            {topJogos.map((jogo, index) => (
-              <div
-                key={index}
-                className="top10-card"
-                style={{
-                  border: index === 0 ? "3px solid gold" : "1px solid #333",
-                  position: "relative"
-                }}
-              >
-                {index === 0 && (
-                  <div className="badge-ouro">🏆 Primeiro Lugar!</div>
-                )}
-
-                <div className="top10-rank">{index + 1}</div>
-
-                <img
-                  src="https://placehold.co/400x300?text=Jogo"
-                  alt={jogo.nome}
-                />
-
-                <div className="top10-info">
-                  <h3>{jogo.nome}</h3>
-                  <p className="categoria-badge">Mais Vendido</p>
-                  <div className="rating">Vendas: {jogo.total}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </section>
 
+      {/* -------------------------------------------------- */}
+      {/*  TOP 10 GERAL - AGORA COMO CARROSSEL */}
+      {/* -------------------------------------------------- */}
+      <div className="ranking-card">
+        <section className="top10-section">
+
+          <div className="titulo-secao">
+            <span className="subtitulo">OS MAIS VENDIDOS</span>
+            <h2>Top 10 Jogos</h2>
+          </div>
+
+          {topJogos.length === 0 ? (
+            <p style={{ textAlign: "center", opacity: 0.7 }}>
+              Não foi possível carregar o ranking de jogos mais vendidos.
+            </p>
+          ) : (
+            <div className="carousel-wrapper">
+
+              {/* Botão ANTERIOR */}
+              <button className="carousel-btn prev" onClick={() => {
+                document.querySelector(".carousel-container")
+                  .scrollBy({ left: -400, behavior: "smooth" });
+              }}>
+                <i className="fas fa-chevron-left"></i>
+              </button>
+
+              {/* Container dos cards */}
+              <div className="carousel-container">
+
+                {topJogos.map((jogo, index) => (
+                  <div className="carousel-card" key={jogo.id ?? index}>
+                    {index === 0 && <div className="badge-ouro">🏆 Primeiro Lugar!</div>}
+                    <img
+                      src="https://placehold.co/400x300?text=Jogo"
+                      alt={jogo.nome}
+                    />
+
+                    <div className="carousel-info">
+                      <h3>{index + 1}. {jogo.nome}</h3>
+
+                      <div className="preco-comprar">
+                        <span className="tag">Mais Vendido</span>
+                        <div className="rating">Vendas: {jogo.totalVendido || jogo.total}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+              </div>
+
+              {/* Botão PRÓXIMO */}
+              <button className="carousel-btn next" onClick={() => {
+                document.querySelector(".carousel-container")
+                  .scrollBy({ left: 400, behavior: "smooth" });
+              }}>
+                <i className="fas fa-chevron-right"></i>
+              </button>
+
+            </div>
+          )}
+
+        </section>
+      </div>
+
+      {/* -------------------------------------------------- */}
+      {/*  TOP 5 POR EMPRESA */}
+      {/* -------------------------------------------------- */}
       <section className="top10-section">
         <div className="titulo-secao">
           <span className="subtitulo">AS QUE MAIS VENDEM</span>
           <h2>Top 5 Empresas</h2>
         </div>
 
-        {topEmpresas.length === 0 ? (
+        {topJogosByEmpresas.length === 0 ? (
           <p style={{ textAlign: "center", opacity: 0.7 }}>
             Não foi possível carregar o ranking de empresas.
           </p>
         ) : (
           <div className="top10-grid">
-            {topEmpresas.map((emp, index) => (
+            {topJogosByEmpresas.map((emp, index) => (
               <div
                 key={index}
                 className="top10-card"
@@ -273,14 +319,12 @@ export default function Home() {
                   position: "relative"
                 }}
               >
-                {index === 0 && (
-                  <div className="badge-ouro">👑 Empresa #1</div>
-                )}
-
+                {index === 0 && <div className="badge-ouro">👑 Empresa #1</div>}
                 <div className="top10-rank">{index + 1}</div>
 
                 <div className="top10-info">
-                  <h3>{emp.empresa}</h3>
+                  <h3>{emp.nome}</h3>
+                  <p className="categoria-badge">{emp.empresa}</p>
                   <div className="rating">Total de vendas: {emp.total}</div>
                 </div>
               </div>
@@ -289,6 +333,9 @@ export default function Home() {
         )}
       </section>
 
+      {/* -------------------------------------------------- */}
+      {/*  LISTA DE TODOS OS JOGOS */}
+      {/* -------------------------------------------------- */}
       <section className="games-section">
         <div className="titulo-secao">
           <span className="subtitulo">CONFIRA TAMBÉM</span>
@@ -300,6 +347,7 @@ export default function Home() {
             jogos.map((jogo, index) => {
               const noCarrinho = estaNoCarrinho(jogo.id);
               const nosFavoritos = estaNosFavoritos(jogo.id);
+
               return (
                 <div className="cartao-jogo" key={jogo.id ?? index}>
                   <img
@@ -322,17 +370,23 @@ export default function Home() {
                     </div>
 
                     <div className="acoes-jogo">
-
-                      {autenticado ?
+                      {autenticado ? (
                         <Link to={`/jogo/${jogo.id}`} className="btn-comprar">
                           <i className="fas fa-arrow-right"></i> Saiba mais
                         </Link>
-
-                        :
-                        <buttons className="btn-comprar" onClick={() => mostrarMensagem("Você precisa estar logado para comprar jogos.", "info")}>
+                      ) : (
+                        <buttons
+                          className="btn-comprar"
+                          onClick={() =>
+                            mostrarMensagem(
+                              "Você precisa estar logado para comprar jogos.",
+                              "info"
+                            )
+                          }
+                        >
                           <i className="fas fa-arrow-right"></i> Saiba mais
                         </buttons>
-                      }
+                      )}
 
                       {/* Carrinho */}
                       <button
@@ -344,7 +398,10 @@ export default function Home() {
                           }`}
                         onClick={() =>
                           statusDoJogo(jogo.id) === "comprado"
-                            ? mostrarMensagem("Você já comprou este jogo.", "info")
+                            ? mostrarMensagem(
+                              "Você já comprou este jogo.",
+                              "info"
+                            )
                             : toggleCarrinho(jogo.id)
                         }
                       >
@@ -360,7 +417,8 @@ export default function Home() {
 
                       {/* Favorito */}
                       <button
-                        className={`btn-favorito ${nosFavoritos ? "ativo" : ""}`}
+                        className={`btn-favorito ${nosFavoritos ? "ativo" : ""
+                          }`}
                         onClick={() => toggleFavorito(jogo.id)}
                       >
                         <i className="fas fa-star"></i>
@@ -371,11 +429,12 @@ export default function Home() {
               );
             })
           ) : (
-            <p style={{ textAlign: "center", marginTop: "20px" }}>Nenhum jogo encontrado.</p>
+            <p style={{ textAlign: "center", marginTop: "20px" }}>
+              Nenhum jogo encontrado.
+            </p>
           )}
         </div>
       </section>
-    </div>
+    </div >
   );
 }
-

@@ -5,7 +5,7 @@ export function mostrarConfirmacao(mensagem, onConfirm) {
   const existente = document.querySelector(".confirmacao-container");
   if (existente) existente.remove();
 
-  // 🔹 Cria o container principal com estilos inline
+  //  Cria o container principal com estilos inline
   const container = document.createElement("div");
   Object.assign(container.style, {
     position: "fixed",
@@ -20,7 +20,7 @@ export function mostrarConfirmacao(mensagem, onConfirm) {
     zIndex: "9999",
   });
 
-  // 🔹 Cria o modal
+  //  Cria o modal
   const modal = document.createElement("div");
   Object.assign(modal.style, {
     background: "#fff",
@@ -41,7 +41,7 @@ export function mostrarConfirmacao(mensagem, onConfirm) {
     marginBottom: "20px",
   });
 
-  // 🔹 Cria o container dos botões
+  //  Cria o container dos botões
   const botoes = document.createElement("div");
   Object.assign(botoes.style, {
     display: "flex",
@@ -49,7 +49,7 @@ export function mostrarConfirmacao(mensagem, onConfirm) {
     gap: "10px",
   });
 
-  // 🔹 Botão "Sim"
+  //  Botão "Sim"
   const btnSim = document.createElement("button");
   btnSim.textContent = "Sim";
   Object.assign(btnSim.style, {
@@ -64,7 +64,7 @@ export function mostrarConfirmacao(mensagem, onConfirm) {
   btnSim.addEventListener("mouseenter", () => (btnSim.style.background = "#0056b3"));
   btnSim.addEventListener("mouseleave", () => (btnSim.style.background = "#007bff"));
 
-  // 🔹 Botão "Não"
+  //  Botão "Não"
   const btnNao = document.createElement("button");
   btnNao.textContent = "Não";
   Object.assign(btnNao.style, {
@@ -79,7 +79,7 @@ export function mostrarConfirmacao(mensagem, onConfirm) {
   btnNao.addEventListener("mouseenter", () => (btnNao.style.background = "#c2c2c2"));
   btnNao.addEventListener("mouseleave", () => (btnNao.style.background = "#e0e0e0"));
 
-  // 🔹 Adiciona os elementos ao DOM
+  //  Adiciona os elementos ao DOM
   botoes.appendChild(btnSim);
   botoes.appendChild(btnNao);
   modal.appendChild(texto);
@@ -87,7 +87,7 @@ export function mostrarConfirmacao(mensagem, onConfirm) {
   container.appendChild(modal);
   document.body.appendChild(container);
 
-  // 🔹 Ações dos botões
+  //  Ações dos botões
   btnSim.addEventListener("click", async () => {
     try {
       await onConfirm();

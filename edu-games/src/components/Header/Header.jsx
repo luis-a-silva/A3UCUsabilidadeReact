@@ -22,7 +22,7 @@ export default function Header() {
       </header>
 
       <nav className="navbar">
-        {/* 🔹 Dropdowns à esquerda */}
+        {/*  Dropdowns à esquerda */}
         <div className="navbar-left">
           <ul className="navbar-menu">
             <li className="dropdown">

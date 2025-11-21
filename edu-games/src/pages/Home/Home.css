@@ -1,3 +1,36 @@
+/* ===== HERO BANNER ===== */
+.hero-minimal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  background: linear-gradient(90deg,
+      rgba(102, 126, 234, 0.06),
+      rgba(130, 87, 229, 0.04));
+  border-radius: 12px;
+  margin: 32px auto;
+  max-width: 1400px;
+}
+
+.hero-minimal .hero-text {
+  text-align: center;
+  max-width: 900px;
+  padding: 8px 16px;
+}
+
+.hero-minimal h2 {
+  font-size: 1.9rem;
+  color: var(--cor-texto-principal);
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+
+.hero-minimal p {
+  font-size: 1rem;
+  color: #6b6b6b;
+  margin: 0;
+}
+
 /* ===== CARRINHO ===== */
 #btnCarrinho {
   position: relative;
@@ -53,6 +86,91 @@
   gap: 8px;
   align-items: center;
 }
+
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.carousel-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 5px;
+}
+
+.carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-card {
+  min-width: 260px;
+  transition: transform 0.2s ease;
+  min-width: 250px;
+  background-color: var(--cor-fundo-componente);
+  border-radius: 15px;
+  overflow: hidden;
+  border: 2px solid var(--cor-borda);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.carousel-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--cor-principal-violeta);
+  box-shadow: 0 10px 30px rgba(130, 87, 229, 0.3);
+}
+
+.carousel-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.carousel-info {
+  padding: 12px;
+}
+
+.carousel-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  color: white;
+  padding: 12px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  z-index: 10;
+  background-color: rgba(130, 87, 229, 0.9);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.carousel-btn.prev {
+  left: -10px;
+}
+
+.carousel-btn.next {
+  right: -10px;
+}
+
+.carousel-btn:hover {
+  background: #333;
+}
+
 
 .btn-add-cart,
 .btn-favorito {
@@ -276,7 +394,7 @@
 
 .top10-info {
   padding: 20px;
-  margin-top: 50px ;
+  margin-top: 50px;
 }
 
 .top10-info h3 {
@@ -286,13 +404,19 @@
   color: var(--cor-texto-principal);
 }
 
+.ranking-card {
+  background: var(--cor-fundo-componente);
+  padding: 20px;
+  margin: 25px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  max-width: 1100px;
+}
+
 
 .badge-ouro {
-  right: 0;
-  position: absolute;
   background: gold;
   padding: 6px 10px;
-  border-radius: 6px;
   font-weight: bold;
   box-shadow: 0 0 8px gold;
 }

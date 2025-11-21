@@ -3,7 +3,7 @@ import axios from "axios";
 const API_URL = "http://localhost:3000/api/v1";
 
 // ===================================================
-// 🔹 Buscar empresa por ID
+//  Buscar empresa por ID
 // ===================================================
 export async function getEmpresaById(id) {
   try {
@@ -20,7 +20,7 @@ export async function getEmpresaById(id) {
 }
 
 // ===================================================
-// 🔹 Listar todas as empresas
+//  Listar todas as empresas
 // ===================================================
 export async function getEmpresas() {
   try {

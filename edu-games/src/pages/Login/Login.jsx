@@ -11,126 +11,122 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const containerLogin = document.getElementById("container-login");
-    const containerCadastro = document.getElementById("container-cadastro");
+  const containerLogin = document.getElementById("container-login");
+  const containerCadastro = document.getElementById("container-cadastro");
 
-    const btnIrParaCadastro = document.getElementById("btn-cadastrar");
-    const btnIrParaLogin = document.getElementById("btn-login");
+  const btnIrParaCadastro = document.getElementById("btn-cadastrar");
+  const btnIrParaLogin = document.getElementById("btn-login");
 
-    const loginForm = document.getElementById("login-form");
-    const cadastrarForm = document.getElementById("cadastrar-form");
+  const loginForm = document.getElementById("login-form");
+  const cadastrarForm = document.getElementById("cadastrar-form");
 
-    // Alternar Login/Cadastro
-    btnIrParaCadastro?.addEventListener("click", () => {
-      containerLogin.classList.remove("form-login-active");
-      containerLogin.classList.add("form-login-hide");
-      containerCadastro.classList.add("form-cadastro-active");
-      setMessage("");
-    });
+  // ---------- Handlers ----------
+  const handleIrParaCadastro = () => {
+    containerLogin.classList.remove("form-login-active");
+    containerLogin.classList.add("form-login-hide");
+    containerCadastro.classList.add("form-cadastro-active");
+    setMessage("");
+  };
 
-    btnIrParaLogin?.addEventListener("click", () => {
-      containerCadastro.classList.remove("form-cadastro-active");
-      containerLogin.classList.remove("form-login-hide");
-      containerLogin.classList.add("form-login-active");
-      setMessage("");
-    });
+  const handleIrParaLogin = () => {
+    containerCadastro.classList.remove("form-cadastro-active");
+    containerLogin.classList.remove("form-login-hide");
+    containerLogin.classList.add("form-login-active");
+    setMessage("");
+  };
 
-    // Login
-    loginForm?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      setLoading(true);
-      setMessage("");
+  const handleSubmitLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
-      const email = document.getElementById("email-login").value;
-      const senha = document.getElementById("password-login").value;
+    const email = document.getElementById("email-login").value;
+    const senha = document.getElementById("password-login").value;
 
-      try {
-        const res = await loginUser(email, senha);
+    try {
+      const res = await loginUser(email, senha);
 
-        // Mostra a mensagem vinda da API
-        mostrarMensagem(res.message, res.status === 200 ? "success" : "info");
+      mostrarMensagem(res.message, res.status === 200 ? "success" : "info");
 
-        // Sucesso (status 200 + token)
-        if (res.status === 200 && res.data.token) {
-          localStorage.setItem("token", res.data.token);
-          setTimeout(() => (window.location.href = "/home"), 800);
-        }
-        
-        // Erro
-      } catch (err) {
-        console.error(err);
-        const msg = err.response?.data?.message || "Não foi possível realizar o login.";
-        mostrarMensagem(msg, "danger");
-
-      } finally {
-        setLoading(false);
-      }
-    });
-
-    // Cadastro
-    cadastrarForm?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      setLoading(true);
-      setMessage("");
-
-      const nome = document.getElementById("nome").value;
-      const email = document.getElementById("email-cadastro").value;
-      const senha = document.getElementById("password-cadastro").value;
-      const confirmar = document.getElementById("confirm-password-cadastro").value;
-
-      if (senha !== confirmar) {
-        mostrarMensagem("As senhas não coincidem!", "info");
-        setLoading(false);
-        return;
+      if (res.status === 200 && res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        setTimeout(() => (window.location.href = "/home"), 800);
       }
 
-      const dataInput = document.getElementById("data-nascimento").value; //yyyy-mm-dd
-      const [ano, mes, dia] = dataInput.split("-");
-      const dataNascimento = `${dia}/${mes}/${ano}`; //dd-mm-yyyy
+    } catch (err) {
+      console.error(err);
+      const msg = err.response?.data?.message || "Não foi possível realizar o login.";
+      mostrarMensagem(msg, "danger");
 
-      try {
-        const res = await registerUser(nome, email, senha, 2, dataNascimento);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        // Exibe mensagem vinda da API
-        mostrarMensagem(res.message, res.status === 201 ? "success" : "info");
+  const handleSubmitCadastro = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
-        // sucesso
-        if (res.status === 201) {
-          btnIrParaLogin?.click();
-        }
+    const nome = document.getElementById("nome").value;
+    const email = document.getElementById("email-cadastro").value;
+    const senha = document.getElementById("password-cadastro").value;
+    const confirmar = document.getElementById("confirm-password-cadastro").value;
 
-        //erro
-      } catch (err) {
-        console.error(err);
+    if (senha !== confirmar) {
+      mostrarMensagem("As senhas não coincidem!", "info");
+      setLoading(false);
+      return;
+    }
 
-        // alerta de erro
-        const msg = err.response?.data?.message || "Erro inesperado no cadastro.";
-        mostrarMensagem(msg, "danger");
+    const dataInput = document.getElementById("data-nascimento").value;
+    const [ano, mes, dia] = dataInput.split("-");
+    const dataNascimento = `${dia}/${mes}/${ano}`;
 
-      } finally {
-        setLoading(false);
+    try {
+      const res = await registerUser(nome, email, senha, 2, dataNascimento);
+
+      mostrarMensagem(res.message, res.status === 201 ? "success" : "info");
+
+      if (res.status === 201) {
+        handleIrParaLogin();
       }
-    });
 
-    return () => {
-      btnIrParaCadastro?.removeEventListener("click", () => { });
-      btnIrParaLogin?.removeEventListener("click", () => { });
-      loginForm?.removeEventListener("submit", () => { });
-      cadastrarForm?.removeEventListener("submit", () => { });
-    };
-  }, []);
+    } catch (err) {
+      console.error(err);
+      const msg = err.response?.data?.message || "Erro inesperado no cadastro.";
+      mostrarMensagem(msg, "danger");
+
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ---------- Add Listeners ----------
+  btnIrParaCadastro?.addEventListener("click", handleIrParaCadastro);
+  btnIrParaLogin?.addEventListener("click", handleIrParaLogin);
+  loginForm?.addEventListener("submit", handleSubmitLogin);
+  cadastrarForm?.addEventListener("submit", handleSubmitCadastro);
+
+  // ---------- Cleanup REAL ----------
+  return () => {
+    btnIrParaCadastro?.removeEventListener("click", handleIrParaCadastro);
+    btnIrParaLogin?.removeEventListener("click", handleIrParaLogin);
+    loginForm?.removeEventListener("submit", handleSubmitLogin);
+    cadastrarForm?.removeEventListener("submit", handleSubmitCadastro);
+  };
+}, []);
+
 
   return (
     <>
       <Header />
 
       <div class="form-wrapper">
-        {/* 🔹 Mensagem de retorno da API */}
-        {message && <div className="api-message">{message}</div>}
-
+      
         {/* Form de Login */}
-        <div class="form-container form-login-active" id="container-login">
-          <div class="left-decor">
+        <div className="form-container form-login-active" id="container-login">
+          <div className="left-decor">
             <img src={loginImg} alt="Imagem Login" />
           </div>
           <form id="login-form">
@@ -154,11 +150,11 @@ export default function Login() {
               disabled={loading}
             />
 
-            <button type="submit" class="btn-primario" disabled={loading}>
+            <button type="submit" className="btn-primario" disabled={loading}>
               {loading ? "Aguarde..." : "Entrar"}
             </button>
 
-            <div class="form-links">
+            <div className="form-links">
               <span>Não possui uma conta?</span>
               <button type="button" id="btn-cadastrar" disabled={loading}>
                 Cadastre-se
@@ -168,8 +164,8 @@ export default function Login() {
         </div>
 
         {/* Form de Cadastro */}
-        <div class="form-container form-cadastro" id="container-cadastro">
-          <div class="left-decor">
+        <div className="form-container form-cadastro" id="container-cadastro">
+          <div className="left-decor">
             <img src={registerImg} alt="Imagem Cadastro" />
           </div>
           <form id="cadastrar-form">
@@ -214,11 +210,11 @@ export default function Login() {
               disabled={loading}
             />
 
-            <button type="submit" class="btn-primario" disabled={loading}>
+            <button type="submit" className="btn-primario" disabled={loading}>
               {loading ? "Aguarde..." : "Cadastrar"}
             </button>
 
-            <div class="form-links">
+            <div className="form-links">
               <span>Já possui uma conta?</span>
               <button type="button" id="btn-login" disabled={loading}>
                 Login

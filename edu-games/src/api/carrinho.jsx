@@ -3,7 +3,7 @@ import axios from "axios";
 const API_URL = "http://localhost:3000/api/v1/carrinho";
 
 // ===================================================
-// 🔹 Obter itens do carrinho
+//  Obter itens do carrinho
 // ===================================================
 export async function getCarrinho() {
   try {
@@ -12,7 +12,7 @@ export async function getCarrinho() {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    // 🔹 Normaliza o formato para sempre retornar um array de jogos
+    //  Normaliza o formato para sempre retornar um array de jogos
     const carrinhos = Array.isArray(res.data?.carrinhosComItens)
       ? res.data.carrinhosComItens
       : [];
@@ -22,11 +22,11 @@ export async function getCarrinho() {
         jogoId: i.fkJogo,
         carrinhoId: c.id,
         itemId: i.id,
-        status: c.status, // 🔹 inclui o status do carrinho
+        status: c.status, //  inclui o status do carrinho
       }))
     );
 
-    // 🔹 Atualiza contador no header se callback existir
+    //  Atualiza contador no header se callback existir
     if (typeof onCountUpdate === "function") {
       onCountUpdate(itens.length);
     }
@@ -40,7 +40,7 @@ export async function getCarrinho() {
 }
 
 // ===================================================
-// 🔹 Adicionar item ao carrinho
+//  Adicionar item ao carrinho
 // ===================================================
 export async function addCarrinho(jogoId) {
     try {
@@ -58,7 +58,7 @@ export async function addCarrinho(jogoId) {
   }
 
   // ===================================================
-  // 🔹 Remover item do carrinho
+  //  Remover item do carrinho
   // ===================================================
   export async function removeCarrinho(jogoId) {
     try {
