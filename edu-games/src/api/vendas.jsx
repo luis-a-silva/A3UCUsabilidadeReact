@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getCarrinho } from "./carrinho";
 import { getAllJogos, getJogoById } from "./jogos";
+import { getEmpresas } from "./empresa";
 
 const API_URL = "http://localhost:3000/api/v1";
 
@@ -162,25 +163,59 @@ export async function getJogosComTotalVendas() {
 
 
 
-
 // ===================================================
-//  Jogo mais vendidos por empresa 
+//  Top 5 por Empresa (todas as empresas)
 // ===================================================
-export async function getTopMaisVendedidosPorEmpresa(empresa) {
+export async function getTopJogosPorEmpresa() {
   const token = localStorage.getItem("token");
 
   try {
-    const res = await axios.get(
-      `${API_URL}/relatorios/jogos-mais-vendidos?top=5&empresa=${empresa}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    console.log(res.data);
-    return res.data; // [{ nome, empresa, total }]
+    // 1) Buscar todas as empresas
+    const empresasRes = await getEmpresas();
+
+  
+
+    console.log("[Top por Empresa] Empresas encontradas:", empresasRes);
+
+    const resultados = [];
+
+    // 2) Para cada empresa, buscar seus jogos mais vendidos
+    for (const emp of empresasRes) {
+      try {
+        const res = await axios.get(
+          `${API_URL}/relatorios/jogos-mais-vendidos?top=5&empresa=${emp.id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const lista = Array.isArray(res.data) ? res.data : [];
+
+        // Se não vendeu nada → ignora
+        if (lista.length === 0) continue;
+
+        // Sempre pega o mais vendido da empresa (primeiro item)
+        const jogoTop = lista[0];
+
+        resultados.push({
+          empresaId: emp.id,
+          empresaNome: emp.nome,
+          jogo: jogoTop.nome,
+          total: jogoTop.total
+        });
+        console.log(resultados);
+
+      } catch {
+        // Se algum erro ocorrer para uma empresa, IGNORA
+        continue;
+      }
+    }
+    resultados.sort((a, b) => b.total - a.total);
+    console.log("[Top por Empresa] Resultado final:", resultados);
+    return resultados;
+
   } catch (err) {
-    console.error("Erro ao buscar top jogos mais vendidos:", err);
-    throw err;
+    console.error("Erro ao montar ranking por empresa:", err);
+    return [];
   }
 }
-
 
 

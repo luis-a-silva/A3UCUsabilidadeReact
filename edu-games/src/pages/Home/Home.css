@@ -323,13 +323,13 @@
 }
 
 .categoria-badge {
-  font-size: 0.75rem;
+  font-size: 1.2rem;
   padding: 2px 8px;
   background: #444;
   color: white;
   border-radius: 12px;
   display: inline-block;
-  margin-top: 6px;
+  margin: 6px;
 }
 
 .top10-section {
@@ -366,7 +366,7 @@
 .top10-rank {
   position: absolute;
   top: 15px;
-  left: 15px;
+  right: 15px;
   background: var(--cor-principal-violeta);
   color: gold;
   width: 50px;
@@ -394,13 +394,11 @@
 
 .top10-info {
   padding: 20px;
-  margin-top: 50px;
 }
 
 .top10-info h3 {
   font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 10px;
   color: var(--cor-texto-principal);
 }
 
@@ -419,4 +417,80 @@
   padding: 6px 10px;
   font-weight: bold;
   box-shadow: 0 0 8px gold;
+}
+
+/* --- Botão Flutuante --- */
+.btn-flutuante {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: var(--cor-destaque-amarelo);
+  color: #000;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform .2s, box-shadow .25s;
+}
+
+.btn-flutuante:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 25px rgba(130,87,229,0.35);
+}
+
+/* --- Modal Jogos --- */
+.modal-jogos {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.65);
+  z-index: 9999;
+}
+
+.modal-content-jogos {
+  background: var(--cor-fundo-componente);
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 900px;
+  border: 2px solid var(--cor-borda);
+  text-align: center;
+}
+
+.modal-content-jogos h2 {
+  color: var(--cor-texto-principal);
+  margin-bottom: 20px;
+}
+
+.jogos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.jogos-grid iframe {
+  width: 100%;
+  height: 320px;
+  border-radius: 10px;
+  border: 2px solid var(--cor-borda);
+}
+
+.close-jogos {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--cor-texto-principal);
+  font-weight: bold;
 }

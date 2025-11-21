@@ -8,7 +8,7 @@ import { addCarrinho, removeCarrinho, getCarrinho } from "../../api/carrinho";
 import { addFavorito, removeFavorito, getFavoritos } from "../../api/favoritos";
 import { mostrarMensagem } from "../../utils/alerta";
 import { atualizarHeaderCarrinho } from "../../utils/headerUtil";
-import { getJogosComTotalVendas } from "../../api/vendas";
+import { getJogosComTotalVendas, getTopJogosPorEmpresa } from "../../api/vendas";
 import "./Home.css";
 
 export default function Home() {
@@ -17,10 +17,12 @@ export default function Home() {
   const [favoritos, setFavoritos] = useState([]);
   const [autenticado, setAutenticado] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [modalJogosAberto, setModalJogosAberto] = useState(false);
 
   // Top geral e top por empresa
   const [topJogos, setTopJogos] = useState([]);
   const [topJogosByEmpresas, setTopJogosByEmpresas] = useState([]);
+
   useEffect(() => {
     carregarTudo();
   }, []);
@@ -63,7 +65,6 @@ export default function Home() {
         })
       );
 
-      console.log("Jogos carregados:", jogosBase);
 
       // 4) Se o usuário NÃO estiver autenticado, não carrega vendas
       if (!tokenExiste) {
@@ -116,8 +117,15 @@ export default function Home() {
           : []
       );
 
+      // 9) Top por empresa (fixo, independente de categoria)
+      if (tokenExiste) {
+        const empresasRanking = await getTopJogosPorEmpresa();
+        setTopJogosByEmpresas(empresasRanking);
+      }
+
+
     } catch (err) {
-      console.error("❌ Erro ao carregar dados:", err);
+      console.error(" Erro ao carregar dados:", err);
       setJogos([]);
       setCarrinho([]);
       setFavoritos([]);
@@ -131,6 +139,7 @@ export default function Home() {
   // --------------------------------------------------
   //  Utilitários
   // --------------------------------------------------
+
 
   function estaNoCarrinho(id) {
     return carrinho.some((i) => i.jogoId === id);
@@ -320,11 +329,11 @@ export default function Home() {
                 }}
               >
                 {index === 0 && <div className="badge-ouro">👑 Empresa #1</div>}
-                <div className="top10-rank">{index + 1}</div>
+                {index != 0 && <div className="top10-rank">{index + 1}</div>}
 
                 <div className="top10-info">
-                  <h3>{emp.nome}</h3>
-                  <p className="categoria-badge">{emp.empresa}</p>
+                  <h3 className="categoria-badge">{emp.empresaNome}</h3>
+                  <h3>🎮 {emp.jogo}</h3>
                   <div className="rating">Total de vendas: {emp.total}</div>
                 </div>
               </div>
@@ -435,6 +444,55 @@ export default function Home() {
           )}
         </div>
       </section>
+
+
+      <button
+        className="btn-flutuante"
+        onClick={() => setModalJogosAberto(true)}
+      >
+        🎮 Jogue Agora
+      </button>
+
+      {modalJogosAberto && (
+        <div className="modal-jogos" onClick={(e) => {
+          if (e.target.classList.contains("modal-jogos")) {
+            setModalJogosAberto(false);
+          }
+        }}>
+          <div className="modal-content-jogos">
+            <span
+              className="close-jogos"
+              onClick={() => setModalJogosAberto(false)}
+            >
+              &times;
+            </span>
+
+            <h2>Escolha um Jogo!</h2>
+
+            <div className="jogos-grid">
+              <iframe
+                src="https://playpager.com/embed/checkers/index.html"
+                title="Online Checkers Game"
+                scrolling="no"
+              ></iframe>
+              <iframe
+                src="https://playpager.com/embed/reversi/index.html"
+                title="Online Othello Game"
+                scrolling="no"
+              ></iframe>
+              <iframe
+                src="https://playpager.com/embed/cubes/index.html"
+                title="Cubes Game"
+                scrolling="no"
+              ></iframe>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </div >
+
+
   );
 }
