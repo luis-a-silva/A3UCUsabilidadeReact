@@ -3,10 +3,12 @@ import { getTopJogosMaisVendidos, getTopJogosPorEmpresa } from "../../api/vendas
 import "./Admin.css";
 import HeaderAdmin from "./HeaderAdmin";
 
+
 export default function Dashboard() {
   const [topJogos, setTopJogos] = useState([]);
   const [topEmpresas, setTopEmpresas] = useState([]);
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     async function carregarDashboard() {
@@ -14,7 +16,7 @@ export default function Dashboard() {
         setLoading(true);
         const jogos = await getTopJogosMaisVendidos() || [];
         setTopJogos(jogos);
-        
+       
         const empresasRanking = await getTopJogosPorEmpresa() || { todas: [] };
         setTopEmpresas(empresasRanking.todas || []);
       } catch (err) {
@@ -26,21 +28,25 @@ export default function Dashboard() {
     carregarDashboard();
   }, []);
 
+
   const maxTotalJogos = topJogos.length > 0 ? Math.max(...topJogos.map(j => j.total)) : 1;
   const maxTotalEmpresas = topEmpresas.length > 0 ? Math.max(...topEmpresas.map(e => e.total)) : 1;
 
+
   if (loading) return <div className="admin-container"><p style={{ textAlign: "center", color: "white", padding: "50px" }}>Carregando Dashboard...</p></div>;
+
 
   return (
     <div className="admin-container">
-      
+     
       <HeaderAdmin />
+
 
       <div className="admin-content-body">
           <div className="secao-titulo-central">
-              <h1 className="titulo-painel">Painel Administrativo</h1>
               <h3 className="subtitulo-gerenciamento">Visão Geral (Dashboard de Vendas)</h3>
           </div>
+
 
           {/* GRÁFICO HORIZONTAL */}
           <section className="grafico-h">
@@ -57,6 +63,7 @@ export default function Dashboard() {
               ))
             )}
           </section>
+
 
           {/* GRÁFICO VERTICAL */}
           <section className="grafico-v">
@@ -77,3 +84,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

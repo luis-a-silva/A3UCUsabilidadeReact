@@ -4,6 +4,7 @@ import { getEmpresas } from "../../api/empresa";
 import HeaderAdmin from "./HeaderAdmin";
 import "./Admin.css";
 
+
 export default function Empresas() {
   const [empresas, setEmpresas] = useState([]);
   const [modalCriar, setModalCriar] = useState(false);
@@ -12,9 +13,11 @@ export default function Empresas() {
   const [formCriar, setFormCriar] = useState({ nome: "" });
   const [formEditar, setFormEditar] = useState({ id: "", nome: "" });
 
+
   useEffect(() => {
     carregarEmpresas();
   }, []);
+
 
   async function carregarEmpresas() {
     try {
@@ -25,11 +28,13 @@ export default function Empresas() {
     }
   }
 
+
   function abrirEditar(emp) {
     setEmpresaEditar(emp);
     setFormEditar({ id: emp.id, nome: emp.nome });
     setModalEditar(true);
   }
+
 
   async function salvarEdicao() {
     try {
@@ -40,6 +45,7 @@ export default function Empresas() {
         alert("Erro ao atualizar empresa");
     }
   }
+
 
   async function criarNovaEmpresa() {
     if (!formCriar.nome) {
@@ -56,15 +62,28 @@ export default function Empresas() {
     }
   }
 
+
+  async function apagarEmpresa(id) {
+    if (!confirm("Deseja realmente excluir esta empresa?")) return;
+    try {
+        await deleteEmpresa(id);
+        carregarEmpresas();
+    } catch (error) {
+        alert("Erro ao deletar empresa");
+    }
+  }
+
+
   return (
     <div className="admin-container">
       <HeaderAdmin />
 
+
       <div className="admin-content-body">
           <div className="secao-titulo-central">
-              <h1 className="titulo-painel">Painel Administrativo</h1>
               <h3 className="subtitulo-gerenciamento">Gerenciamento de Empresas</h3>
           </div>
+
 
           <div className="top-controls">
               <button className="btn-criar-verde" onClick={() => setModalCriar(true)}>
@@ -72,6 +91,7 @@ export default function Empresas() {
               </button>
               <span className="contador-texto">Quantidade de Empresas cadastradas: {empresas.length}</span>
           </div>
+
 
           <div className="grid-cards">
               {empresas.map((emp) => (
@@ -91,11 +111,18 @@ export default function Empresas() {
           </div>
       </div>
 
+
+      {/* Modal Criar */}
       {modalCriar && (
         <div className="modal-bg" onClick={() => setModalCriar(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h2>Criar Empresa</h2>
-            <input type="text" placeholder="Nome da Empresa" value={formCriar.nome} onChange={(e) => setFormCriar({ ...formCriar, nome: e.target.value })} />
+            <input
+              type="text"
+              placeholder="Nome da Empresa"
+              value={formCriar.nome}
+              onChange={(e) => setFormCriar({ ...formCriar, nome: e.target.value })}
+            />
             <div className="modal-actions">
               <button className="btn-salvar" onClick={criarNovaEmpresa}>Salvar</button>
               <button className="btn-cancelar" onClick={() => setModalCriar(false)}>Cancelar</button>
@@ -104,11 +131,17 @@ export default function Empresas() {
         </div>
       )}
 
+
+      {/* Modal Editar */}
       {modalEditar && (
         <div className="modal-bg" onClick={() => setModalEditar(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h2>Editar Empresa</h2>
-            <input type="text" value={formEditar.nome} onChange={(e) => setFormEditar({ ...formEditar, nome: e.target.value })} />
+            <input
+              type="text"
+              value={formEditar.nome}
+              onChange={(e) => setFormEditar({ ...formEditar, nome: e.target.value })}
+            />
             <div className="modal-actions">
               <button className="btn-salvar" onClick={salvarEdicao}>Salvar</button>
               <button className="btn-cancelar" onClick={() => setModalEditar(false)}>Cancelar</button>
@@ -119,3 +152,4 @@ export default function Empresas() {
     </div>
   );
 }
+

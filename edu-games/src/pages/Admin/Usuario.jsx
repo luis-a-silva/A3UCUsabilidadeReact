@@ -4,6 +4,7 @@ import { registerUser } from "../../api/authService";
 import HeaderAdmin from "./HeaderAdmin";
 import "./Admin.css";
 
+
 export default function Usuarios() {
     const [usuarios, setUsuarios] = useState([]);
     const [perfis, setPerfis] = useState([]);
@@ -12,6 +13,7 @@ export default function Usuarios() {
     const [usuarioEditar, setUsuarioEditar] = useState(null);
     const [formCriar, setFormCriar] = useState({ nome: "", email: "", senha: "", confirmarSenha: "", dataNascimento: "", perfil: "" });
     const [formEditar, setFormEditar] = useState({ id: "", nome: "", email: "", dataNascimento: "", fkPerfil: "" });
+
 
     function formatarDataParaInput(data) {
         if (!data) return "";
@@ -23,16 +25,19 @@ export default function Usuarios() {
         return data;
     }
 
+
     function formatarDataParaBackend(isoDate) {
         if (!isoDate) return null;
         const [ano, mes, dia] = isoDate.split("-");
         return `${dia}-${mes}-${ano}`;
     }
 
+
     useEffect(() => {
         carregarUsuarios();
         carregarPerfis();
     }, []);
+
 
     async function carregarUsuarios() {
         try {
@@ -43,6 +48,7 @@ export default function Usuarios() {
         }
     }
 
+
     async function carregarPerfis() {
         try {
             const pefis = await getPerfis();
@@ -51,6 +57,7 @@ export default function Usuarios() {
             console.error("Erro ao carregar perfis", error);
         }
     }
+
 
     function abrirEditar(usuario) {
         setUsuarioEditar(usuario);
@@ -64,6 +71,7 @@ export default function Usuarios() {
         setModalEditar(true);
     }
 
+
     async function salvarEdicao() {
         try {
             await updateUser(formEditar.id, formEditar.nome, formEditar.dataNascimento, formEditar.fkPerfil);
@@ -73,6 +81,7 @@ export default function Usuarios() {
             alert("Erro ao editar usuário");
         }
     }
+
 
     async function criarNovoUsuario() {
         try {
@@ -87,15 +96,17 @@ export default function Usuarios() {
         }
     }
 
+
     return (
         <div className="admin-container">
             <HeaderAdmin />
 
+
             <div className="admin-content-body">
                 <div className="secao-titulo-central">
-                    <h1 className="titulo-painel">Painel Administrativo</h1>
                     <h3 className="subtitulo-gerenciamento">Gerenciamento de Usuários</h3>
                 </div>
+
 
                 <div className="top-controls">
                     <button className="btn-criar-verde" onClick={() => setModalCriar(true)}>
@@ -103,6 +114,7 @@ export default function Usuarios() {
                     </button>
                     <span className="contador-texto">Quantidade de Usuários cadastrados: {usuarios.length}</span>
                 </div>
+
 
                 <div className="grid-cards">
                     {usuarios.map((u) => (
@@ -124,6 +136,7 @@ export default function Usuarios() {
                 </div>
             </div>
 
+
             {modalCriar && (
                 <div className="modal-bg" onClick={() => setModalCriar(false)}>
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -140,6 +153,7 @@ export default function Usuarios() {
                     </div>
                 </div>
             )}
+
 
             {modalEditar && (
                 <div className="modal-bg" onClick={() => setModalEditar(false)}>
@@ -162,3 +176,4 @@ export default function Usuarios() {
         </div>
     );
 }
+

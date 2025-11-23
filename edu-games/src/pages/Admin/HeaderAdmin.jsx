@@ -2,34 +2,39 @@ import logo from "../../assets/logo_edugames_horizontal.png";
 import "./Admin.css";
 import { Link, useLocation } from "react-router-dom";
 
+
 export default function HeaderAdmin() {
     const handleLogout = () => {
         localStorage.removeItem("token");
         window.location.href = "/login";
     };
 
+
     const location = useLocation();
 
-    // Função para marcar o botão ativo
+
+    // Verifica qual página está ativa para aplicar a classe "ativo"
     const isActive = (path) => location.pathname === path ? "nav-btn ativo" : "nav-btn";
+
 
     return (
         <header className="admin-header">
             {/* Esquerda: Logo */}
             <div className="header-logo-area">
                 <Link to="/">
-                    <img 
-                        src={logo} 
-                        alt="EduGames" 
+                    <img
+                        src={logo}
+                        alt="EduGames"
                         className="logo-icone"
                     />
                 </Link>
             </div>
 
+
             {/* Centro: Navegação Unificada */}
             <nav className="header-nav-container">
                 <span className="titulo-painel-nav">Painel Administrativo:</span>
-                
+               
                 <Link to="/admin/dashboard" className={isActive("/admin/dashboard")}>
                     Dashboard
                 </Link>
@@ -44,6 +49,7 @@ export default function HeaderAdmin() {
                 </Link>
             </nav>
 
+
             {/* Direita: Botão Sair */}
             <div className="header-sair-area">
                 <button className="btn-sair" onClick={handleLogout}>
@@ -53,3 +59,4 @@ export default function HeaderAdmin() {
         </header>
     );
 }
+
