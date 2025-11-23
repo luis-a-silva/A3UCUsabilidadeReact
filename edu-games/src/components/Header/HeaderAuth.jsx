@@ -6,11 +6,26 @@ import { atualizarHeaderCarrinho } from "../../utils/headerUtil";
 import { inicializarDropdownPerfil } from "../../utils/perfilDropdown";
 import { getCategorias } from "../../api/jogos";
 import "./Header.css";
+import {jwtDecode}  from "jwt-decode";
+
 
 export default function HeaderAuth({ carregarTudo, loading }) {
 
     const [cartCount, setCartCount] = useState(0);
     const [categorias, setCategorias] = useState([]);
+
+
+    function usuarioEhAdmin() {
+        const token = localStorage.getItem("token");
+        if (!token) return false;
+
+        try {
+            const decoded = jwtDecode(token);
+            return decoded.perfil === "Administrador";
+        } catch {
+            return false;
+        }
+    }
 
     async function carregarCategorias() {
         try {
@@ -94,6 +109,11 @@ export default function HeaderAuth({ carregarTudo, loading }) {
                                 <li><a href="#">Contato</a></li>
                             </ul>
                         </li>
+
+                        {usuarioEhAdmin() && (
+                            <Link to="/admin/dashboard" className="link-admin"> <i class="fa-solid fa-user-gear"></i> Painel Admin</Link>
+                        )}
+
                     </ul>
                 </div>
 

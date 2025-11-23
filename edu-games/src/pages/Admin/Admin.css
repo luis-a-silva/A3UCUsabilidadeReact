@@ -1,0 +1,241 @@
+.navegacao-admin {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: var(--cor-fundo-componente);
+}
+
+.links {
+  display: flex;
+  gap: 35px;
+  padding: 12px;
+  text-decoration: none;
+  color: var(--cor-texto);
+  font-weight: bold;
+}
+
+.links a:hover {
+  color: var(--cor-principal-violeta);
+}
+
+.admin-panel {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--cor-texto-principal);
+  margin: 20px auto;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--cor-texto-principal);
+  text-align: center;
+  border-bottom: 1px solid var(--cor-texto-principal);
+  margin-bottom: 40px;
+  padding-bottom: 12px;
+}
+
+.dashboard-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 20px;
+  color: var(--cor-texto-principal);
+  font-family: Arial, sans-serif;
+}
+
+/* ========================================================= */
+/* 📊 GRÁFICO HORIZONTAL                                     */
+/* ========================================================= */
+.grafico-h {
+  margin-bottom: 60px;
+}
+
+.grafico-h h2 {
+  margin-bottom: 15px;
+}
+
+.barra {
+  display: grid;
+  grid-template-columns: 200px 1fr 60px;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.barra .label {
+  font-weight: bold;
+}
+
+.barra .valor {
+  height: 22px;
+  background: linear-gradient(90deg, #8257e5, #5f3bd1);
+  width: var(--w);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+.barra .num {
+  text-align: right;
+  font-weight: bold;
+  opacity: 0.8;
+}
+
+/* ========================================================= */
+/* 📊 GRÁFICO VERTICAL — CORRIGIDO                          */
+/* ========================================================= */
+.grafico-v {
+  text-align: center;
+  margin-top: 60px;
+  padding-top: 40px;
+  /* 🔥 Cria espaço superior */
+}
+
+.colunas {
+  display: flex;
+  gap: 35px;
+  justify-content: center;
+  align-items: flex-end;
+  /* 🔥 Faz as barras crescerem “pra cima” */
+  height: 320px;
+  /* 🔥 Altura fixa do gráfico */
+  padding-bottom: 20px;
+  /* Mais espaço inferior */
+  border-bottom: 2px solid #444;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+/* 🔥 Agora as barras geram altura proporcional, mas NUNCA somem */
+.barra-v {
+  width: 60px;
+  height: calc(var(--h) * 1px);
+  /* 🔥 Agora funciona mesmo com valores pequenos */
+  max-height: 260px;
+  min-height: 20px;
+  /* 🔥 Evita barra invisível */
+
+  background: linear-gradient(180deg, #00e0ff, #0088cc);
+  border-radius: 8px 8px 0 0;
+  transition: height 0.5s ease;
+  margin-top: auto;
+}
+
+.nome {
+  margin-top: 10px;
+  font-weight: bold;
+  text-align: center;
+  width: 120px;
+}
+
+.num-emp {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* ========================================================= */
+/* 📋 TABELA DE USUÁRIOS                                     */
+.usuarios-pagina {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  color: white;
+}
+
+.tabela-usuarios {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabela-usuarios th,
+.tabela-usuarios td {
+  padding: 12px;
+  border-bottom: 1px solid #444;
+}
+
+.tabela-usuarios th {
+  background: #222;
+}
+
+.btn-criar {
+  background: #28a745;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 0;
+}
+
+.acoes button {
+  margin-right: 6px;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 5px;
+  border: none;
+}
+
+.btn-edit {
+  background: #ffc107;
+  color: #000;
+}
+
+.btn-delete {
+  background: #dc3545;
+  color: #fff;
+}
+
+/* ================== MODAL ================== */
+
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.modal {
+  background: #121212;
+  padding: 25px;
+  width: 400px;
+  border-radius: 10px;
+  border: 1px solid #444;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  background: #222;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+}
+
+.modal-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-salvar {
+  background: #28a745;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 5px;
+}
+
+.btn-cancelar {
+  background: #6c757d;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 5px;
+}
