@@ -31,3 +31,59 @@
 .rodape .icones-sociais a:hover {
   color: var(--cor-principal-violeta);
 }
+
+.torre-decorativa {
+  position: absolute;
+  bottom: 100%;
+  pointer-events: none;
+  height: 400px;
+  width: auto;
+  z-index: 1;
+  display: none;
+}
+
+.torre-esquerda {
+  left: 0;
+}
+
+.torre-direita {
+  right: 0;
+}
+
+/* Mostrar torres baseado na página ativa */
+body.page-login .torre-direita {
+  display: block;
+}
+
+body.page-cadastro .torre-esquerda {
+  display: block;
+}
+
+/* Responsividade das torres */
+@media (max-width: 1200px) {
+  .torre-decorativa {
+    height: 320px;
+  }
+}
+
+@media (max-width: 900px) {
+  .torre-decorativa {
+    height: 250px;
+  }
+}
+
+@media (max-width: 600px) {
+  .torre-decorativa {
+    height: 180px;
+  }
+}
+
+@media (max-width: 420px) {
+  .torre-decorativa {
+    height: 130px;
+  }
+}
+.footer-wrapper {
+    position: relative;
+    width: 100%;
+}

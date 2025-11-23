@@ -11,111 +11,119 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-  const containerLogin = document.getElementById("container-login");
-  const containerCadastro = document.getElementById("container-cadastro");
+    // Adiciona classe inicial para controlar torres do footer
+    document.body.classList.add("page-login");
+    const containerLogin = document.getElementById("container-login");
+    const containerCadastro = document.getElementById("container-cadastro");
 
-  const btnIrParaCadastro = document.getElementById("btn-cadastrar");
-  const btnIrParaLogin = document.getElementById("btn-login");
+    const btnIrParaCadastro = document.getElementById("btn-cadastrar");
+    const btnIrParaLogin = document.getElementById("btn-login");
 
-  const loginForm = document.getElementById("login-form");
-  const cadastrarForm = document.getElementById("cadastrar-form");
+    const loginForm = document.getElementById("login-form");
+    const cadastrarForm = document.getElementById("cadastrar-form");
 
-  // ---------- Handlers ----------
-  const handleIrParaCadastro = () => {
-    containerLogin.classList.remove("form-login-active");
-    containerLogin.classList.add("form-login-hide");
-    containerCadastro.classList.add("form-cadastro-active");
-    setMessage("");
-  };
+    // ---------- Handlers ----------
+    const handleIrParaCadastro = () => {
+      containerLogin.classList.remove("form-login-active");
+      containerLogin.classList.add("form-login-hide");
+      containerCadastro.classList.add("form-cadastro-active");
+      document.body.classList.remove("page-login");
+      document.body.classList.add("page-cadastro");
+      setMessage("");
+    };
 
-  const handleIrParaLogin = () => {
-    containerCadastro.classList.remove("form-cadastro-active");
-    containerLogin.classList.remove("form-login-hide");
-    containerLogin.classList.add("form-login-active");
-    setMessage("");
-  };
+    const handleIrParaLogin = () => {
+      containerCadastro.classList.remove("form-cadastro-active");
+      containerLogin.classList.remove("form-login-hide");
+      containerLogin.classList.add("form-login-active");
+      document.body.classList.remove("page-cadastro");
+      document.body.classList.add("page-login");
+      setMessage("");
+    };
 
-  const handleSubmitLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+    const handleSubmitLogin = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      setMessage("");
 
-    const email = document.getElementById("email-login").value;
-    const senha = document.getElementById("password-login").value;
+      const email = document.getElementById("email-login").value;
+      const senha = document.getElementById("password-login").value;
 
-    try {
-      const res = await loginUser(email, senha);
+      try {
+        const res = await loginUser(email, senha);
 
-      mostrarMensagem(res.message, res.status === 200 ? "success" : "info");
+        mostrarMensagem(res.message, res.status === 200 ? "success" : "info");
 
-      if (res.status === 200 && res.data.token) {
-        localStorage.setItem("token", res.data.token);
-        setTimeout(() => (window.location.href = "/home"), 800);
+        if (res.status === 200 && res.data.token) {
+          localStorage.setItem("token", res.data.token);
+          setTimeout(() => (window.location.href = "/home"), 800);
+        }
+
+      } catch (err) {
+        console.error(err);
+        const msg = err.response?.data?.message || "Não foi possível realizar o login.";
+        mostrarMensagem(msg, "danger");
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const handleSubmitCadastro = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      setMessage("");
+
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email-cadastro").value;
+      const senha = document.getElementById("password-cadastro").value;
+      const confirmar = document.getElementById("confirm-password-cadastro").value;
+
+      if (senha !== confirmar) {
+        mostrarMensagem("As senhas não coincidem!", "info");
+        setLoading(false);
+        return;
       }
 
-    } catch (err) {
-      console.error(err);
-      const msg = err.response?.data?.message || "Não foi possível realizar o login.";
-      mostrarMensagem(msg, "danger");
+      const dataInput = document.getElementById("data-nascimento").value;
+      const [ano, mes, dia] = dataInput.split("-");
+      const dataNascimento = `${dia}/${mes}/${ano}`;
 
-    } finally {
-      setLoading(false);
-    }
-  };
+      try {
+        const res = await registerUser(nome, email, senha, 2, dataNascimento);
 
-  const handleSubmitCadastro = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+        mostrarMensagem(res.message, res.status === 201 ? "success" : "info");
 
-    const nome = document.getElementById("nome").value;
-    const email = document.getElementById("email-cadastro").value;
-    const senha = document.getElementById("password-cadastro").value;
-    const confirmar = document.getElementById("confirm-password-cadastro").value;
+        if (res.status === 201) {
+          handleIrParaLogin();
+        }
 
-    if (senha !== confirmar) {
-      mostrarMensagem("As senhas não coincidem!", "info");
-      setLoading(false);
-      return;
-    }
+      } catch (err) {
+        console.error(err);
+        const msg = err.response?.data?.message || "Erro inesperado no cadastro.";
+        mostrarMensagem(msg, "danger");
 
-    const dataInput = document.getElementById("data-nascimento").value;
-    const [ano, mes, dia] = dataInput.split("-");
-    const dataNascimento = `${dia}/${mes}/${ano}`;
-
-    try {
-      const res = await registerUser(nome, email, senha, 2, dataNascimento);
-
-      mostrarMensagem(res.message, res.status === 201 ? "success" : "info");
-
-      if (res.status === 201) {
-        handleIrParaLogin();
+      } finally {
+        setLoading(false);
       }
+    };
 
-    } catch (err) {
-      console.error(err);
-      const msg = err.response?.data?.message || "Erro inesperado no cadastro.";
-      mostrarMensagem(msg, "danger");
+    // ---------- Add Listeners ----------
+    btnIrParaCadastro?.addEventListener("click", handleIrParaCadastro);
+    btnIrParaLogin?.addEventListener("click", handleIrParaLogin);
+    loginForm?.addEventListener("submit", handleSubmitLogin);
+    cadastrarForm?.addEventListener("submit", handleSubmitCadastro);
 
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ---------- Add Listeners ----------
-  btnIrParaCadastro?.addEventListener("click", handleIrParaCadastro);
-  btnIrParaLogin?.addEventListener("click", handleIrParaLogin);
-  loginForm?.addEventListener("submit", handleSubmitLogin);
-  cadastrarForm?.addEventListener("submit", handleSubmitCadastro);
-
-  // ---------- Cleanup REAL ----------
-  return () => {
-    btnIrParaCadastro?.removeEventListener("click", handleIrParaCadastro);
-    btnIrParaLogin?.removeEventListener("click", handleIrParaLogin);
-    loginForm?.removeEventListener("submit", handleSubmitLogin);
-    cadastrarForm?.removeEventListener("submit", handleSubmitCadastro);
-  };
-}, []);
+    // ---------- Cleanup REAL ----------
+    return () => {
+      btnIrParaCadastro?.removeEventListener("click", handleIrParaCadastro);
+      btnIrParaLogin?.removeEventListener("click", handleIrParaLogin);
+      loginForm?.removeEventListener("submit", handleSubmitLogin);
+      cadastrarForm?.removeEventListener("submit", handleSubmitCadastro);
+      // Remove classes das torres ao sair da página
+      document.body.classList.remove("page-login", "page-cadastro");
+    };
+  }, []);
 
 
   return (
@@ -123,7 +131,7 @@ export default function Login() {
       <Header />
 
       <div class="form-wrapper">
-      
+
         {/* Form de Login */}
         <div className="form-container form-login-active" id="container-login">
           <div className="left-decor">

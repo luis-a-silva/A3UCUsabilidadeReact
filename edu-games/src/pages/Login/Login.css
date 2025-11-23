@@ -347,7 +347,7 @@ body[data-theme="light"] form input:focus {
     padding: 0;
   }
 
-  .form-links>* {
+  .form-links {
     flex: 1 1 100%;
     min-width: 0;
   }
