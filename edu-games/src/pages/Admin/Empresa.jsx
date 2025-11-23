@@ -4,7 +4,6 @@ import { getEmpresas } from "../../api/empresa";
 import HeaderAdmin from "./HeaderAdmin";
 import "./Admin.css";
 
-
 export default function Empresas() {
   const [empresas, setEmpresas] = useState([]);
   const [modalCriar, setModalCriar] = useState(false);
@@ -13,11 +12,9 @@ export default function Empresas() {
   const [formCriar, setFormCriar] = useState({ nome: "" });
   const [formEditar, setFormEditar] = useState({ id: "", nome: "" });
 
-
   useEffect(() => {
     carregarEmpresas();
   }, []);
-
 
   async function carregarEmpresas() {
     try {
@@ -28,13 +25,11 @@ export default function Empresas() {
     }
   }
 
-
   function abrirEditar(emp) {
     setEmpresaEditar(emp);
     setFormEditar({ id: emp.id, nome: emp.nome });
     setModalEditar(true);
   }
-
 
   async function salvarEdicao() {
     try {
@@ -45,7 +40,6 @@ export default function Empresas() {
         alert("Erro ao atualizar empresa");
     }
   }
-
 
   async function criarNovaEmpresa() {
     if (!formCriar.nome) {
@@ -62,7 +56,6 @@ export default function Empresas() {
     }
   }
 
-
   async function apagarEmpresa(id) {
     if (!confirm("Deseja realmente excluir esta empresa?")) return;
     try {
@@ -73,17 +66,15 @@ export default function Empresas() {
     }
   }
 
-
   return (
     <div className="admin-container">
       <HeaderAdmin />
 
-
       <div className="admin-content-body">
           <div className="secao-titulo-central">
+              <h1 className="titulo-painel">Painel Administrativo</h1>
               <h3 className="subtitulo-gerenciamento">Gerenciamento de Empresas</h3>
           </div>
-
 
           <div className="top-controls">
               <button className="btn-criar-verde" onClick={() => setModalCriar(true)}>
@@ -91,7 +82,6 @@ export default function Empresas() {
               </button>
               <span className="contador-texto">Quantidade de Empresas cadastradas: {empresas.length}</span>
           </div>
-
 
           <div className="grid-cards">
               {empresas.map((emp) => (
@@ -104,15 +94,15 @@ export default function Empresas() {
                           <p><strong>Empresa:</strong> {emp.nome}</p>
                       </div>
                       <div className="card-footer">
-                          <button className="btn-acao-amarelo" onClick={() => abrirEditar(emp)}>Ações</button>
+                          <button className="btn-acao-amarelo" onClick={() => abrirEditar(emp)}>
+                              Ações
+                          </button>
                       </div>
                   </div>
               ))}
           </div>
       </div>
 
-
-      {/* Modal Criar */}
       {modalCriar && (
         <div className="modal-bg" onClick={() => setModalCriar(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -131,8 +121,6 @@ export default function Empresas() {
         </div>
       )}
 
-
-      {/* Modal Editar */}
       {modalEditar && (
         <div className="modal-bg" onClick={() => setModalEditar(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -152,4 +140,3 @@ export default function Empresas() {
     </div>
   );
 }
-

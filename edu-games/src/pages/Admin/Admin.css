@@ -1,4 +1,17 @@
-/* ================= GERAL ================= */
+:root {
+  --cor-fundo: #100e19;
+  --cor-fundo-componente: #1d1a2c;
+  --cor-principal-violeta: #8257e5;
+  --cor-lixeira-carrinho: #e83f5b; 
+  --cor-destaque-amarelo: #f7df1e;
+  --cor-destaque-ciano: #61dafb;
+  --cor-borda: #2c2844;
+  --cor-texto-principal: #ffffff;
+  --cor-texto-secundario: #a8a8b3;
+  --fonte-logo: "Faster One", system-ui;
+  --fonte-corpo: "Poppins", sans-serif;
+}
+
 .admin-container {
     background-color: var(--cor-fundo);
     min-height: 100vh;
@@ -8,13 +21,11 @@
     flex-direction: column;
 }
 
-
-/* ================= HEADER UNIFICADO ================= */
 .admin-header {
     height: 90px;
     display: flex;
     align-items: center;
-    justify-content: center; /* Centraliza a navegação */
+    justify-content: center; 
     background-color: var(--cor-fundo-componente);
     border-bottom: 1px solid var(--cor-borda);
     position: relative;
@@ -22,8 +33,6 @@
     z-index: 10;
 }
 
-
-/* Logo na Esquerda (Absoluto) */
 .header-logo-area {
     position: absolute;
     left: 40px;
@@ -31,25 +40,20 @@
     align-items: center;
 }
 
-
 .logo-icone {
     max-height: 45px;
     transition: transform 0.3s;
 }
 
-
 .logo-icone:hover {
     transform: scale(1.05);
 }
 
-
-/* Centro: Navegação */
 .header-nav-container {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
 
 .titulo-painel-nav {
     font-size: 1.1rem;
@@ -61,8 +65,6 @@
     display: inline-block;
 }
 
-
-/* Links de Navegação */
 .nav-btn {
     text-decoration: none;
     color: var(--cor-texto-secundario);
@@ -74,13 +76,11 @@
     border: 1px solid transparent;
 }
 
-
 .nav-btn:hover {
     color: var(--cor-principal-violeta);
     background-color: rgba(130, 87, 229, 0.1);
     border-color: var(--cor-principal-violeta);
 }
-
 
 .nav-btn.ativo {
     background-color: var(--cor-principal-violeta);
@@ -89,13 +89,10 @@
     box-shadow: 0 0 15px rgba(130, 87, 229, 0.3);
 }
 
-
-/* Botão Sair na Direita (Absoluto) */
 .header-sair-area {
     position: absolute;
     right: 40px;
 }
-
 
 .btn-sair {
     background: transparent;
@@ -112,15 +109,12 @@
     gap: 8px;
 }
 
-
 .btn-sair:hover {
     background-color: var(--cor-lixeira-carrinho);
     color: #fff;
     box-shadow: 0 0 12px rgba(232, 63, 91, 0.4);
 }
 
-
-/* ================= LAYOUT DE CONTEÚDO ================= */
 .admin-content-body {
     max-width: 1400px;
     margin: 0 auto;
@@ -130,19 +124,15 @@
     animation: fadeIn 0.5s ease;
 }
 
-
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-
-/* Títulos Centralizados */
 .secao-titulo-central {
     text-align: center;
     margin-bottom: 40px;
 }
-
 
 .titulo-painel {
     font-size: 2rem;
@@ -151,24 +141,18 @@
     margin-bottom: 5px;
 }
 
-
 .subtitulo-gerenciamento {
-    font-size: 1.9rem;
+    font-size: 1.2rem;
     color: var(--cor-texto-secundario);
     font-weight: 400;
-    margin-top: 20px;
-    margin-bottom: 100px;
 }
 
-
-/* ================= CONTROLES E GRID ================= */
 .top-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
 }
-
 
 .btn-criar-verde {
     background-color: #28a745;
@@ -186,12 +170,10 @@
     box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
 }
 
-
 .btn-criar-verde:hover {
     filter: brightness(1.1);
     transform: translateY(-2px);
 }
-
 
 .contador-texto {
     font-size: 1.1rem;
@@ -199,14 +181,11 @@
     font-weight: 500;
 }
 
-
-/* GRID DE CARDS */
 .grid-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 30px;
 }
-
 
 .card-item {
     background-color: var(--cor-fundo-componente);
@@ -219,13 +198,11 @@
     transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
-
 .card-item:hover {
     transform: translateY(-8px);
     border-color: var(--cor-principal-violeta);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
-
 
 .card-header {
     display: flex;
@@ -236,13 +213,11 @@
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-
 .card-title {
     font-size: 1.4rem;
     font-weight: bold;
     color: #fff;
 }
-
 
 .card-id {
     color: var(--cor-texto-secundario);
@@ -250,23 +225,19 @@
     opacity: 0.7;
 }
 
-
 .card-body p {
     margin-bottom: 10px;
     color: var(--cor-texto-secundario);
     font-size: 0.95rem;
 }
 
-
 .card-body strong {
     color: var(--cor-texto-principal);
 }
 
-
 .card-footer {
     margin-top: 25px;
 }
-
 
 .btn-acao-amarelo {
     width: 100%;
@@ -280,14 +251,11 @@
     transition: filter 0.2s, transform 0.2s;
 }
 
-
 .btn-acao-amarelo:hover {
     filter: brightness(0.9);
     transform: scale(1.02);
 }
 
-
-/* ================= MODAL ================= */
 .modal-bg {
     position: fixed;
     inset: 0;
@@ -299,7 +267,6 @@
     z-index: 9999;
 }
 
-
 .modal {
     background: var(--cor-fundo-componente);
     padding: 40px;
@@ -309,14 +276,12 @@
     box-shadow: 0 20px 50px rgba(0,0,0,0.6);
 }
 
-
 .modal h2 {
     text-align: center;
     margin-bottom: 30px;
     color: var(--cor-texto-principal);
     font-size: 1.5rem;
 }
-
 
 .modal input, .modal select, .modal textarea {
     width: 100%;
@@ -330,12 +295,10 @@
     font-family: var(--fonte-corpo);
 }
 
-
 .modal input:focus, .modal select:focus, .modal textarea:focus {
     border-color: var(--cor-principal-violeta);
     box-shadow: 0 0 0 2px rgba(130, 87, 229, 0.2);
 }
-
 
 .modal-actions {
     display: flex;
@@ -343,7 +306,6 @@
     gap: 15px;
     margin-top: 20px;
 }
-
 
 .btn-salvar {
     flex: 1;
@@ -357,11 +319,9 @@
     transition: 0.2s;
 }
 
-
 .btn-salvar:hover {
     filter: brightness(1.1);
 }
-
 
 .btn-cancelar {
     flex: 1;
@@ -374,14 +334,11 @@
     transition: 0.2s;
 }
 
-
 .btn-cancelar:hover {
     background: rgba(255,255,255,0.05);
     color: #fff;
 }
 
-
-/* ================= GRÁFICOS (DASHBOARD) ================= */
 .grafico-h, .grafico-v {
     text-align: center;
     margin-top: 40px;
@@ -391,11 +348,9 @@
     border: 1px solid var(--cor-borda);
 }
 
-
 .grafico-h h2, .grafico-v h2 {
     margin-bottom: 30px;
 }
-
 
 .barra {
     display: grid;
@@ -404,7 +359,6 @@
     margin: 15px 0;
 }
 
-
 .barra .valor {
     height: 24px;
     background: linear-gradient(90deg, #8257e5, #5f3bd1);
@@ -412,7 +366,6 @@
     border-radius: 6px;
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 
 .colunas {
     display: flex;
@@ -425,7 +378,6 @@
     margin: 0 auto;
 }
 
-
 .barra-v {
     width: 60px;
     height: calc(var(--h) * 1px);
@@ -437,13 +389,11 @@
     transition: height 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-
 .grafico-scroll {
     width: 100%;
     overflow-x: auto;
     padding-bottom: 10px;
 }
-
 
 .col {
     display: flex;
@@ -451,4 +401,3 @@
     align-items: center;
     height: 100%;
 }
-

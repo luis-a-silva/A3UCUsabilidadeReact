@@ -15,7 +15,6 @@ import "./App.css";
 export default function App() {
   return (
     <Router>
-
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -23,12 +22,13 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/jogo/:jogoId" element={<GameInfo />} />
           <Route path="/carrinho" element={<Cart />} />
-          <Route path="/admin/user" element={<Usuario />} />          
-          <Route path="/admin/dashboard" element={<Dashboard />} />          
-          <Route path="/admin/empresa" element={<Empresa />} />          
-          <Route path="/admin/jogo" element={<Jogos />} />          
-          <Route path="/user" element={<User />} />          
-          <Route path="/favoritos" element={<Favoritos />} />          
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/usuarios" element={<Usuario />} />
+          <Route path="/admin/empresas" element={<Empresa />} />
+          <Route path="/admin/jogos" element={<Jogos />} />
+          
+          <Route path="/user" element={<User />} />
+          <Route path="/favoritos" element={<Favoritos />} />
         </Routes>
       </main>
 
