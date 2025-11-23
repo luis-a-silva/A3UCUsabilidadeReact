@@ -1,5 +1,6 @@
 .navegacao-admin {
   display: flex;
+  position: sticky;
   justify-content: space-between;
   padding: 10px;
   background: var(--cor-fundo-componente);
