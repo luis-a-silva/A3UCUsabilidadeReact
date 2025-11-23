@@ -47,11 +47,13 @@
 /* GRÁFICO HORIZONTAL                                     */
 /* ========================================================= */
 .grafico-h {
-  margin-bottom: 60px;
+  text-align: center;
+  margin-top: 60px;
+  padding-top: 40px;
 }
 
 .grafico-h h2 {
-  margin-bottom: 15px;
+  margin-bottom: 40px;
 }
 
 .barra {
@@ -88,6 +90,10 @@
   padding-top: 40px;
 }
 
+.grafico-v h2 {
+  margin-bottom: 40px;
+}
+
 .colunas {
   display: flex;
   gap: 35px;
@@ -95,19 +101,24 @@
   height: 320px;
   padding-bottom: 20px;
   border-bottom: 2px solid #444;
-  width: max-content; /* 🔥 permite que o conteúdo defina a largura */
+  width: max-content;
+  /* 🔥 permite que o conteúdo defina a largura */
 }
 
 .grafico-scroll {
   width: 100%;
-  overflow-x: auto;      /* habilita scroll horizontal */
+  overflow-x: auto;
+  /* habilita scroll horizontal */
   overflow-y: hidden;
-  padding-bottom: 10px;  /* espaço para não cortar o scroll */
-  scrollbar-width: thin; /* Firefox */
+  padding-bottom: 10px;
+  /* espaço para não cortar o scroll */
+  scrollbar-width: thin;
+  /* Firefox */
 }
 
 .grafico-scroll::-webkit-scrollbar {
-  height: 8px;           /* altura da barra */
+  height: 8px;
+  /* altura da barra */
 }
 
 .grafico-scroll::-webkit-scrollbar-thumb {
@@ -209,7 +220,7 @@
 .modal-bg {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.65);
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
   justify-content: center;
   align-items: center;
