@@ -2,6 +2,7 @@
   --cor-fundo: #100e19;
   --cor-fundo-componente: #1d1a2c;
   --cor-principal-violeta: #8257e5;
+  --cor-lixeira-carrinho: #e83f5b; 
   --cor-destaque-amarelo: #f7df1e;
   --cor-destaque-ciano: #61dafb;
   --cor-borda: #2c2844;
@@ -16,6 +17,7 @@ body[data-theme="light"] {
   --cor-fundo: #f5f5f5;
   --cor-fundo-componente: #ffffff;
   --cor-principal-violeta: #6b4de6;
+  --cor-lixeira-carrinho: #cc0000; 
   --cor-destaque-amarelo: #f7c948;
   --cor-destaque-ciano: #40cfff;
   --cor-borda: #e0e0e0;
