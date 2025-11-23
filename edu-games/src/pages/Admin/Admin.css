@@ -44,7 +44,7 @@
 }
 
 /* ========================================================= */
-/* 📊 GRÁFICO HORIZONTAL                                     */
+/* GRÁFICO HORIZONTAL                                     */
 /* ========================================================= */
 .grafico-h {
   margin-bottom: 60px;
@@ -80,13 +80,12 @@
 }
 
 /* ========================================================= */
-/* 📊 GRÁFICO VERTICAL — CORRIGIDO                          */
+/* GRÁFICO VERTICAL — CORRIGIDO                          */
 /* ========================================================= */
 .grafico-v {
   text-align: center;
   margin-top: 60px;
   padding-top: 40px;
-  /* 🔥 Cria espaço superior */
 }
 
 .colunas {
@@ -94,11 +93,8 @@
   gap: 35px;
   justify-content: center;
   align-items: flex-end;
-  /* 🔥 Faz as barras crescerem “pra cima” */
   height: 320px;
-  /* 🔥 Altura fixa do gráfico */
   padding-bottom: 20px;
-  /* Mais espaço inferior */
   border-bottom: 2px solid #444;
 }
 
@@ -109,15 +105,11 @@
   height: 100%;
 }
 
-/* 🔥 Agora as barras geram altura proporcional, mas NUNCA somem */
 .barra-v {
   width: 60px;
   height: calc(var(--h) * 1px);
-  /* 🔥 Agora funciona mesmo com valores pequenos */
   max-height: 260px;
   min-height: 20px;
-  /* 🔥 Evita barra invisível */
-
   background: linear-gradient(180deg, #00e0ff, #0088cc);
   border-radius: 8px 8px 0 0;
   transition: height 0.5s ease;
@@ -139,6 +131,8 @@
 
 /* ========================================================= */
 /* 📋 TABELA DE USUÁRIOS                                     */
+/* ========================================================= */
+
 .usuarios-pagina {
   max-width: 900px;
   margin: 30px auto;
@@ -210,7 +204,8 @@
 }
 
 .modal input,
-.modal select {
+.modal select,
+.modal textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 12px;
