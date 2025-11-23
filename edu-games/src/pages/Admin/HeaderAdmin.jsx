@@ -1,48 +1,55 @@
 import logo from "../../assets/logo_edugames_horizontal.png";
-import "./Admin.css"
-import { Link } from "react-router-dom";
+import "./Admin.css";
+import { Link, useLocation } from "react-router-dom";
 
 export default function HeaderAdmin() {
     const handleLogout = () => {
         localStorage.removeItem("token");
         window.location.href = "/login";
     };
+
+    const location = useLocation();
+
+    // Função para marcar o botão ativo
+    const isActive = (path) => location.pathname === path ? "nav-btn ativo" : "nav-btn";
+
     return (
-        <>
-            <header className="cabecalho">
-                {/* Botão do menu lateral */}
-                <button
-                    className="btn-menu-hamburger"
-                    id="btn-menu"
-                    aria-label="Abrir menu"
-                    aria-expanded="false"
-                >
-                    <i className="fas fa-bars"></i>
-                </button>
+        <header className="admin-header">
+            {/* Esquerda: Logo */}
+            <div className="header-logo-area">
+                <Link to="/">
+                    <img 
+                        src={logo} 
+                        alt="EduGames" 
+                        className="logo-icone"
+                    />
+                </Link>
+            </div>
 
-                {/* Logo */}
-                <a href="/" className="logo">
-                    <img src={logo} alt="EduGames Logo" />
-                </a>
-            </header>
-
-            {/* Navegação principal */}
-            <nav className="navegacao-admin">
-        <div className="links">
-                <Link to="/admin/dashboard" className="link-admin">  Dashboard</Link>
-                <Link to="/admin/user" className="link-admin">  Usuário</Link>
-                <Link to="/admin/empresa" className="link-admin"> Empresa</Link>
-                <Link to="/admin/jogo" className="link-admin">  Jogos</Link>
-        </div>
-
-                <button className="btn-primario" onClick={handleLogout}>
-                    <i className="fas fa-sign-out-alt"></i> Sair
-                </button>
+            {/* Centro: Navegação Unificada */}
+            <nav className="header-nav-container">
+                <span className="titulo-painel-nav">Painel Administrativo:</span>
+                
+                <Link to="/admin/dashboard" className={isActive("/admin/dashboard")}>
+                    Dashboard
+                </Link>
+                <Link to="/admin/user" className={isActive("/admin/user")}>
+                    Usuários
+                </Link>
+                <Link to="/admin/empresa" className={isActive("/admin/empresa")}>
+                    Empresas
+                </Link>
+                <Link to="/admin/jogos" className={isActive("/admin/jogos")}>
+                    Jogos
+                </Link>
             </nav>
-            <section className="admin-panel">
-                <h2>Painel Administrativo</h2>
-                <p>Gerencie jogos, usuários e pedidos.</p>
-            </section>
-        </>
-    )
+
+            {/* Direita: Botão Sair */}
+            <div className="header-sair-area">
+                <button className="btn-sair" onClick={handleLogout}>
+                    Sair ➡
+                </button>
+            </div>
+        </header>
+    );
 }

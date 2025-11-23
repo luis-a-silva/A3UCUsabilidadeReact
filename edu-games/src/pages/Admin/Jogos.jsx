@@ -1,348 +1,164 @@
 import { useState, useEffect } from "react";
-import {
-    getAllJogos,
-    getCategorias
-} from "../../api/jogos";
-import {
-    getEmpresas
-} from "../../api/empresa";
-import {
-    createJogo,
-    updateJogo,
-    deleteJogo
-} from "../../api/adminApi";
+import { getUsuarios, updateUser, getPerfis } from "../../api/adminApi";
+import { registerUser } from "../../api/authService";
 import HeaderAdmin from "./HeaderAdmin";
+import "./Admin.css";
 
-export default function Jogos() {
-    const [jogos, setJogos] = useState([]);
-    const [categorias, setCategorias] = useState([]);
-    const [empresas, setEmpresas] = useState([]);
-
+export default function Usuarios() {
+    const [usuarios, setUsuarios] = useState([]);
+    const [perfis, setPerfis] = useState([]);
     const [modalCriar, setModalCriar] = useState(false);
     const [modalEditar, setModalEditar] = useState(false);
+    const [usuarioEditar, setUsuarioEditar] = useState(null);
+    const [formCriar, setFormCriar] = useState({ nome: "", email: "", senha: "", confirmarSenha: "", dataNascimento: "", perfil: "" });
+    const [formEditar, setFormEditar] = useState({ id: "", nome: "", email: "", dataNascimento: "", fkPerfil: "" });
 
-    const [formCriar, setFormCriar] = useState({
-        nome: "",
-        descricao: "",
-        preco: "",
-        ano: "",
-        fkCategoria: "",
-        fkEmpresa: "",
-    });
+    function formatarDataParaInput(data) {
+        if (!data) return "";
+        if (data.includes("/")) {
+            const [dia, mes, ano] = data.split("/");
+            return `${ano}-${mes}-${dia}`;
+        }
+        if (data.includes("T")) return data.split("T")[0];
+        return data;
+    }
 
-    const [formEditar, setFormEditar] = useState({
-        id: "",
-        nome: "",
-        descricao: "",
-        preco: "",
-        ano: "",
-        fkCategoria: "",
-        fkEmpresa: "",
-    });
+    function formatarDataParaBackend(isoDate) {
+        if (!isoDate) return null;
+        const [ano, mes, dia] = isoDate.split("-");
+        return `${dia}-${mes}-${ano}`;
+    }
 
     useEffect(() => {
-        carregarJogos();
-        carregarCategorias();
-        carregarEmpresas();
+        carregarUsuarios();
+        carregarPerfis();
     }, []);
 
-    async function carregarJogos() {
-        const lista = await getAllJogos();
-        setJogos(lista);
+    async function carregarUsuarios() {
+        try {
+            const lista = await getUsuarios();
+            setUsuarios(lista || []);
+        } catch (error) {
+            console.error("Erro ao carregar usuários", error);
+        }
     }
 
-    async function carregarCategorias() {
-        const lista = await getCategorias();
-        setCategorias(lista);
+    async function carregarPerfis() {
+        try {
+            const pefis = await getPerfis();
+            setPerfis(pefis || []);
+        } catch (error) {
+            console.error("Erro ao carregar perfis", error);
+        }
     }
 
-    async function carregarEmpresas() {
-        const lista = await getEmpresas();
-        setEmpresas(lista);
-    }
-
-    // ============================
-    //  ABRIR MODAL EDITAR
-    // ============================
-    function abrirEditar(jogo) {
+    function abrirEditar(usuario) {
+        setUsuarioEditar(usuario);
         setFormEditar({
-            id: jogo.id,
-            nome: jogo.nome,
-            descricao: jogo.descricao,
-            preco: jogo.preco,
-            ano: jogo.ano,
-            fkCategoria: jogo.fkCategoria,
-            fkEmpresa: jogo.fkEmpresa,
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            dataNascimento: formatarDataParaInput(usuario.dataNascimento),
+            fkPerfil: usuario.fkPerfil,
         });
         setModalEditar(true);
     }
 
-    // ============================
-    //  SALVAR EDIÇÃO
-    // ============================
     async function salvarEdicao() {
-        const payload = {
-            nome: formEditar.nome,
-            descricao: formEditar.descricao,
-            preco: Number(formEditar.preco),
-            ano: Number(formEditar.ano),
-            fkCategoria: Number(formEditar.fkCategoria),
-            fkEmpresa: Number(formEditar.fkEmpresa),
-        };
-
-        await updateJogo(formEditar.id, payload);
-        setModalEditar(false);
-        carregarJogos();
+        try {
+            await updateUser(formEditar.id, formEditar.nome, formEditar.dataNascimento, formEditar.fkPerfil);
+            setModalEditar(false);
+            carregarUsuarios();
+        } catch (error) {
+            alert("Erro ao editar usuário");
+        }
     }
 
-    // ============================
-    //  CRIAR NOVO JOGO
-    // ============================
-    async function criarNovoJogo() {
-        const payload = {
-            nome: formCriar.nome,
-            descricao: formCriar.descricao,
-            preco: Number(formCriar.preco),
-            ano: Number(formCriar.ano),
-            fkCategoria: Number(formCriar.fkCategoria),
-            fkEmpresa: Number(formCriar.fkEmpresa),
-        };
-
-        await createJogo(payload);
-
-        setModalCriar(false);
-        carregarJogos();
-
-        setFormCriar({
-            nome: "",
-            descricao: "",
-            preco: "",
-            ano: "",
-            fkCategoria: "",
-            fkEmpresa: "",
-        });
-    }
-
-    // ============================
-    //  APAGAR
-    // ============================
-    async function apagarJogo(id) {
-        if (confirm("Deseja excluir este jogo?") === false) return;
-        await deleteJogo(id);
-        carregarJogos();
+    async function criarNovoUsuario() {
+        try {
+            const dataFormatada = formatarDataParaBackend(formCriar.dataNascimento);
+            await registerUser(formCriar.nome, formCriar.email, formCriar.senha, dataFormatada);
+            alert("Usuário criado com sucesso");
+            setModalCriar(false);
+            carregarUsuarios();
+        } catch (err) {
+            console.error("Erro", err);
+            alert("Erro ao criar usuário");
+        }
     }
 
     return (
-        <>
+        <div className="admin-container">
             <HeaderAdmin />
 
-            <div className="usuarios-pagina">
-                <h4 className="page-title">Gerenciamento de Jogos</h4>
+            <div className="admin-content-body">
+                <div className="secao-titulo-central">
+                    <h1 className="titulo-painel">Painel Administrativo</h1>
+                    <h3 className="subtitulo-gerenciamento">Gerenciamento de Usuários</h3>
+                </div>
 
-                <button className="btn-criar" onClick={() => setModalCriar(true)}>
-                    ➕ Criar Jogo
-                </button>
+                <div className="top-controls">
+                    <button className="btn-criar-verde" onClick={() => setModalCriar(true)}>
+                        ➕ Criar Usuário
+                    </button>
+                    <span className="contador-texto">Quantidade de Usuários cadastrados: {usuarios.length}</span>
+                </div>
 
-                {/* ============================TABELA============================ */}
-                <table className="tabela-usuarios">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Preço</th>
-                            <th>Ano</th>
-                            <th>Categoria</th>
-                            <th>Empresa</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {jogos.map((j) => (
-                            <tr key={j.id}>
-                                <td>{j.id}</td>
-                                <td>{j.nome}</td>
-                                <td>R$ {Number(j.preco).toFixed(2)}</td>
-                                <td>{j.ano}</td>
-                                <td>{categorias.find((c) => c.id === j.fkCategoria)?.nome}</td>
-                                <td>{empresas.find((e) => e.id === j.fkEmpresa)?.nome}</td>
-
-                                <td className="acoes">
-                                    <button className="btn-edit" onClick={() => abrirEditar(j)}>
-                                        <i className="fas fa-edit"></i>
-                                    </button>
-
-                                    <button className="btn-delete" onClick={() => apagarJogo(j.id)}>
-                                        <i className="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-
-                {/* ============================ MODAL CRIAR ============================ */}
-                {modalCriar && (
-                    <div className="modal-bg" onClick={() => setModalCriar(false)}>
-                        <div className="modal" onClick={(e) => e.stopPropagation()}>
-                            <h2>Criar Jogo</h2>
-
-                            <input
-                                type="text"
-                                placeholder="Nome"
-                                value={formCriar.nome}
-                                onChange={(e) =>
-                                    setFormCriar({ ...formCriar, nome: e.target.value })
-                                }
-                            />
-
-                            <textarea
-                                placeholder="Descrição"
-                                value={formCriar.descricao}
-                                onChange={(e) =>
-                                    setFormCriar({ ...formCriar, descricao: e.target.value })
-                                }
-                            />
-
-                            <input
-                                type="number"
-                                placeholder="Preço"
-                                value={formCriar.preco}
-                                onChange={(e) =>
-                                    setFormCriar({ ...formCriar, preco: e.target.value })
-                                }
-                            />
-
-                            <input
-                                type="number"
-                                placeholder="Ano de lançamento"
-                                value={formCriar.ano}
-                                onChange={(e) =>
-                                    setFormCriar({ ...formCriar, ano: e.target.value })
-                                }
-                            />
-
-                            <select
-                                value={formCriar.fkCategoria}
-                                onChange={(e) =>
-                                    setFormCriar({ ...formCriar, fkCategoria: e.target.value })
-                                }
-                            >
-                                <option value="">Selecione a categoria</option>
-                                {categorias.map((c) => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.nome}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <select
-                                value={formCriar.fkEmpresa}
-                                onChange={(e) =>
-                                    setFormCriar({ ...formCriar, fkEmpresa: e.target.value })
-                                }
-                            >
-                                <option value="">Selecione a empresa</option>
-                                {empresas.map((e) => (
-                                    <option key={e.id} value={e.id}>
-                                        {e.nome}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <div className="modal-actions">
-                                <button className="btn-salvar" onClick={criarNovoJogo}>
-                                    Salvar
-                                </button>
-                                <button
-                                    className="btn-cancelar"
-                                    onClick={() => setModalCriar(false)}
-                                >
-                                    Cancelar
-                                </button>
+                <div className="grid-cards">
+                    {usuarios.map((u) => (
+                        <div className="card-item" key={u.id}>
+                            <div className="card-header">
+                                <span className="card-title">{u.nome}</span>
+                                <span className="card-id">#{u.id}</span>
+                            </div>
+                            <div className="card-body">
+                                <p><strong>Email:</strong> {u.email}</p>
+                                <p><strong>Nasc:</strong> {u.dataNascimento ?? "--/--/--"}</p>
+                                <p><strong>Perfil:</strong> {perfis.find((p) => p.id === u.fkPerfil)?.nome || "N/A"}</p>
+                            </div>
+                            <div className="card-footer">
+                                <button className="btn-acao-amarelo" onClick={() => abrirEditar(u)}>Ações</button>
                             </div>
                         </div>
-                    </div>
-                )}
-
-                {/* ============================ MODAL EDITAR ============================ */}
-                {modalEditar && (
-                    <div className="modal-bg" onClick={() => setModalEditar(false)}>
-                        <div className="modal" onClick={(e) => e.stopPropagation()}>
-                            <h2>Editar Jogo</h2>
-
-                            <input
-                                type="text"
-                                value={formEditar.nome}
-                                onChange={(e) =>
-                                    setFormEditar({ ...formEditar, nome: e.target.value })
-                                }
-                            />
-
-                            <textarea
-                                value={formEditar.descricao}
-                                onChange={(e) =>
-                                    setFormEditar({ ...formEditar, descricao: e.target.value })
-                                }
-                            />
-
-                            <input
-                                type="number"
-                                value={formEditar.preco}
-                                onChange={(e) =>
-                                    setFormEditar({ ...formEditar, preco: e.target.value })
-                                }
-                            />
-
-                            <input
-                                type="number"
-                                value={formEditar.ano}
-                                onChange={(e) =>
-                                    setFormEditar({ ...formEditar, ano: e.target.value })
-                                }
-                            />
-
-                            <select
-                                value={formEditar.fkCategoria}
-                                onChange={(e) =>
-                                    setFormEditar({ ...formEditar, fkCategoria: e.target.value })
-                                }
-                            >
-                                {categorias.map((c) => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.nome}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <select
-                                value={formEditar.fkEmpresa}
-                                onChange={(e) =>
-                                    setFormEditar({ ...formEditar, fkEmpresa: e.target.value })
-                                }
-                            >
-                                {empresas.map((e) => (
-                                    <option key={e.id} value={e.id}>
-                                        {e.nome}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <div className="modal-actions">
-                                <button className="btn-salvar" onClick={salvarEdicao}>
-                                    Salvar
-                                </button>
-                                <button
-                                    className="btn-cancelar"
-                                    onClick={() => setModalEditar(false)}
-                                >
-                                    Cancelar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                    ))}
+                </div>
             </div>
-        </>
+
+            {modalCriar && (
+                <div className="modal-bg" onClick={() => setModalCriar(false)}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <h2>Criar Usuário</h2>
+                        <input type="text" placeholder="Nome" value={formCriar.nome} onChange={(e) => setFormCriar({ ...formCriar, nome: e.target.value })} />
+                        <input type="email" placeholder="Email" value={formCriar.email} onChange={(e) => setFormCriar({ ...formCriar, email: e.target.value })} />
+                        <input type="date" value={formCriar.dataNascimento} onChange={(e) => setFormCriar({ ...formCriar, dataNascimento: e.target.value })} />
+                        <input type="password" placeholder="Senha" value={formCriar.senha} onChange={(e) => setFormCriar({ ...formCriar, senha: e.target.value })} />
+                        <input type="password" placeholder="Confirmar Senha" value={formCriar.confirmarSenha} onChange={(e) => setFormCriar({ ...formCriar, confirmarSenha: e.target.value })} />
+                        <div className="modal-actions">
+                            <button className="btn-salvar" onClick={criarNovoUsuario}>Salvar</button>
+                            <button className="btn-cancelar" onClick={() => setModalCriar(false)}>Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {modalEditar && (
+                <div className="modal-bg" onClick={() => setModalEditar(false)}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <h2>Editar Usuário</h2>
+                        <input type="text" value={formEditar.nome} onChange={(e) => setFormEditar({ ...formEditar, nome: e.target.value })} />
+                        <input type="email" value={formEditar.email} disabled style={{opacity: 0.5}} />
+                        <input type="date" value={formEditar.dataNascimento} onChange={(e) => setFormEditar({ ...formEditar, dataNascimento: e.target.value })} />
+                        <select value={formEditar.fkPerfil} onChange={(e) => setFormEditar({ ...formEditar, fkPerfil: e.target.value })}>
+                            <option value="">Selecione o perfil</option>
+                            {perfis.map((p) => <option key={p.id} value={p.id}>{p.nome}</option>)}
+                        </select>
+                        <div className="modal-actions">
+                            <button className="btn-salvar" onClick={salvarEdicao}>Salvar</button>
+                            <button className="btn-cancelar" onClick={() => setModalEditar(false)}>Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }
