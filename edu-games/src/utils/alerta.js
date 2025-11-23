@@ -60,5 +60,5 @@ export function mostrarMensagem(mensagem, tipo = "info") {
   setTimeout(() => {
     alerta.remove();
     style.remove();
-  }, 3000);
+  }, 1500);
 }

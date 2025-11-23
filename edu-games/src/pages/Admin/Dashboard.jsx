@@ -21,7 +21,7 @@ export default function Dashboard() {
 
         // 2) Top por Empresa
         const empresasRanking = await getTopJogosPorEmpresa();
-        setTopEmpresas(empresasRanking);
+        setTopEmpresas(empresasRanking.todas);
 
       } catch (err) {
         console.error("Erro ao carregar dados:", err);
@@ -77,20 +77,21 @@ export default function Dashboard() {
         <section className="grafico-v">
           <h2>🏢 Empresas que Mais Vendem</h2>
 
-          <div className="colunas">
-            {topEmpresas.map((emp) => (
-              <div className="col" key={emp.empresaId}>
-                <div
-                  className="barra-v"
-                  style={{ "--h": (emp.total / maxTotalEmpresas) * 260 }}
-                  title={`${emp.total} vendas`}
+          <div className="grafico-scroll">
+            <div className="colunas">
+              {topEmpresas.map((emp) => (
+                <div className="col" key={emp.empresaId}>
+                  <div
+                    className="barra-v"
+                    style={{ "--h": (emp.total / maxTotalEmpresas) * 260 }}
+                    title={`${emp.total} vendas`}
+                  ></div>
 
-                ></div>
-
-                <span className="nome">{emp.empresaNome}</span>
-                <span className="num-emp">{emp.total}</span>
-              </div>
-            ))}
+                  <span className="nome">{emp.empresaNome}</span>
+                  <span className="num-emp">{emp.total}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </div>

@@ -163,17 +163,12 @@ export async function getJogosComTotalVendas() {
 
 
 
-// ===================================================
-//  Top 5 por Empresa (todas as empresas)
-// ===================================================
 export async function getTopJogosPorEmpresa() {
   const token = localStorage.getItem("token");
 
   try {
     // 1) Buscar todas as empresas
     const empresasRes = await getEmpresas();
-
-  
 
     console.log("[Top por Empresa] Empresas encontradas:", empresasRes);
 
@@ -189,10 +184,8 @@ export async function getTopJogosPorEmpresa() {
 
         const lista = Array.isArray(res.data) ? res.data : [];
 
-        // Se não vendeu nada → ignora
         if (lista.length === 0) continue;
 
-        // Sempre pega o mais vendido da empresa (primeiro item)
         const jogoTop = lista[0];
 
         resultados.push({
@@ -201,20 +194,33 @@ export async function getTopJogosPorEmpresa() {
           jogo: jogoTop.nome,
           total: jogoTop.total
         });
-        console.log(resultados);
 
       } catch {
-        // Se algum erro ocorrer para uma empresa, IGNORA
         continue;
       }
     }
+
+    // Ordenação total
     resultados.sort((a, b) => b.total - a.total);
-    console.log("[Top por Empresa] Resultado final:", resultados);
-    return resultados;
+
+    // TOP 5
+    const top5 = resultados.slice(0, 5);
+
+    console.log("[Top por Empresa] TOP 5:", top5);
+    console.log("[Top por Empresa] TODAS:", resultados);
+
+    // 🔥 retornar dois resultados
+    return {
+      top5,
+      todas: resultados
+    };
 
   } catch (err) {
     console.error("Erro ao montar ranking por empresa:", err);
-    return [];
+    return {
+      top5: [],
+      todas: []
+    };
   }
 }
 

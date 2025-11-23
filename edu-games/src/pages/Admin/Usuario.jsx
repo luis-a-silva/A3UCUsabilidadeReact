@@ -28,6 +28,14 @@ export default function Usuarios() {
         return data;
     }
 
+    function formatarDataParaBackend(isoDate) {
+        if (!isoDate) return null;
+
+        // vem "yyyy-mm-dd"
+        const [ano, mes, dia] = isoDate.split("-");
+        return `${dia}-${mes}-${ano}`; // formato aceito pela API
+    }
+
 
     const [formCriar, setFormCriar] = useState({
         nome: "",
@@ -98,29 +106,22 @@ export default function Usuarios() {
 
 
     async function criarNovoUsuario() {
-        if (formCriar.senha !== formCriar.confirmarSenha) {
-            alert("As senhas não coincidem!");
-            return;
+        try {
+            const dataFormatada = formatarDataParaBackend(formCriar.dataNascimento);
+
+            await registerUser(
+                formCriar.nome,
+                formCriar.email,
+                formCriar.senha,
+                dataFormatada
+            );
+
+            mostrarMensagem("Usuário criado com sucesso");
+            setModalCriar(false);
+        } catch (err) {
+            console.error("Erro ao criar usuário:", err);
+            mostrarMensagem("Erro ao criar usuário", "erro");
         }
-
-        await registerUser(
-            formCriar.nome,
-            formCriar.email,
-            formCriar.senha,
-            formCriar.dataNascimento
-        );
-
-        setModalCriar(false);
-        carregarUsuarios();
-
-        setFormCriar({
-            nome: "",
-            email: "",
-            senha: "",
-            confirmarSenha: "",
-            dataNascimento: "",
-            perfil: "",
-        });
     }
 
     return (
@@ -235,8 +236,6 @@ export default function Usuarios() {
                         </div>
                     </div>
                 )}
-
-
 
                 {/* ============================MODAL EDITAR USUÁRIO============================ */}
                 {modalEditar && (

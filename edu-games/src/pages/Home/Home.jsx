@@ -120,7 +120,7 @@ export default function Home() {
       // 9) Top por empresa (fixo, independente de categoria)
       if (tokenExiste) {
         const empresasRanking = await getTopJogosPorEmpresa();
-        setTopJogosByEmpresas(empresasRanking);
+        setTopJogosByEmpresas(empresasRanking.top5);
       }
 
 
@@ -270,22 +270,24 @@ export default function Home() {
               <div className="carousel-container">
 
                 {topJogos.map((jogo, index) => (
-                  <div className="carousel-card" key={jogo.id ?? index}>
-                    {index === 0 && <div className="badge-ouro">🏆 Primeiro Lugar!</div>}
-                    <img
-                      src="https://placehold.co/400x300?text=Jogo"
-                      alt={jogo.nome}
-                    />
+                  <Link to={`/jogo/${jogo.id}`}>
+                    <div className="carousel-card" key={jogo.id ?? index}>
+                      {index === 0 && <div className="badge-ouro">🏆 Primeiro Lugar!</div>}
+                      <img
+                        src="https://placehold.co/400x300?text=Jogo"
+                        alt={jogo.nome}
+                      />
 
-                    <div className="carousel-info">
-                      <h3>{index + 1}. {jogo.nome}</h3>
+                      <div className="carousel-info">
+                        <h3>{index + 1}. {jogo.nome}</h3>
 
-                      <div className="preco-comprar">
-                        <span className="tag">Mais Vendido</span>
-                        <div className="rating">Vendas: {jogo.totalVendido || jogo.total}</div>
+                        <div className="preco-comprar">
+                          <span className="tag">Mais Vendido</span>
+                          <div className="rating">Vendas: {jogo.totalVendido || jogo.total}</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
 
               </div>
@@ -359,13 +361,15 @@ export default function Home() {
 
               return (
                 <div className="cartao-jogo" key={jogo.id ?? index}>
-                  <img
-                    src={
-                      jogo.imagem ||
-                      "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400&h=400&fit=crop"
-                    }
-                    alt={`Capa do jogo ${jogo.nome}`}
-                  />
+                  <Link to={`/jogo/${jogo.id}`}>
+                    <img
+                      src={
+                        jogo.imagem ||
+                        "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400&h=400&fit=crop"
+                      }
+                      alt={`Capa do jogo ${jogo.nome}`}
+                    />
+                  </Link>
                   <div className="info-jogo">
                     <h3>{jogo.nome}</h3>
                     <p className="categoria">
