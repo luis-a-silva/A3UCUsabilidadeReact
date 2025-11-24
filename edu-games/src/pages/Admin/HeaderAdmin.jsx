@@ -31,13 +31,13 @@ export default function HeaderAdmin() {
                 <Link to="/admin/dashboard" className={isActive("dashboard")}>
                     Dashboard
                 </Link>
-                <Link to="/admin/usuarios" className={isActive("usuarios")}>
+                <Link to="/admin/user" className={isActive("usuarios")}>
                     Usuários
                 </Link>
-                <Link to="/admin/empresas" className={isActive("empresas")}>
+                <Link to="/admin/empresa" className={isActive("empresas")}>
                     Empresas
                 </Link>
-                <Link to="/admin/jogos" className={isActive("jogos")}>
+                <Link to="/admin/jogo" className={isActive("jogos")}>
                     Jogos
                 </Link>
             </nav>
