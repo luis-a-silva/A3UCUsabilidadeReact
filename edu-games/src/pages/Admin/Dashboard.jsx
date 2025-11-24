@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getTopJogosMaisVendidos, getTopJogosPorEmpresa } from "../../api/vendas";
 import "./Admin.css";
 import HeaderAdmin from "./HeaderAdmin";
+import { isAuthenticated } from "../../utils/auth";
 
 export default function Dashboard() {
   const [topJogos, setTopJogos] = useState([]);
@@ -9,6 +10,15 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
+    const tokenExiste = isAuthenticated();
+
+    if (!tokenExiste) {
+      mostrarMensagem("Você precisa estar logado para acessar esta página.", "info");
+      navigate("/login");
+      return;
+    }
+
     async function carregarDashboard() {
       try {
         setLoading(true);

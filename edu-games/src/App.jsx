@@ -10,6 +10,7 @@ import Empresa from "./pages/Admin/Empresa";
 import Jogos from "./pages/Admin/Jogos";
 import User from "./pages/User/User";
 import Favoritos from "./pages/Favoritos/Favoritos";
+ import AdminRoute from "../src/components/AdminRoute/AdminRoute";
 import "./App.css";
 
 export default function App() {
@@ -22,11 +23,42 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/jogo/:jogoId" element={<GameInfo />} />
           <Route path="/carrinho" element={<Cart />} />
-          <Route path="/admin/dashboard" element={<Dashboard />} />
-          <Route path="/admin/usuarios" element={<Usuario />} />
-          <Route path="/admin/empresas" element={<Empresa />} />
-          <Route path="/admin/jogos" element={<Jogos />} />
-          
+         
+          <Route
+            path="/admin/user"
+            element={
+              <AdminRoute>
+                <Usuario />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <Dashboard />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/empresa"
+            element={
+              <AdminRoute>
+                <Empresa />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/jogo"
+            element={
+              <AdminRoute>
+                <Jogos />
+              </AdminRoute>
+            }
+          />
           <Route path="/user" element={<User />} />
           <Route path="/favoritos" element={<Favoritos />} />
         </Routes>
